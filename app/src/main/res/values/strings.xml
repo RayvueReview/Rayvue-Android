@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!-- Default -->
+    <string name="app_name">Rayvue</string>
+    <string name="error_title">Error</string>
+    <string name="warning_title">Warning!</string>
+    <string name="question_title">Are you sure?</string>
+    <string name="action_positive_title">Ok</string>
+    <string name="action_negative_title">Cancel</string>
+
+    <!-- Account Screen -->
+    <string name="account_prompt_message">Create a free account to save your reviews in the cloud.</string>
+    <string name="account_button_login_title">Log in</string>
+    <string name="account_button_signup_title">Sign up</string>
+    <string name="account_button_no_account_title">Continue with no account</string>
+
+    <!-- Login Screen -->
+    <string name="login_prompt_message">Log in with your email and password.</string>
+    <string name="login_send_data_error_message">An error occurred while trying to log in.</string>
+    <string name="login_email_hint">Your email</string>
+    <string name="login_email_support">You\'ll have to remember it</string>
+    <string name="login_email_error">The account with this email doesn\'t exist</string>
+    <string name="login_password_hint">Your password</string>
+    <string name="login_password_support">If you forgot it, request a reset</string>
+    <string name="login_password_error">Wrong password</string>
+    <string name="login_button_title">Enter account</string>
+
+    <!-- Signup Screen -->
+    <string name="signup_prompt_message">Sign up with an email and a password.</string>
+    <string name="signup_validate_data_error_message">An error occurred while trying to verify if this account already exists.</string>
+    <string name="signup_email_hint">Email</string>
+    <string name="signup_email_support">The email has to be correct and complete</string>
+    <string name="signup_email_error">Email is linked to an existing account</string>
+    <string name="signup_password_hint">Password</string>
+    <string name="signup_password_support">Minimum 10 characters</string>
+    <string name="signup_button_title">Next</string>
+
+    <!-- Input Name Screen -->
+    <string name="input_name_prompt_message">Add your name or choose an username.</string>
+    <string name="input_name_name_hint">Name</string>
+    <string name="input_name_name_support">Maximum 20 characters</string>
+    <string name="input_name_button_title">Continue</string>
+
+    <!-- Input Invite Screen -->
+    <string name="input_invite_prompt_message">Were you invited as a reviewer?</string>
+    <string name="input_invite_validate_data_error_message">Your code is wrong</string>
+    <string name="input_invite_send_code_data_error_message">An error occurred while trying to validate the code.</string>
+    <string name="input_invite_send_signup_data_error_message">An error occurred while trying to sign up.</string>
+    <string name="input_invite_invite_hint">Invite code</string>
+    <string name="input_invite_invite_support">You only need to input this once</string>
+    <string name="input_invite_button_enter_title">Enter code and sign up</string>
+    <string name="input_invite_button_skip_title">Skip this step and sign up</string>
+
+    <!-- Games Screen -->
+    <string name="games_welcome_account_message">Hello there, %1$s! What game do you want to play today?</string>
+    <string name="games_welcome_no_account_message">Hello! What game do you want to play today?</string>
+    <string name="games_get_data_error_message">An error occurred. Check your Internet connection and try again.</string>
+    <string name="games_section_recent_title">Recently Added</string>
+    <string name="games_section_discover_title">Discover</string>
+    <string name="games_section_all_title">All Games</string>
+
+    <!-- Game Details Screen -->
+    <string name="game_details_get_data_error_message">An error occurred. Details for this game could not be loaded.</string>
+    <string name="game_details_empty_data_error_message">No reviews have been found for this game. Add one yourself.</string>
+    <string name="game_details_section_reviews_title">Reviews</string>
+    <string name="game_details_section_keep_in_mind_title">Keep In Mind</string>
+    <string name="game_details_tag_price_symbol">\$%1$s</string>
+    <string name="game_details_tag_sub_message">Subscription service</string>
+    <string name="game_details_tag_micro_message">Microtransactions</string>
+    <string name="game_details_tag_pass_message">Battle pass</string>
+    <string name="game_details_tag_loot_message">Loot boxes</string>
+    <string name="game_details_tag_ptw_message">Pay-to-win</string>
+    <string name="game_details_tag_malicious_message">Malicious practices</string>
+    <string name="game_details_tag_tos_message">Concerning TOS</string>
+    <string name="game_details_tag_fake_message">Fake engagement</string>
+    <string name="game_details_tag_ad_message">Not as advertised</string>
+    <string name="game_details_tag_dev_message">Immoral developers</string>
+    <string name="game_details_tag_scam_message">Scam</string>
+
+    <!-- Reviews Screen -->
+    <string name="reviews_get_data_error_message">An error occurred. Reviews could not be loaded.</string>
+    <string name="reviews_empty_data_error_message">No reviews have been found.</string>
+    <string name="reviews_send_data_error_message">An error occurred. The review could not be posted.</string>
+    <string name="reviews_write_hint">Write a review</string>
+    <string name="reviews_info_no_account">You need an account to leave a review.</string>
+    <string name="reviews_info_review_exists">You\'ve already added a review for this game.</string>
+
+    <!-- Settings Screen -->
+    <string name="settings_title">Settings</string>
+    <string name="settings_category_account_title">Account</string>
+    <string name="settings_login_text">Log in</string>
+    <string name="settings_login_subtext">Enter your account</string>
+    <string name="settings_signup_text">Sign up</string>
+    <string name="settings_signup_subtext">Create a new account</string>
+    <string name="settings_log_out_text">Log out</string>
+    <string name="settings_log_out_subtext">Exit your account</string>
+    <string name="settings_log_out_prompt_message">You will need to log back in to leave reviews.</string>
+    <string name="settings_log_out_error_message">Could not log out.</string>
+    <string name="settings_sign_out_text">Delete account</string>
+    <string name="settings_sign_out_subtext">This is a permanent action!</string>
+    <string name="settings_sign_out_prompt_message">You cannot undo this! Make sure you clicked on this intentionally.</string>
+    <string name="settings_sing_out_error_message">Could not delete account.</string>
+    <string name="settings_category_info_title">Info</string>
+    <string name="settings_about_reviewer_text">What is a certified reviewer?</string>
+    <string name="settings_about_reviewer_subtext">A certified reviewer is a person who has been exclusively invited to leave public reviews on any game.</string>
+    <string name="settings_about_invite_text">What is an invite code?</string>
+    <string name="settings_about_invite_subtext">An invite code is received via email by all the people who have been invited to become certified reviewers.</string>
+    <string name="settings_app_version_text">App version: %1$s</string>
+
+</resources>

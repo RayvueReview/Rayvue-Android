@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="pref_key_logged_user_id" translatable="false">logged_user</string>
+</resources>

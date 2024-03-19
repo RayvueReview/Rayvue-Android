@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!-- Default -->
+    <string name="app_name">Rayvue</string>
+    <string name="error_title">Eroare</string>
+    <string name="warning_title">Atenție!</string>
+    <string name="question_title">Ești sigur?</string>
+    <string name="action_positive_title">Ok</string>
+    <string name="action_negative_title">Anulează</string>
+
+    <!-- Account Screen -->
+    <string name="account_prompt_message">Creează un cont gratis pentru a salva recenziile tale în cloud.</string>
+    <string name="account_button_login_title">Intră în cont</string>
+    <string name="account_button_signup_title">Creează un cont nou</string>
+    <string name="account_button_no_account_title">Continuă fără un cont</string>
+
+    <!-- Login Screen -->
+    <string name="login_prompt_message">Intră în cont cu parola și email-ul.</string>
+    <string name="login_send_data_error_message">A apărut o eroare în timpul intrării în cont.</string>
+    <string name="login_email_hint">Adresa ta de email</string>
+    <string name="login_email_support">Va trebui să ți-o amintești</string>
+    <string name="login_email_error">Contul cu acest email nu există</string>
+    <string name="login_password_hint">Parola ta</string>
+    <string name="login_password_support">Dacă ai uitat-o, cere o resetare</string>
+    <string name="login_password_error">Parolă greșită</string>
+    <string name="login_button_title">Intră în cont</string>
+
+    <!-- Input Email Password Screen -->
+    <string name="signup_prompt_message">Creează un cont cu o parola și un email.</string>
+    <string name="signup_validate_data_error_message">A apărut o eroare în timpul verificării dacă acest cont există deja.</string>
+    <string name="signup_email_hint">Adresă de email</string>
+    <string name="signup_email_support">Emailul trebuie sa fie corect și complet</string>
+    <string name="signup_email_error">Emailul aparține unui cont existent</string>
+    <string name="signup_password_hint">Parolă</string>
+    <string name="signup_password_support">Minim 10 caractere</string>
+    <string name="signup_button_title">Următorul</string>
+
+    <!-- Input Name Screen -->
+    <string name="input_name_prompt_message">Adaugă numele tău sau alege un nume de utilizator.</string>
+    <string name="input_name_name_hint">Nume</string>
+    <string name="input_name_name_support">Maxim 20 de caractere</string>
+    <string name="input_name_button_title">Continuă</string>
+
+    <!-- Input Invite Screen -->
+    <string name="input_invite_prompt_message">Ai fost invitat cu rolul de critic?</string>
+    <string name="input_invite_validate_data_error_message">Codul tău e greșit</string>
+    <string name="input_invite_send_code_data_error_message">A apărut o eroare în timpul validării codului.</string>
+    <string name="input_invite_send_signup_data_error_message">A apărut o eroare în timpul creării contului.</string>
+    <string name="input_invite_invite_hint">Cod de invitație</string>
+    <string name="input_invite_invite_support">Trebuie să-l introduci doar o dată</string>
+    <string name="input_invite_button_enter_title">Introdu codul și crează cont</string>
+    <string name="input_invite_button_skip_title">Sări acest pas și crează cont</string>
+
+    <!-- Games Screen -->
+    <string name="games_welcome_account_message">Salut, %1$s! Ce joc vrei să joci astăzi?</string>
+    <string name="games_welcome_no_account_message">Salut! Ce joc vrei să joci astăzi?</string>
+    <string name="games_get_data_error_message">A apărut o eroare. Verifică-ți conexiunea la Internet și încearcă din nou.</string>
+    <string name="games_section_recent_title">Recent adăugate</string>
+    <string name="games_section_discover_title">Descoperă</string>
+    <string name="games_section_all_title">Toate jocurile</string>
+
+    <!-- Game Details Screen -->
+    <string name="game_details_get_data_error_message">A apărut o eroare. Detaliile pentru acest joc nu au putut fi încărcate.</string>
+    <string name="game_details_empty_data_error_message">Nu au fost găsite recenzii pentru acest joc. Adaugă tu unul.</string>
+    <string name="game_details_section_reviews_title">Recenzii</string>
+    <string name="game_details_section_keep_in_mind_title">De retinut</string>
+    <string name="game_details_tag_price_symbol">\$%1$s</string>
+    <string name="game_details_tag_sub_message">Serviciu de subscripție</string>
+    <string name="game_details_tag_micro_message">Micro tranzacții</string>
+    <string name="game_details_tag_pass_message">Permis sezonal</string>
+    <string name="game_details_tag_loot_message">Cutii de noroc</string>
+    <string name="game_details_tag_ptw_message">Plată pentru câștig</string>
+    <string name="game_details_tag_malicious_message">Practici malițioase</string>
+    <string name="game_details_tag_tos_message">Termeni suspicioși</string>
+    <string name="game_details_tag_fake_message">Angajament fals</string>
+    <string name="game_details_tag_ad_message">Reclame false</string>
+    <string name="game_details_tag_dev_message">Dezvoltatori imorali</string>
+    <string name="game_details_tag_scam_message">Înșelătorie</string>
+
+    <!-- Reviews Screen -->
+    <string name="reviews_get_data_error_message">A apărut o eroare. Recenziile nu s-au putut încărca.</string>
+    <string name="reviews_empty_data_error_message">Nu au fost găsite recenzii.</string>
+    <string name="reviews_send_data_error_message">A apărut o eroare. Recenzia nu a putut fi trimisă.</string>
+    <string name="reviews_write_hint">Scrie o recenzie</string>
+    <string name="reviews_info_no_account">Îți trebuie un cont pentru a lăsa o recenzie.</string>
+    <string name="reviews_info_review_exists">Ai adăugat deja o recenzie pentru acest joc.</string>
+
+    <!-- Settings Screen -->
+    <string name="settings_title">Setări</string>
+    <string name="settings_category_account_title">Cont</string>
+    <string name="settings_login_text">Logare</string>
+    <string name="settings_login_subtext">Intră în contul tău</string>
+    <string name="settings_signup_text">Creare cont</string>
+    <string name="settings_signup_subtext">Crează un cont nou</string>
+    <string name="settings_log_out_text">Delogare</string>
+    <string name="settings_log_out_subtext">Ieși din contul tău</string>
+    <string name="settings_log_out_prompt_message">Va trebui să te loghezi din nou pentru a lăsa recenzii.</string>
+    <string name="settings_log_out_error_message">Nu s-a putut efectua ieșirea din cont.</string>
+    <string name="settings_sign_out_text">Ștergere cont</string>
+    <string name="settings_sign_out_subtext">Aceasta este o acțiune permanentă!</string>
+    <string name="settings_sign_out_prompt_message">Nu poți reversa asta! Asigură-te că ai apăsat intenționat pe acest buton.</string>
+    <string name="settings_sing_out_error_message">Nu s-a putut efectua ștergerea contului.</string>
+    <string name="settings_category_info_title">Informații</string>
+    <string name="settings_about_reviewer_text">Ce este un recenzor acreditat?</string>
+    <string name="settings_about_reviewer_subtext">Un recenzor acreditat este o persoană care a fost invitată să lase recenzii publice pentru jocuri.</string>
+    <string name="settings_about_invite_text">Ce este un cod de invitație?</string>
+    <string name="settings_about_invite_subtext">Un cod de invitație este primit pe email de către persoanele care au fost invitate să devină recenzori acreditați.</string>
+    <string name="settings_app_version_text">Versiune aplicație: %1$s</string>
+
+</resources>
