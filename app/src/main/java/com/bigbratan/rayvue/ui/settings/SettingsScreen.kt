@@ -1,5 +1,6 @@
 package com.bigbratan.rayvue.ui.settings
 
+import android.content.pm.PackageManager
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -322,8 +323,8 @@ private fun SettingsView(
                         id = R.string.settings_app_version_text,
                         LocalContext.current.packageManager.getPackageInfo(
                             LocalContext.current.packageName,
-                            0
-                        ).versionCode
+                            PackageManager.GET_META_DATA
+                        ).longVersionCode
                     ),
                     shape = RoundedCornerShape(4.dp, 4.dp, 16.dp, 16.dp),
                     onSettingClick = {},
