@@ -71,7 +71,7 @@
     <string name="game_details_tag_micro_message">Micro-transactions</string>
     <string name="game_details_tag_pass_message">Battle pass</string>
     <string name="game_details_tag_loot_message">Loot boxes</string>
-    <string name="game_details_tag_ptw_message">Pay-to-win</string>
+    <string name="game_details_tag_p2w_message">Pay-to-win</string>
     <string name="game_details_tag_malicious_message">Malicious practices</string>
     <string name="game_details_tag_tos_message">Concerning TOS</string>
     <string name="game_details_tag_fake_message">Fake engagement</string>
@@ -89,6 +89,28 @@
 
     <!-- Tags Info Screen -->
     <string name="tags_info_title">Keep In Mind</string>
+    <string name="tags_info_sub_title">What is a subscription service?</string>
+    <string name="tags_info_sub_meaning">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis molestie tincidunt ligula, eu posuere ligula feugiat at. Etiam arcu lorem, sodales at volutpat vel, iaculis at lectus. Sed a metus nisl. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. In ut blandit urna.</string>
+    <string name="tags_info_micro_title">What are micro-transactions?</string>
+    <string name="tags_info_micro_meaning">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis molestie tincidunt ligula, eu posuere ligula feugiat at. Etiam arcu lorem, sodales at volutpat vel, iaculis at lectus. Sed a metus nisl. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. In ut blandit urna.</string>
+    <string name="tags_info_pass_title">What is a battle pass?</string>
+    <string name="tags_info_pass_meaning">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis molestie tincidunt ligula, eu posuere ligula feugiat at. Etiam arcu lorem, sodales at volutpat vel, iaculis at lectus. Sed a metus nisl. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. In ut blandit urna.</string>
+    <string name="tags_info_loot_title">What are loot boxes?</string>
+    <string name="tags_info_loot_meaning">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis molestie tincidunt ligula, eu posuere ligula feugiat at. Etiam arcu lorem, sodales at volutpat vel, iaculis at lectus. Sed a metus nisl. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. In ut blandit urna.</string>
+    <string name="tags_info_p2w_title">What is pay-to-win?</string>
+    <string name="tags_info_p2w_meaning">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis molestie tincidunt ligula, eu posuere ligula feugiat at. Etiam arcu lorem, sodales at volutpat vel, iaculis at lectus. Sed a metus nisl. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. In ut blandit urna.</string>
+    <string name="tags_info_malicious_title">What are malicious practices?</string>
+    <string name="tags_info_malicious_meaning">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis molestie tincidunt ligula, eu posuere ligula feugiat at. Etiam arcu lorem, sodales at volutpat vel, iaculis at lectus. Sed a metus nisl. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. In ut blandit urna.</string>
+    <string name="tags_info_tos_title">What are concerning TOS?</string>
+    <string name="tags_info_tos_meaning">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis molestie tincidunt ligula, eu posuere ligula feugiat at. Etiam arcu lorem, sodales at volutpat vel, iaculis at lectus. Sed a metus nisl. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. In ut blandit urna.</string>
+    <string name="tags_info_fake_title">What is fake engagement?</string>
+    <string name="tags_info_fake_meaning">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis molestie tincidunt ligula, eu posuere ligula feugiat at. Etiam arcu lorem, sodales at volutpat vel, iaculis at lectus. Sed a metus nisl. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. In ut blandit urna.</string>
+    <string name="tags_info_ad_title">What does \"not as advertised\" mean?</string>
+    <string name="tags_info_ad_meaning">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis molestie tincidunt ligula, eu posuere ligula feugiat at. Etiam arcu lorem, sodales at volutpat vel, iaculis at lectus. Sed a metus nisl. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. In ut blandit urna.</string>
+    <string name="tags_info_dev_title">What are immoral developers?</string>
+    <string name="tags_info_dev_meaning">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis molestie tincidunt ligula, eu posuere ligula feugiat at. Etiam arcu lorem, sodales at volutpat vel, iaculis at lectus. Sed a metus nisl. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. In ut blandit urna.</string>
+    <string name="tags_info_scam_title">What is defined as a scam?</string>
+    <string name="tags_info_scam_meaning">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis molestie tincidunt ligula, eu posuere ligula feugiat at. Etiam arcu lorem, sodales at volutpat vel, iaculis at lectus. Sed a metus nisl. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. In ut blandit urna.</string>
 
     <!-- Settings Screen -->
     <string name="settings_title">Settings</string>

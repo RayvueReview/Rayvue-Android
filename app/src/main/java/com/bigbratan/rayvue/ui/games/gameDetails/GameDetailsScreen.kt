@@ -80,6 +80,7 @@ internal fun GameDetailsScreen(
         gameName: String,
         gameIcon: String,
     ) -> Unit,
+    onTagsInfoClick: () -> Unit,
 ) {
     val obtainedGameDetailsState by viewModel.obtainedGameDetailsState.collectAsState()
 
@@ -127,6 +128,7 @@ internal fun GameDetailsScreen(
                 reviews = reviews,
                 onBackClick = onBackClick,
                 onReviewClick = onReviewClick,
+                onTagsInfoClick = onTagsInfoClick,
             )
         }
     }
@@ -143,6 +145,7 @@ private fun GameDetailsView(
         gameName: String,
         gameIcon: String,
     ) -> Unit,
+    onTagsInfoClick: () -> Unit,
 ) {
     val sheetScaffoldState = rememberBottomSheetScaffoldState(
         bottomSheetState = rememberBottomSheetState(initialValue = BottomSheetValue.Collapsed)
@@ -263,7 +266,7 @@ private fun GameDetailsView(
                         SectionHeader(
                             text = stringResource(id = R.string.game_details_section_keep_in_mind_title),
                             imageVector = Icons.Outlined.Info,
-                            onClick = {},
+                            onClick = { onTagsInfoClick() },
                         )
                     }
 

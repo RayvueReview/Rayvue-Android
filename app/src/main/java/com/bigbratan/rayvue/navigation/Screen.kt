@@ -21,6 +21,8 @@ sealed class Screen(val route: String) {
         object GameDetailsScreen : Screen("game_details_screen")
 
         object ReviewsScreen : Screen("reviews_screen")
+
+        object TagsInfoScreen : Screen("tags_info_screen")
     }
 
     fun routeWithArgs(vararg args: String): String {
