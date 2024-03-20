@@ -101,7 +101,7 @@ data class GameDetailsItemViewModel(
                     2 -> context.getString(R.string.game_details_tag_micro_message)
                     3 -> context.getString(R.string.game_details_tag_pass_message)
                     4 -> context.getString(R.string.game_details_tag_loot_message)
-                    5 -> context.getString(R.string.game_details_tag_ptw_message)
+                    5 -> context.getString(R.string.game_details_tag_p2w_message)
                     6 -> context.getString(R.string.game_details_tag_malicious_message)
                     7 -> context.getString(R.string.game_details_tag_tos_message)
                     8 -> context.getString(R.string.game_details_tag_fake_message)

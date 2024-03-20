@@ -8,6 +8,7 @@ import androidx.navigation.navArgument
 import com.bigbratan.rayvue.navigation.Screen
 import com.bigbratan.rayvue.ui.games.GamesScreen
 import com.bigbratan.rayvue.ui.games.gameDetails.GameDetailsScreen
+import com.bigbratan.rayvue.ui.games.tagsInfo.TagsInfoScreen
 import com.bigbratan.rayvue.ui.reviews.ReviewsScreen
 import com.bigbratan.rayvue.ui.settings.SettingsScreen
 import java.net.URLDecoder
@@ -71,9 +72,22 @@ fun NavGraphBuilder.mainApp(
                             reviewedGameEncodedIcon,
                         )
                     )
+                },
+                onTagsInfoClick = {
+                    navController.navigate(
+                        route = Screen.Main.TagsInfoScreen.route
+                    )
                 }
             )
         }
+    }
+
+    composable(route = Screen.Main.TagsInfoScreen.route) {
+        TagsInfoScreen(
+            onBackClick = {
+                navController.popBackStack()
+            },
+        )
     }
 
     composable(
