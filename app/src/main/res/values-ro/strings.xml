@@ -64,13 +64,14 @@
     <string name="game_details_get_data_error_message">A apărut o eroare. Detaliile pentru acest joc nu au putut fi încărcate.</string>
     <string name="game_details_empty_data_error_message">Nu au fost găsite recenzii pentru acest joc. Adaugă tu unul.</string>
     <string name="game_details_section_reviews_title">Recenzii</string>
-    <string name="game_details_section_keep_in_mind_title">De retinut</string>
+    <string name="game_details_section_keep_in_mind_title">De reținut</string>
     <string name="game_details_tag_price_symbol">\$%1$s</string>
+    <string name="game_details_tag_price_free">Gratis</string>
     <string name="game_details_tag_sub_message">Serviciu de subscripție</string>
     <string name="game_details_tag_micro_message">Micro tranzacții</string>
-    <string name="game_details_tag_pass_message">Permis sezonal</string>
-    <string name="game_details_tag_loot_message">Cutii de noroc</string>
-    <string name="game_details_tag_ptw_message">Plată pentru câștig</string>
+    <string name="game_details_tag_pass_message">Season pass</string>
+    <string name="game_details_tag_loot_message">Premii pe noroc</string>
+    <string name="game_details_tag_ptw_message">Plătește pentru a câștiga</string>
     <string name="game_details_tag_malicious_message">Practici malițioase</string>
     <string name="game_details_tag_tos_message">Termeni suspicioși</string>
     <string name="game_details_tag_fake_message">Angajament fals</string>
@@ -85,6 +86,9 @@
     <string name="reviews_write_hint">Scrie o recenzie</string>
     <string name="reviews_info_no_account">Îți trebuie un cont pentru a lăsa o recenzie.</string>
     <string name="reviews_info_review_exists">Ai adăugat deja o recenzie pentru acest joc.</string>
+
+    <!-- Tags Info Screen -->
+    <string name="tags_info_title">De reținut</string>
 
     <!-- Settings Screen -->
     <string name="settings_title">Setări</string>

@@ -286,10 +286,14 @@ private fun GameDetailsView(
 
                         TagCard(
                             modifier = modifier,
-                            content = if (tagIndex == 0) stringResource(
-                                id = R.string.game_details_tag_price_symbol,
-                                gameDetails.tags[tagIndex]
-                            ) else gameDetails.tags[tagIndex]
+                            content = if (tagIndex == 0) {
+                                if (gameDetails.tags[tagIndex] != "0.0")
+                                stringResource(
+                                    id = R.string.game_details_tag_price_symbol,
+                                    gameDetails.tags[tagIndex]
+                                )
+                                else stringResource(id = R.string.game_details_tag_price_free)
+                            } else gameDetails.tags[tagIndex]
                         )
                     }
                 }

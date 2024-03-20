@@ -6,7 +6,7 @@
     <string name="error_title">Error</string>
     <string name="warning_title">Warning!</string>
     <string name="question_title">Are you sure?</string>
-    <string name="action_positive_title">Ok</string>
+    <string name="action_positive_title">OK</string>
     <string name="action_negative_title">Cancel</string>
 
     <!-- Account Screen -->
@@ -66,8 +66,9 @@
     <string name="game_details_section_reviews_title">Reviews</string>
     <string name="game_details_section_keep_in_mind_title">Keep In Mind</string>
     <string name="game_details_tag_price_symbol">\$%1$s</string>
+    <string name="game_details_tag_price_free">Free</string>
     <string name="game_details_tag_sub_message">Subscription service</string>
-    <string name="game_details_tag_micro_message">Microtransactions</string>
+    <string name="game_details_tag_micro_message">Micro-transactions</string>
     <string name="game_details_tag_pass_message">Battle pass</string>
     <string name="game_details_tag_loot_message">Loot boxes</string>
     <string name="game_details_tag_ptw_message">Pay-to-win</string>
@@ -85,6 +86,9 @@
     <string name="reviews_write_hint">Write a review</string>
     <string name="reviews_info_no_account">You need an account to leave a review.</string>
     <string name="reviews_info_review_exists">You\'ve already added a review for this game.</string>
+
+    <!-- Tags Info Screen -->
+    <string name="tags_info_title">Keep In Mind</string>
 
     <!-- Settings Screen -->
     <string name="settings_title">Settings</string>
