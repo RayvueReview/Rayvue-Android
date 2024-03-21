@@ -1,5 +1,6 @@
 package com.bigbratan.rayvue.navigation
 
+import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -15,10 +16,10 @@ fun Navigation() {
     val viewModel: NavigationViewModel = hiltViewModel()
     val startDestination = viewModel.startDestination.collectAsState()
 
-    startDestination.value?.let {
+    startDestination.value?.let { foundDestination ->
         NavHost(
             navController = navController,
-            startDestination = it,
+            startDestination = foundDestination,
         ) {
             navigation(
                 route = Screen.Auth.route,
