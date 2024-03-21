@@ -13,7 +13,7 @@
     <string name="nav_games_title">Games</string>
     <string name="nav_awards_title">Awards</string>
     <string name="nav_add_title">Add</string>
-    <string name="nav_personal_title">Personal</string>
+    <string name="nav_journal_title">Journal</string>
     <string name="nav_settings_title">Settings</string>
 
     <!-- Account Screen -->

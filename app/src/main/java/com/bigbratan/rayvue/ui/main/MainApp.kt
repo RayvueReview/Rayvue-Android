@@ -4,12 +4,10 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.statusBarsPadding
-import androidx.compose.material.BottomNavigation
-import androidx.compose.material.BottomNavigationItem
 import androidx.compose.material3.Icon
 import androidx.compose.material.Scaffold
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.Book
 import androidx.compose.material.icons.filled.EmojiEvents
 import androidx.compose.material.icons.filled.Error
 import androidx.compose.material.icons.filled.Gamepad
@@ -26,9 +24,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.navigation.NavGraph.Companion.findStartDestination
-import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
@@ -41,7 +37,7 @@ import com.bigbratan.rayvue.ui.main.awards.AwardsScreen
 import com.bigbratan.rayvue.ui.main.games.GamesScreen
 import com.bigbratan.rayvue.ui.main.games.gameDetails.GameDetailsScreen
 import com.bigbratan.rayvue.ui.main.games.tagsInfo.TagsInfoScreen
-import com.bigbratan.rayvue.ui.main.personal.PersonalScreen
+import com.bigbratan.rayvue.ui.main.journal.JournalScreen
 import com.bigbratan.rayvue.ui.main.reviews.ReviewsScreen
 import com.bigbratan.rayvue.ui.main.settings.SettingsScreen
 import com.bigbratan.rayvue.ui.theme.noFontPadding
@@ -52,7 +48,7 @@ import java.nio.charset.StandardCharsets
 private val navItems = listOf(
     Screen.Main.GamesScreen,
     Screen.Main.AwardsScreen,
-    Screen.Main.PersonalScreen,
+    Screen.Main.JournalScreen,
 )
 
 @Composable
@@ -77,14 +73,14 @@ fun MainApp(
                     val navIcon = when (item.route) {
                         Screen.Main.GamesScreen.route -> Icons.Default.Gamepad
                         Screen.Main.AwardsScreen.route -> Icons.Default.EmojiEvents
-                        Screen.Main.PersonalScreen.route -> Icons.Default.Inbox
+                        Screen.Main.JournalScreen.route -> Icons.Default.Book
                         else -> Icons.Default.Error
                     }
 
                     val navLabel = when (item.route) {
                         Screen.Main.GamesScreen.route -> R.string.nav_games_title
                         Screen.Main.AwardsScreen.route -> R.string.nav_awards_title
-                        Screen.Main.PersonalScreen.route -> R.string.nav_personal_title
+                        Screen.Main.JournalScreen.route -> R.string.nav_journal_title
                         else -> R.string.error_title
                     }
 
@@ -229,8 +225,8 @@ fun MainApp(
                 AwardsScreen()
             }
 
-            composable(route = Screen.Main.PersonalScreen.route) {
-                PersonalScreen()
+            composable(route = Screen.Main.JournalScreen.route) {
+                JournalScreen()
             }
         }
     }
@@ -348,7 +344,7 @@ fun NavGraphBuilder.mainApp(
         AwardsScreen()
     }
 
-    composable(route = Screen.Main.PersonalScreen.route) {
-        PersonalScreen()
+    composable(route = Screen.Main.JournalScreen.route) {
+        JournalScreen()
     }
 }*/

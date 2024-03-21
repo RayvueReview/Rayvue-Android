@@ -1,33 +1,13 @@
 package com.bigbratan.rayvue.navigation
 
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.statusBarsPadding
-import androidx.compose.material.BottomNavigationItem
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Gamepad
-import androidx.compose.material3.Icon
-import androidx.compose.material3.NavigationBar
-import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
-import androidx.compose.ui.Modifier
-import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.navigation.NavGraph.Companion.findStartDestination
-import androidx.navigation.compose.NavHost
-import androidx.navigation.compose.currentBackStackEntryAsState
-import androidx.navigation.compose.navigation
 import androidx.navigation.compose.rememberNavController
-import com.bigbratan.rayvue.services.UserService
-import com.bigbratan.rayvue.ui.auth.authApp
 import com.bigbratan.rayvue.ui.main.MainApp
 
 private val navItems = listOf(
     Screen.Main.GamesScreen,
     Screen.Main.AwardsScreen,
-    Screen.Main.PersonalScreen,
+    Screen.Main.JournalScreen,
 )
 
 @Composable
