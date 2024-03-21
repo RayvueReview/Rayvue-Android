@@ -33,10 +33,10 @@ private val navItems = listOf(
 @Composable
 fun Navigation() {
     val navController = rememberNavController()
-    val viewModel: NavigationViewModel = hiltViewModel()
+    /*val viewModel: NavigationViewModel = hiltViewModel()
     val startDestination = viewModel.startDestination.collectAsState()
 
-    /*val navBackStackEntry by navController.currentBackStackEntryAsState()
+    val navBackStackEntry by navController.currentBackStackEntryAsState()
     val currentDestination = navBackStackEntry?.destination?.route
 
     startDestination.value?.let { foundDestination ->

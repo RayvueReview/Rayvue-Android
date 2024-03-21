@@ -9,6 +9,13 @@
     <string name="action_positive_title">OK</string>
     <string name="action_negative_title">Cancel</string>
 
+    <!-- Main -->
+    <string name="nav_games_title">Games</string>
+    <string name="nav_awards_title">Awards</string>
+    <string name="nav_add_title">Add</string>
+    <string name="nav_personal_title">Personal</string>
+    <string name="nav_settings_title">Settings</string>
+
     <!-- Account Screen -->
     <string name="account_prompt_message">Create a free account to save your reviews in the cloud.</string>
     <string name="account_button_login_title">Log in</string>
