@@ -1,4 +1,4 @@
-package com.bigbratan.rayvue.ui.settings
+package com.bigbratan.rayvue.ui.main.settings
 
 import android.content.pm.PackageManager
 import androidx.compose.foundation.clickable

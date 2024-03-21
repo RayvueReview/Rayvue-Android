@@ -1,4 +1,4 @@
-package com.bigbratan.rayvue.ui
+package com.bigbratan.rayvue.ui.main
 
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
@@ -6,11 +6,11 @@ import androidx.navigation.NavType
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
 import com.bigbratan.rayvue.navigation.Screen
-import com.bigbratan.rayvue.ui.games.GamesScreen
-import com.bigbratan.rayvue.ui.games.gameDetails.GameDetailsScreen
-import com.bigbratan.rayvue.ui.games.tagsInfo.TagsInfoScreen
-import com.bigbratan.rayvue.ui.reviews.ReviewsScreen
-import com.bigbratan.rayvue.ui.settings.SettingsScreen
+import com.bigbratan.rayvue.ui.main.games.GamesScreen
+import com.bigbratan.rayvue.ui.main.games.gameDetails.GameDetailsScreen
+import com.bigbratan.rayvue.ui.main.games.tagsInfo.TagsInfoScreen
+import com.bigbratan.rayvue.ui.main.reviews.ReviewsScreen
+import com.bigbratan.rayvue.ui.main.settings.SettingsScreen
 import java.net.URLDecoder
 import java.nio.charset.StandardCharsets
 

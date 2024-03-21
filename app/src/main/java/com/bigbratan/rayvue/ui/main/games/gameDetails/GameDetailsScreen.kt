@@ -1,4 +1,4 @@
-package com.bigbratan.rayvue.ui.games.gameDetails
+package com.bigbratan.rayvue.ui.main.games.gameDetails
 
 import android.app.Activity
 import androidx.compose.foundation.clickable
@@ -60,8 +60,8 @@ import androidx.core.view.WindowCompat
 import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.AsyncImage
 import com.bigbratan.rayvue.R
-import com.bigbratan.rayvue.ui.games.GRID_SIZE
-import com.bigbratan.rayvue.ui.reviews.ReviewItemViewModel
+import com.bigbratan.rayvue.ui.main.games.GRID_SIZE
+import com.bigbratan.rayvue.ui.main.reviews.ReviewItemViewModel
 import com.bigbratan.rayvue.ui.theme.noFontPadding
 import com.bigbratan.rayvue.ui.theme.plusJakartaSans
 import com.bigbratan.rayvue.ui.views.ErrorMessage

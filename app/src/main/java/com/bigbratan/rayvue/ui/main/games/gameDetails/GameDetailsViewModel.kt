@@ -1,4 +1,4 @@
-package com.bigbratan.rayvue.ui.games.gameDetails
+package com.bigbratan.rayvue.ui.main.games.gameDetails
 
 import android.content.Context
 import androidx.lifecycle.ViewModel
@@ -8,7 +8,7 @@ import com.bigbratan.rayvue.models.GameDetails
 import com.bigbratan.rayvue.services.GamesService
 import com.bigbratan.rayvue.services.ReviewsService
 import com.bigbratan.rayvue.services.UserService
-import com.bigbratan.rayvue.ui.reviews.ReviewItemViewModel
+import com.bigbratan.rayvue.ui.main.reviews.ReviewItemViewModel
 import com.bigbratan.rayvue.ui.utils.encodeField
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext

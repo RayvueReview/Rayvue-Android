@@ -1,4 +1,4 @@
-package com.bigbratan.rayvue.ui.games
+package com.bigbratan.rayvue.ui.main.games
 
 import android.annotation.SuppressLint
 import androidx.compose.foundation.clickable

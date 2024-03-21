@@ -7,7 +7,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.navigation
 import androidx.navigation.compose.rememberNavController
 import com.bigbratan.rayvue.ui.auth.authApp
-import com.bigbratan.rayvue.ui.mainApp
+import com.bigbratan.rayvue.ui.main.mainApp
 
 @Composable
 fun Navigation() {

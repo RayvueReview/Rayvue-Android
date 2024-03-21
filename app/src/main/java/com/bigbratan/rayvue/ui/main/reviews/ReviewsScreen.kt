@@ -1,4 +1,4 @@
-package com.bigbratan.rayvue.ui.reviews
+package com.bigbratan.rayvue.ui.main.reviews
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement

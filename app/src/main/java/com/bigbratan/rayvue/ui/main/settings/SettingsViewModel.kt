@@ -1,4 +1,4 @@
-package com.bigbratan.rayvue.ui.settings
+package com.bigbratan.rayvue.ui.main.settings
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope

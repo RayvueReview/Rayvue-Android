@@ -1,4 +1,4 @@
-package com.bigbratan.rayvue.ui.reviews
+package com.bigbratan.rayvue.ui.main.reviews
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope

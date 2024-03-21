@@ -1,4 +1,4 @@
-package com.bigbratan.rayvue.ui.games.tagsInfo
+package com.bigbratan.rayvue.ui.main.games.tagsInfo
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
