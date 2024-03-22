@@ -14,22 +14,6 @@ class NavigationViewModel @Inject constructor(
 ) : ViewModel() {
     val canUserAccessContent: MutableStateFlow<Boolean> = MutableStateFlow(false)
 
-    /*val startDestination: MutableStateFlow<String?> = MutableStateFlow(null)
-
-    init {
-        if (userService.isUserLoggedIn) {
-            viewModelScope.launch {
-                userService.user.collect { user ->
-                    if (user != null) {
-                        startDestination.value = Screen.Main.route
-                    }
-                }
-            }
-        } else {
-            startDestination.value = Screen.Auth.route
-        }
-    }*/
-
     init {
         if (userService.isUserLoggedIn) {
             viewModelScope.launch {
@@ -42,9 +26,5 @@ class NavigationViewModel @Inject constructor(
         } else {
             canUserAccessContent.value = false
         }
-    }
-
-    fun setUserCanAccessContent(canUserAccessContentValue: Boolean) {
-        canUserAccessContent.value = canUserAccessContentValue
     }
 }
