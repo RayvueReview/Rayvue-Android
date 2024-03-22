@@ -1,20 +1,24 @@
 package com.bigbratan.rayvue.navigation
 
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.compose.rememberNavController
+import com.bigbratan.rayvue.ui.auth.AuthApp
 import com.bigbratan.rayvue.ui.main.MainApp
 
-private val navItems = listOf(
+/*private val navItems = listOf(
     Screen.Main.GamesScreen,
     Screen.Main.AwardsScreen,
     Screen.Main.JournalScreen,
-)
+)*/
 
 @Composable
 fun Navigation() {
     val navController = rememberNavController()
-    /*val viewModel: NavigationViewModel = hiltViewModel()
-    val startDestination = viewModel.startDestination.collectAsState()
+    val viewModel: NavigationViewModel = hiltViewModel()
+    val canUserAccessContent = viewModel.canUserAccessContent.collectAsState()
+    /*val startDestination = viewModel.startDestination.collectAsState()
 
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val currentDestination = navBackStackEntry?.destination?.route
@@ -76,5 +80,8 @@ fun Navigation() {
         )
     }*/
 
-    MainApp(navController = navController)
+    if (canUserAccessContent.value)
+        MainApp(navController = navController)
+    else
+        AuthApp(navController = navController)
 }

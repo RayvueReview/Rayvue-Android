@@ -12,7 +12,9 @@ import javax.inject.Inject
 class NavigationViewModel @Inject constructor(
     userService: UserService,
 ) : ViewModel() {
-    val startDestination: MutableStateFlow<String?> = MutableStateFlow(null)
+    val canUserAccessContent: MutableStateFlow<Boolean> = MutableStateFlow(false)
+
+    /*val startDestination: MutableStateFlow<String?> = MutableStateFlow(null)
 
     init {
         if (userService.isUserLoggedIn) {
@@ -26,5 +28,23 @@ class NavigationViewModel @Inject constructor(
         } else {
             startDestination.value = Screen.Auth.route
         }
+    }*/
+
+    init {
+        if (userService.isUserLoggedIn) {
+            viewModelScope.launch {
+                userService.user.collect { user ->
+                    if (user != null) {
+                        canUserAccessContent.value = true
+                    }
+                }
+            }
+        } else {
+            canUserAccessContent.value = false
+        }
+    }
+
+    fun setUserCanAccessContent(canUserAccessContentValue: Boolean) {
+        canUserAccessContent.value = canUserAccessContentValue
     }
 }

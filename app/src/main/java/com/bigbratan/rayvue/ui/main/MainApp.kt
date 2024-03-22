@@ -4,17 +4,17 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.statusBarsPadding
-import androidx.compose.material3.Icon
-import androidx.compose.material3.Scaffold
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Book
 import androidx.compose.material.icons.filled.EmojiEvents
 import androidx.compose.material.icons.filled.Error
 import androidx.compose.material.icons.filled.Gamepad
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarDefaults
 import androidx.compose.material3.NavigationBarItem
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -23,6 +23,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
 import androidx.navigation.NavType
@@ -31,6 +32,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.navArgument
 import com.bigbratan.rayvue.R
+import com.bigbratan.rayvue.navigation.NavigationViewModel
 import com.bigbratan.rayvue.navigation.Screen
 import com.bigbratan.rayvue.ui.main.awards.AwardsScreen
 import com.bigbratan.rayvue.ui.main.games.GamesScreen
@@ -53,6 +55,7 @@ private val navItems = listOf(
 @Composable
 fun MainApp(
     navController: NavHostController,
+    viewModel: NavigationViewModel = hiltViewModel()
 ) {
     Scaffold(
         modifier = Modifier
@@ -136,14 +139,16 @@ fun MainApp(
             composable(route = Screen.Main.SettingsScreen.route) {
                 SettingsScreen(
                     onLoginClick = {
-                        navController.navigate(
+                        viewModel.setUserCanAccessContent(false)
+                        /*navController.navigate(
                             route = Screen.Auth.LoginScreen.route
-                        )
+                        )*/
                     },
                     onSignupClick = {
-                        navController.navigate(
+                        viewModel.setUserCanAccessContent(false)
+                        /*navController.navigate(
                             route = Screen.Auth.SignupScreen.route
-                        )
+                        )*/
                     },
                     onBackClick = {
                         navController.popBackStack()
