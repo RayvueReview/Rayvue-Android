@@ -151,9 +151,7 @@ private fun GameDetailsView(
         bottomSheetState = rememberBottomSheetState(initialValue = BottomSheetValue.Collapsed)
     )
 
-    Box(
-        modifier = Modifier.fillMaxSize(),
-    ) {
+    Box(modifier = Modifier.fillMaxSize()) {
         BottomSheetScaffold(
             scaffoldState = sheetScaffoldState,
             sheetShape = RoundedCornerShape(24.dp, 24.dp, 0.dp, 0.dp),
@@ -291,10 +289,10 @@ private fun GameDetailsView(
                             modifier = modifier,
                             content = if (tagIndex == 0) {
                                 if (gameDetails.tags[tagIndex] != "0.0")
-                                stringResource(
-                                    id = R.string.game_details_tag_price_symbol,
-                                    gameDetails.tags[tagIndex]
-                                )
+                                    stringResource(
+                                        id = R.string.game_details_tag_price_symbol,
+                                        gameDetails.tags[tagIndex]
+                                    )
                                 else stringResource(id = R.string.game_details_tag_price_free)
                             } else gameDetails.tags[tagIndex]
                         )

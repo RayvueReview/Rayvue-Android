@@ -13,8 +13,9 @@ fun Navigation() {
     val viewModel: NavigationViewModel = hiltViewModel()
     val canUserAccessContent = viewModel.canUserAccessContent.collectAsState()
 
-    if (canUserAccessContent.value)
+    MainApp(navController = navController)
+    /*if (canUserAccessContent.value)
         MainApp(navController = navController)
     else
-        AuthApp(navController = navController)
+        AuthApp(navController = navController)*/
 }

@@ -1,36 +1,28 @@
 package com.bigbratan.rayvue.ui.auth
 
+import android.annotation.SuppressLint
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.navigationBarsPadding
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import com.bigbratan.rayvue.navigation.NavigationViewModel
 import com.bigbratan.rayvue.navigation.Screen
 import com.bigbratan.rayvue.ui.auth.inputInvite.InputInviteScreen
 import com.bigbratan.rayvue.ui.auth.inputName.InputNameScreen
 import com.bigbratan.rayvue.ui.auth.login.LoginScreen
 import com.bigbratan.rayvue.ui.auth.signup.SignupScreen
 
+@SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
 fun AuthApp(
     navController: NavHostController,
-    viewModel: NavigationViewModel = hiltViewModel()
 ) {
     Scaffold(
-        modifier = Modifier
-            .statusBarsPadding()
-            .navigationBarsPadding()
-            .fillMaxSize(),
-        content = { paddingValues ->
+        modifier = Modifier.fillMaxSize(),
+        content = {
             NavHost(
-                modifier = Modifier.padding(paddingValues),
                 navController = navController,
                 startDestination = Screen.Auth.AccountScreen.route,
             ) {

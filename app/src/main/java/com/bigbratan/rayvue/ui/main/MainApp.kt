@@ -1,9 +1,7 @@
 package com.bigbratan.rayvue.ui.main
 
+import android.annotation.SuppressLint
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.navigationBarsPadding
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Book
 import androidx.compose.material.icons.filled.EmojiEvents
@@ -12,7 +10,6 @@ import androidx.compose.material.icons.filled.Gamepad
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.NavigationBar
-import androidx.compose.material3.NavigationBarDefaults
 import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -23,7 +20,6 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
 import androidx.navigation.NavType
@@ -32,7 +28,6 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.navArgument
 import com.bigbratan.rayvue.R
-import com.bigbratan.rayvue.navigation.NavigationViewModel
 import com.bigbratan.rayvue.navigation.Screen
 import com.bigbratan.rayvue.ui.main.awards.AwardsScreen
 import com.bigbratan.rayvue.ui.main.games.GamesScreen
@@ -52,21 +47,16 @@ private val navItems = listOf(
     Screen.Main.JournalScreen,
 )
 
+@SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
 fun MainApp(
     navController: NavHostController,
-    viewModel: NavigationViewModel = hiltViewModel()
 ) {
     Scaffold(
-        modifier = Modifier
-            .statusBarsPadding()
-            .navigationBarsPadding()
-            .fillMaxSize(),
+        modifier = Modifier.fillMaxSize(),
         bottomBar = {
             NavigationBar(
-                containerColor = NavigationBarDefaults.containerColor,
                 tonalElevation = 0.dp,
-                windowInsets = NavigationBarDefaults.windowInsets,
             ) {
                 val navBackStackEntry by navController.currentBackStackEntryAsState()
                 val currentRoute = navBackStackEntry?.destination?.route
@@ -113,9 +103,8 @@ fun MainApp(
                 }
             }
         }
-    ) { paddingValues ->
+    ) {
         NavHost(
-            modifier = Modifier.padding(paddingValues),
             navController = navController,
             startDestination = Screen.Main.GamesScreen.route,
         ) {
