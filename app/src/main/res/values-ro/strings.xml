@@ -9,6 +9,13 @@
     <string name="action_positive_title">Ok</string>
     <string name="action_negative_title">Anulează</string>
 
+    <!-- Main -->
+    <string name="nav_games_title">Jocuri</string>
+    <string name="nav_awards_title">Premii</string>
+    <string name="nav_add_title">Adaugă</string>
+    <string name="nav_journal_title">Jurnal</string>
+    <string name="nav_settings_title">Setări</string>
+
     <!-- Account Screen -->
     <string name="account_prompt_message">Creează un cont gratis pentru a salva recenziile tale în cloud.</string>
     <string name="account_button_login_title">Intră în cont</string>

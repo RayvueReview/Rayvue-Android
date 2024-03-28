@@ -9,6 +9,13 @@
     <string name="action_positive_title">OK</string>
     <string name="action_negative_title">Cancel</string>
 
+    <!-- Main -->
+    <string name="nav_games_title">Games</string>
+    <string name="nav_awards_title">Awards</string>
+    <string name="nav_add_title">Add</string>
+    <string name="nav_journal_title">Journal</string>
+    <string name="nav_settings_title">Settings</string>
+
     <!-- Account Screen -->
     <string name="account_prompt_message">Create a free account to save your reviews in the cloud.</string>
     <string name="account_button_login_title">Log in</string>
@@ -90,27 +97,27 @@
     <!-- Tags Info Screen -->
     <string name="tags_info_title">Keep In Mind</string>
     <string name="tags_info_sub_title">What is a subscription service?</string>
-    <string name="tags_info_sub_meaning">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis molestie tincidunt ligula, eu posuere ligula feugiat at. Etiam arcu lorem, sodales at volutpat vel, iaculis at lectus. Sed a metus nisl. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. In ut blandit urna.</string>
+    <string name="tags_info_sub_meaning">A subscription service is when game companies ask for a certain sum of money in exchange for your access to their game every week/month/year.</string>
     <string name="tags_info_micro_title">What are micro-transactions?</string>
-    <string name="tags_info_micro_meaning">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis molestie tincidunt ligula, eu posuere ligula feugiat at. Etiam arcu lorem, sodales at volutpat vel, iaculis at lectus. Sed a metus nisl. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. In ut blandit urna.</string>
+    <string name="tags_info_micro_meaning">Micro-transactions are in-game items that the user can purchase using real money. The problem with micro-transactions is that the game difficulty is created in such a way that the player can\'t progress in a reasonable amount of time without paying for said micro-transactions. Another issue is that those in-game items are created in such a way that, if you want to keep winning, you will have to keep buying them, ending up spending potentially thousands of real world currency.</string>
     <string name="tags_info_pass_title">What is a battle pass?</string>
-    <string name="tags_info_pass_meaning">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis molestie tincidunt ligula, eu posuere ligula feugiat at. Etiam arcu lorem, sodales at volutpat vel, iaculis at lectus. Sed a metus nisl. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. In ut blandit urna.</string>
+    <string name="tags_info_pass_meaning">A battle pass is a subscription service for micro-transactions. It\'s usually divided into a basic battle pass and a premium battle pass, the premium version offering better rewards. All battle passes are designed in such a way that the player has to keep playing the game in order to get the better and better rewards, making them addicted in the process.</string>
     <string name="tags_info_loot_title">What are loot boxes?</string>
-    <string name="tags_info_loot_meaning">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis molestie tincidunt ligula, eu posuere ligula feugiat at. Etiam arcu lorem, sodales at volutpat vel, iaculis at lectus. Sed a metus nisl. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. In ut blandit urna.</string>
+    <string name="tags_info_loot_meaning">Loot boxes are micro-transactions with a gambling twist. If you thought spending a lot of money on some in-game items is bad, wait until you have to spend this much money and potentially get nothing in return! Yay!</string>
     <string name="tags_info_p2w_title">What is pay-to-win?</string>
-    <string name="tags_info_p2w_meaning">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis molestie tincidunt ligula, eu posuere ligula feugiat at. Etiam arcu lorem, sodales at volutpat vel, iaculis at lectus. Sed a metus nisl. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. In ut blandit urna.</string>
+    <string name="tags_info_p2w_meaning">Pay-to-win is a derogatory name for a type of game that implements practices created to make you spend exorbitant amounts of money in order to have a chance at winning the game. Some of those practices were presented above.</string>
     <string name="tags_info_malicious_title">What are malicious practices?</string>
-    <string name="tags_info_malicious_meaning">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis molestie tincidunt ligula, eu posuere ligula feugiat at. Etiam arcu lorem, sodales at volutpat vel, iaculis at lectus. Sed a metus nisl. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. In ut blandit urna.</string>
+    <string name="tags_info_malicious_meaning">Malicious practices are hidden psychological tricks added in games in order to further make you spend more money. Such tricks may include: creating a lot of in-game currencies so that the user is confused when spending them, the main goal being the devaluation of real money.</string>
     <string name="tags_info_tos_title">What are concerning TOS?</string>
-    <string name="tags_info_tos_meaning">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis molestie tincidunt ligula, eu posuere ligula feugiat at. Etiam arcu lorem, sodales at volutpat vel, iaculis at lectus. Sed a metus nisl. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. In ut blandit urna.</string>
+    <string name="tags_info_tos_meaning">Concerning terms of service are created in such a way that legally allows the company that owns the game to screw you over, either by stealing all your data, refusing refunds or even monitoring you device.</string>
     <string name="tags_info_fake_title">What is fake engagement?</string>
-    <string name="tags_info_fake_meaning">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis molestie tincidunt ligula, eu posuere ligula feugiat at. Etiam arcu lorem, sodales at volutpat vel, iaculis at lectus. Sed a metus nisl. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. In ut blandit urna.</string>
+    <string name="tags_info_fake_meaning">Fake engagement refers to buying botted positive reviews for a game.</string>
     <string name="tags_info_ad_title">What does \"not as advertised\" mean?</string>
-    <string name="tags_info_ad_meaning">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis molestie tincidunt ligula, eu posuere ligula feugiat at. Etiam arcu lorem, sodales at volutpat vel, iaculis at lectus. Sed a metus nisl. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. In ut blandit urna.</string>
+    <string name="tags_info_ad_meaning">When a game is marked with this tag, it means all the promotional art created in order to advertise that game completely misrepresents the final product. Example: a company releases a trailer that makes their game look like it\'s a third person shooter, but in reality, after you download the game expecting what you saw in the trailer, you find out it\'s just a base building game.</string>
     <string name="tags_info_dev_title">What are immoral developers?</string>
-    <string name="tags_info_dev_meaning">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis molestie tincidunt ligula, eu posuere ligula feugiat at. Etiam arcu lorem, sodales at volutpat vel, iaculis at lectus. Sed a metus nisl. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. In ut blandit urna.</string>
+    <string name="tags_info_dev_meaning">Immoral developers are those who lie to their community and even steal from them.</string>
     <string name="tags_info_scam_title">What is defined as a scam?</string>
-    <string name="tags_info_scam_meaning">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis molestie tincidunt ligula, eu posuere ligula feugiat at. Etiam arcu lorem, sodales at volutpat vel, iaculis at lectus. Sed a metus nisl. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. In ut blandit urna.</string>
+    <string name="tags_info_scam_meaning">A game marked as a scam is a game that was hyped up in order to make people buy or preorder it, but which turned out to be incomplete, buggy and overall a mess at launch, on top of which having developers who ran away with people\'s money, never to return.</string>
 
     <!-- Settings Screen -->
     <string name="settings_title">Settings</string>

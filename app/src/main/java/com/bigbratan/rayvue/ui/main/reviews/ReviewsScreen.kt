@@ -1,4 +1,4 @@
-package com.bigbratan.rayvue.ui.reviews
+package com.bigbratan.rayvue.ui.main.reviews
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -100,7 +100,11 @@ internal fun ReviewsScreen(
         )
     }
 
-    Box(Modifier.pullRefresh(pullRefreshState)) {
+    Box(
+        Modifier
+            .pullRefresh(pullRefreshState)
+            .fillMaxSize()
+    ) {
         when (obtainedReviewsState.value) {
             is ObtainedReviewsState.Loading -> {
                 LoadingAnimation(
@@ -209,7 +213,8 @@ private fun ReviewsView(
     Scaffold(
         modifier = Modifier
             .statusBarsPadding()
-            .navigationBarsPadding(),
+            .navigationBarsPadding()
+            .fillMaxSize(),
         topBar = {
             TopAppBar(
                 title = {

@@ -1,4 +1,4 @@
-package com.bigbratan.rayvue.ui.games
+package com.bigbratan.rayvue.ui.main.games
 
 import android.annotation.SuppressLint
 import androidx.compose.foundation.clickable
@@ -78,7 +78,11 @@ internal fun GamesScreen(
         viewModel.getData(canRefresh = false)
     }
 
-    Box(Modifier.pullRefresh(pullRefreshState)) {
+    Box(
+        modifier = Modifier
+            .pullRefresh(pullRefreshState)
+            .fillMaxSize()
+    ) {
         when (obtainedGamesState.value) {
             is ObtainedGamesState.Loading -> {
                 LoadingAnimation(
@@ -131,6 +135,7 @@ private fun GamesView(
         modifier = Modifier
             .statusBarsPadding()
             .navigationBarsPadding()
+            .fillMaxSize()
     ) {
         LazyVerticalGrid(
             columns = GridCells.Fixed(GRID_SIZE),
