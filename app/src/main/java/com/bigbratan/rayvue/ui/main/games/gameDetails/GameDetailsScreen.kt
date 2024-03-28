@@ -151,7 +151,9 @@ private fun GameDetailsView(
         bottomSheetState = rememberBottomSheetState(initialValue = BottomSheetValue.Collapsed)
     )
 
-    Box(modifier = Modifier.fillMaxSize()) {
+    Box(
+        modifier = Modifier.fillMaxSize()
+    ) {
         BottomSheetScaffold(
             scaffoldState = sheetScaffoldState,
             sheetShape = RoundedCornerShape(24.dp, 24.dp, 0.dp, 0.dp),

@@ -2,6 +2,9 @@ package com.bigbratan.rayvue.navigation
 
 import android.annotation.SuppressLint
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.navigationBarsPadding
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Book
 import androidx.compose.material.icons.filled.EmojiEvents
@@ -81,7 +84,10 @@ fun Navigation() {
 
                             NavigationBarItem(
                                 icon = {
-                                    Icon(navIcon, contentDescription = null)
+                                    Icon(
+                                        navIcon,
+                                        contentDescription = null
+                                    )
                                 },
                                 label = {
                                     Text(
@@ -107,8 +113,9 @@ fun Navigation() {
                     }
                 }
             }
-        ) {
+        ) { paddingValues ->
             NavHost(
+                // modifier = Modifier.padding(bottom = paddingValues.calculateBottomPadding()),
                 navController = navController,
                 startDestination = startDestinationValue,
             ) {

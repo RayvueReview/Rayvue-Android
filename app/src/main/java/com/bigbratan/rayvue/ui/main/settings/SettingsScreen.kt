@@ -72,7 +72,9 @@ internal fun SettingsScreen(
     var isLogOutPopupVisible by remember { mutableStateOf(false) }
     var isSignOutPopupVisible by remember { mutableStateOf(false) }
 
-    Box(modifier = Modifier.fillMaxSize()) {
+    Box(
+        modifier = Modifier.fillMaxSize()
+    ) {
         when (sentLogOutDataState.value) {
             SentLogOutDataState.Idle -> {
                 Unit
@@ -169,7 +171,8 @@ private fun SettingsView(
     Scaffold(
         modifier = Modifier
             .statusBarsPadding()
-            .navigationBarsPadding(),
+            .navigationBarsPadding()
+            .fillMaxSize(),
         topBar = {
             TopAppBar(
                 title = {
