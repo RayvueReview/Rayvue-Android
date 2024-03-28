@@ -20,7 +20,7 @@ sealed class Screen(val route: String) {
 
         object JournalScreen : Screen("journal_screen")
 
-        object SettingsScreen: Screen("settings_screen")
+        object SettingsScreen : Screen("settings_screen")
 
         object GameDetailsScreen : Screen("game_details_screen")
 
