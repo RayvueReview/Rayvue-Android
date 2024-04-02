@@ -66,33 +66,42 @@ fun Navigation() {
         Scaffold(
             modifier = Modifier.fillMaxSize(),
             topBar = {
-                Row(
-                    modifier = Modifier.fillMaxWidth()
-                ) {
-                    var isSearchActive by rememberSaveable { mutableStateOf(false) }
-                    val searchedGamesState = viewModel.searchedGamesState.collectAsState()
-
-                    EmbeddedSearchBar(
-                        isSearchActive = isSearchActive,
-                        onQueryChange = { query ->
-                            viewModel.searchGames(query)
-                            Log.d("search", "${searchedGamesState.value}")
-                        },
-                        onActiveChanged = { isSearchActive = it },
-                        onSearch = { query ->
-                            viewModel.searchGames(query)
-                        }
+                val shouldShowTopBar =
+                    navController.currentBackStackEntryAsState().value?.destination?.route in listOf(
+                        Screen.Main.GamesScreen.route,
+                        Screen.Main.AwardsScreen.route,
+                        Screen.Main.JournalScreen.route,
                     )
 
-                    TonalIconButton(
-                        modifier = Modifier.padding(horizontal = 24.dp),
-                        imageVector = Icons.Filled.Settings,
-                        onClick = {
-                            navController.navigate(
-                                route = Screen.Main.SettingsScreen.route
-                            )
-                        },
-                    )
+                if (shouldShowTopBar) {
+                    Row(
+                        modifier = Modifier.fillMaxWidth()
+                    ) {
+                        var isSearchActive by rememberSaveable { mutableStateOf(false) }
+                        val searchedGamesState = viewModel.searchedGamesState.collectAsState()
+
+                        EmbeddedSearchBar(
+                            isSearchActive = isSearchActive,
+                            onQueryChange = { query ->
+                                viewModel.searchGames(query)
+                                Log.d("search", "${searchedGamesState.value}")
+                            },
+                            onActiveChanged = { isSearchActive = it },
+                            onSearch = { query ->
+                                viewModel.searchGames(query)
+                            }
+                        )
+
+                        TonalIconButton(
+                            modifier = Modifier.padding(horizontal = 24.dp),
+                            imageVector = Icons.Filled.Settings,
+                            onClick = {
+                                navController.navigate(
+                                    route = Screen.Main.SettingsScreen.route
+                                )
+                            },
+                        )
+                    }
                 }
             },
             bottomBar = {
