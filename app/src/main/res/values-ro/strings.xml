@@ -72,7 +72,8 @@
     <string name="journal_empty_data_error_message">You haven\'t added any games to your journal.</string>
 
     <!-- Search Screen -->
-    <string name="search_placeholder">Caută</string>
+    <string name="search_database_placeholder">Caută jocuri</string>
+    <string name="search_local_placeholder">Caută jocurile tale</string>
 
     <!-- Game Details Screen -->
     <string name="game_details_get_data_error_message">A apărut o eroare. Detaliile pentru acest joc nu au putut fi încărcate.</string>

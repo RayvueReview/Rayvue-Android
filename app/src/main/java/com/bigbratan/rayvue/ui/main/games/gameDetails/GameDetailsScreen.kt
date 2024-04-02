@@ -60,7 +60,7 @@ import androidx.core.view.WindowCompat
 import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.AsyncImage
 import com.bigbratan.rayvue.R
-import com.bigbratan.rayvue.ui.main.games.GRID_SIZE
+import com.bigbratan.rayvue.ui.main.games.MAIN_GRID_SIZE
 import com.bigbratan.rayvue.ui.main.reviews.ReviewItemViewModel
 import com.bigbratan.rayvue.ui.theme.noFontPadding
 import com.bigbratan.rayvue.ui.theme.plusJakartaSans
@@ -168,9 +168,9 @@ private fun GameDetailsView(
                         .fillMaxHeight(0.85f)
                         .fillMaxWidth()
                         .padding(vertical = 24.dp),
-                    columns = GridCells.Fixed(GRID_SIZE)
+                    columns = GridCells.Fixed(MAIN_GRID_SIZE)
                 ) {
-                    item(span = { GridItemSpan(GRID_SIZE) }) {
+                    item(span = { GridItemSpan(MAIN_GRID_SIZE) }) {
                         Text(
                             modifier = Modifier
                                 .fillMaxWidth()
@@ -188,7 +188,7 @@ private fun GameDetailsView(
                         )
                     }
 
-                    item(span = { GridItemSpan(GRID_SIZE) }) {
+                    item(span = { GridItemSpan(MAIN_GRID_SIZE) }) {
                         Text(
                             modifier = Modifier
                                 .fillMaxWidth()
@@ -207,7 +207,7 @@ private fun GameDetailsView(
                         )
                     }
 
-                    item(span = { GridItemSpan(GRID_SIZE) }) {
+                    item(span = { GridItemSpan(MAIN_GRID_SIZE) }) {
                         SectionHeader(
                             modifier = Modifier.padding(top = 24.dp),
                             text = stringResource(id = R.string.game_details_section_reviews_title),
@@ -223,7 +223,7 @@ private fun GameDetailsView(
                     }
 
                     if (reviews.isEmpty()) {
-                        item(span = { GridItemSpan(GRID_SIZE) }) {
+                        item(span = { GridItemSpan(MAIN_GRID_SIZE) }) {
                             ReviewsMissingCard(
                                 modifier = Modifier.fillMaxWidth(),
                                 onReviewClick = {
@@ -236,7 +236,7 @@ private fun GameDetailsView(
                             )
                         }
                     } else {
-                        item(span = { GridItemSpan(GRID_SIZE) }) {
+                        item(span = { GridItemSpan(MAIN_GRID_SIZE) }) {
                             LazyRow(
                                 modifier = Modifier.fillMaxWidth(),
                                 horizontalArrangement = Arrangement.spacedBy(12.dp),
@@ -262,7 +262,7 @@ private fun GameDetailsView(
                         }
                     }
 
-                    item(span = { GridItemSpan(GRID_SIZE) }) {
+                    item(span = { GridItemSpan(MAIN_GRID_SIZE) }) {
                         SectionHeader(
                             text = stringResource(id = R.string.game_details_section_keep_in_mind_title),
                             imageVector = Icons.Outlined.Info,

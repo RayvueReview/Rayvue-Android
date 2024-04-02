@@ -72,7 +72,8 @@
     <string name="journal_empty_data_error_message">You haven\'t added any games to your journal.</string>
 
     <!-- Search Screen -->
-    <string name="search_placeholder">Search</string>
+    <string name="search_database_placeholder">Search all games</string>
+    <string name="search_local_placeholder">Search your games</string>
 
     <!-- Game Details Screen -->
     <string name="game_details_get_data_error_message">An error occurred. Details for this game could not be loaded.</string>

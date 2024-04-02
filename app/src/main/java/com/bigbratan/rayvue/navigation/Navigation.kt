@@ -1,13 +1,16 @@
 package com.bigbratan.rayvue.navigation
 
 import android.annotation.SuppressLint
-import android.util.Log
+import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.statusBarsPadding
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Book
 import androidx.compose.material.icons.filled.EmojiEvents
@@ -15,22 +18,20 @@ import androidx.compose.material.icons.filled.Error
 import androidx.compose.material.icons.filled.Gamepad
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material.icons.filled.Settings
-import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material.ripple.rememberRipple
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.SearchBar
-import androidx.compose.material3.SearchBarDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.runtime.setValue
+import androidx.compose.runtime.remember
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
@@ -58,42 +59,72 @@ private val navItems = listOf(
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
 fun Navigation() {
-    val navController = rememberNavController()
     val viewModel: NavigationViewModel = hiltViewModel()
+    val navController = rememberNavController()
     val startDestination = viewModel.startDestination.collectAsState()
+
+    val shouldShowBottomBar =
+        navController.currentBackStackEntryAsState().value?.destination?.route in listOf(
+            Screen.Main.GamesScreen.route,
+            Screen.Main.AwardsScreen.route,
+            Screen.Main.JournalScreen.route,
+        )
+    val shouldShowTopBar =
+        navController.currentBackStackEntryAsState().value?.destination?.route in listOf(
+            Screen.Main.GamesScreen.route,
+            Screen.Main.AwardsScreen.route,
+            Screen.Main.JournalScreen.route,
+        )
 
     startDestination.value?.let { startDestinationValue ->
         Scaffold(
             modifier = Modifier.fillMaxSize(),
             topBar = {
-                val shouldShowTopBar =
-                    navController.currentBackStackEntryAsState().value?.destination?.route in listOf(
-                        Screen.Main.GamesScreen.route,
-                        Screen.Main.AwardsScreen.route,
-                        Screen.Main.JournalScreen.route,
-                    )
-
                 if (shouldShowTopBar) {
                     Row(
-                        modifier = Modifier.fillMaxWidth()
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .statusBarsPadding()
+                            .padding(horizontal = 24.dp)
+                            .padding(top = 8.dp),
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.SpaceBetween
                     ) {
-                        var isSearchActive by rememberSaveable { mutableStateOf(false) }
-                        val searchedGamesState = viewModel.searchedGamesState.collectAsState()
-
-                        EmbeddedSearchBar(
+                        /*EmbeddedSearchBar(
+                            modifier = Modifier.fillMaxWidth(),
+                            searchedGamesState = searchedGamesState.value,
                             isSearchActive = isSearchActive,
                             onQueryChange = { query ->
                                 viewModel.searchGames(query)
-                                Log.d("search", "${searchedGamesState.value}")
                             },
                             onActiveChanged = { isSearchActive = it },
                             onSearch = { query ->
                                 viewModel.searchGames(query)
+                            },
+                            onGameClick = { gameId ->
+                                navController.navigate(
+                                    route = Screen.Main.GameDetailsScreen.routeWithArgs(
+                                        gameId
+                                    )
+                                )
+                            }
+                        )*/
+
+                        EmbeddedSearchBar(
+                            placeholder = if (navController.currentBackStackEntryAsState().value?.destination?.route == Screen.Main.JournalScreen.route)
+                                stringResource(id = R.string.search_local_placeholder)
+                            else
+                                stringResource(id = R.string.search_database_placeholder),
+                            modifier = Modifier.weight(1f),
+                            onClick = {
+                                navController.navigate(
+                                    route = Screen.Main.SettingsScreen.route
+                                )
                             }
                         )
 
                         TonalIconButton(
-                            modifier = Modifier.padding(horizontal = 24.dp),
+                            modifier = Modifier.padding(start = 24.dp),
                             imageVector = Icons.Filled.Settings,
                             onClick = {
                                 navController.navigate(
@@ -105,13 +136,6 @@ fun Navigation() {
                 }
             },
             bottomBar = {
-                val shouldShowBottomBar =
-                    navController.currentBackStackEntryAsState().value?.destination?.route in listOf(
-                        Screen.Main.GamesScreen.route,
-                        Screen.Main.AwardsScreen.route,
-                        Screen.Main.JournalScreen.route,
-                    )
-
                 if (shouldShowBottomBar) {
                     EmbeddedBottomBar(
                         navController = navController
@@ -119,8 +143,17 @@ fun Navigation() {
                 }
             }
         ) { paddingValues ->
+            val navModifier = if (shouldShowBottomBar) {
+                Modifier.padding(
+                    top = paddingValues.calculateTopPadding(),
+                    bottom = paddingValues.calculateBottomPadding(),
+                )
+            } else {
+                Modifier
+            }
+
             NavHost(
-                // modifier = Modifier.padding(bottom = paddingValues.calculateBottomPadding()),
+                modifier = navModifier,
                 navController = navController,
                 startDestination = startDestinationValue,
             ) {
@@ -203,13 +236,57 @@ private fun EmbeddedBottomBar(
 }
 
 @Composable
+private fun EmbeddedSearchBar(
+    modifier: Modifier,
+    placeholder: String,
+    onClick: () -> Unit,
+) {
+    Row(
+        modifier = modifier
+            .clip(RoundedCornerShape(64.dp))
+            .clickable(
+                interactionSource = remember { MutableInteractionSource() },
+                indication = rememberRipple(bounded = true),
+                onClick = onClick,
+            )
+            .fillMaxWidth()
+            .background(
+                color = MaterialTheme.colorScheme.surfaceVariant,
+                shape = RoundedCornerShape(64.dp)
+            )
+            .padding(
+                horizontal = 24.dp,
+                vertical = 12.dp,
+            ),
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        Icon(
+            imageVector = Icons.Filled.Search,
+            tint = MaterialTheme.colorScheme.onSurfaceVariant,
+            contentDescription = null,
+        )
+
+        Text(
+            modifier = Modifier.padding(start = 8.dp),
+            text = placeholder,
+            fontFamily = plusJakartaSans,
+            fontWeight = FontWeight(500),
+            color = MaterialTheme.colorScheme.onSurface,
+            style = TextStyle(platformStyle = noFontPadding)
+        )
+    }
+}
+
+/*@Composable
 @OptIn(ExperimentalMaterial3Api::class)
 private fun EmbeddedSearchBar(
-    modifier: Modifier = Modifier,
+    modifier: Modifier,
+    searchedGamesState: SearchedGamesState,
     isSearchActive: Boolean,
     onQueryChange: (String) -> Unit,
     onActiveChanged: (Boolean) -> Unit,
     onSearch: ((String) -> Unit)? = null,
+    onGameClick: (gameId: String) -> Unit,
 ) {
     var searchQuery by rememberSaveable { mutableStateOf("") }
 
@@ -218,8 +295,20 @@ private fun EmbeddedSearchBar(
         onQueryChange("")
         onActiveChanged(active)
     }
+
+    val searchBarModifier = if (isSearchActive) {
+        modifier
+    } else {
+        modifier
+            .padding(
+                start = 24.dp,
+                end = 64.dp,
+            )
+    }
+
     if (onSearch != null) {
         SearchBar(
+            modifier = searchBarModifier,
             query = searchQuery,
             onQueryChange = { query ->
                 searchQuery = query
@@ -228,8 +317,15 @@ private fun EmbeddedSearchBar(
             onSearch = onSearch,
             active = isSearchActive,
             onActiveChange = activeChanged,
-            modifier = modifier.fillMaxWidth(),
-            placeholder = { Text(text = stringResource(id = R.string.search_placeholder)) },
+            placeholder = {
+                Text(
+                    text = stringResource(id = R.string.search_database_placeholder),
+                    fontFamily = plusJakartaSans,
+                    fontWeight = FontWeight(500),
+                    color = MaterialTheme.colorScheme.onSurface,
+                    style = TextStyle(platformStyle = noFontPadding)
+                )
+            },
             leadingIcon = {
                 Icon(
                     imageVector = Icons.Filled.Search,
@@ -237,13 +333,58 @@ private fun EmbeddedSearchBar(
                     contentDescription = null,
                 )
             },
+            trailingIcon = {
+                if (searchQuery.isNotEmpty()) {
+                    IconButton(
+                        onClick = {
+                            searchQuery = ""
+                            onQueryChange("")
+                        }
+                    ) {
+                        Icon(
+                            imageVector = Icons.Filled.Close,
+                            contentDescription = null,
+                            tint = MaterialTheme.colorScheme.onSurfaceVariant
+                        )
+                    }
+                }
+            },
             colors = SearchBarDefaults.colors(
                 containerColor = MaterialTheme.colorScheme.surfaceVariant,
             ),
             tonalElevation = 0.dp,
             content = {
+                when (searchedGamesState) {
+                    is SearchedGamesState.Loading -> {}
 
+                    is SearchedGamesState.Error -> {
+                        ErrorMessage(
+                            message = stringResource(
+                                id = R.string.games_get_data_error_message
+                            ),
+                            isInHomeScreen = true,
+                            onBackClick = { }
+                        )
+                    }
+
+                    is SearchedGamesState.Success -> {
+                        val games = searchedGamesState.games
+
+                        LazyVerticalGrid(
+                            columns = GridCells.Fixed(SEARCH_GRID_SIZE)
+                        ) {
+                            items(games.size) { gameIndex ->
+                                val game = games[gameIndex]
+
+                                HorizontalGameCard(
+                                    game = game,
+                                    onGameClick = { onGameClick(game.id) },
+                                )
+                            }
+                        }
+                    }
+                }
             }
         )
     }
-}
+}*/

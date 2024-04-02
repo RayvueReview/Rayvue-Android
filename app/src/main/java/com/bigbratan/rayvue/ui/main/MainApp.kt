@@ -28,11 +28,6 @@ fun NavGraphBuilder.mainApp(
                     )
                 )
             },
-            onSettingsClick = {
-                navController.navigate(
-                    route = Screen.Main.SettingsScreen.route
-                )
-            }
         )
     }
 
