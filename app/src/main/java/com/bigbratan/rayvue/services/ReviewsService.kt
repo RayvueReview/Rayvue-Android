@@ -8,14 +8,14 @@ import javax.inject.Singleton
 
 @Singleton
 class ReviewsService @Inject constructor(
-    private val storageService: StorageService,
+    private val firebaseStorageService: FirebaseStorageService,
     private val userService: UserService,
 ) {
     suspend fun fetchReviews(
         gameId: String,
     ): List<Review> {
         val userId = userService.user.value?.id
-        val reviews = storageService.getDocuments<Review>(
+        val reviews = firebaseStorageService.getDocuments<Review>(
             collection = "reviews",
             documentFields = arrayOf(
                 "id",
@@ -44,7 +44,7 @@ class ReviewsService @Inject constructor(
         val userId = userService.user.value?.id
 
         if (userId != null) {
-            return storageService.getDocuments<Review>(
+            return firebaseStorageService.getDocuments<Review>(
                 collection = "reviews",
                 documentFields = arrayOf(
                     "id",
@@ -87,7 +87,7 @@ class ReviewsService @Inject constructor(
             }
 
             if (reviewData != null) {
-                storageService.addDocument(
+                firebaseStorageService.addDocument(
                     collection = "reviews",
                     documentId = reviewId,
                     data = reviewData,
@@ -103,7 +103,7 @@ class ReviewsService @Inject constructor(
         val userId = userService.user.value?.id
 
         if (userId != null) {
-            storageService.updateDocument(
+            firebaseStorageService.updateDocument(
                 collection = "reviews",
                 documentId = reviewId,
                 field = "content",
@@ -118,7 +118,7 @@ class ReviewsService @Inject constructor(
         val userId = userService.user.value?.id
 
         if (userId != null) {
-            storageService.deleteDocument(
+            firebaseStorageService.deleteDocument(
                 collection = "reviews",
                 documentId = reviewId,
             )
@@ -128,7 +128,7 @@ class ReviewsService @Inject constructor(
     suspend fun deleteReviews(
         userId: String
     ) {
-        storageService.deleteDocuments(
+        firebaseStorageService.deleteDocuments(
             collection = "reviews",
             internalId = "userId",
             matchingId = userId,

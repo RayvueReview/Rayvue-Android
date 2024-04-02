@@ -12,7 +12,7 @@ import javax.inject.Singleton
 class AuthService @Inject constructor(
     private val userService: UserService,
     private val accountService: AccountService,
-    private val storageService: StorageService,
+    private val firebaseStorageService: FirebaseStorageService,
     private val reviewsService: ReviewsService,
 ) {
     private val auth = Firebase.auth
@@ -42,7 +42,7 @@ class AuthService @Inject constructor(
             )
 
             userId?.let {
-                storageService.addDocument(
+                firebaseStorageService.addDocument(
                     collection = "users",
                     documentId = it,
                     data = userData,
@@ -72,11 +72,11 @@ class AuthService @Inject constructor(
 
     @SuppressLint("RestrictedApi")
     suspend fun deleteAccount() {
-        val user = storageService.getCurrentUser()
+        val user = firebaseStorageService.getCurrentUser()
         val userId = user?.uid
 
         userId?.let {
-            storageService.deleteDocument(
+            firebaseStorageService.deleteDocument(
                 collection = "users",
                 documentId = it,
             )
@@ -113,10 +113,10 @@ class AuthService @Inject constructor(
     suspend fun updateName(
         userName: String,
     ) {
-        val userId = storageService.getCurrentUser()?.uid
+        val userId = firebaseStorageService.getCurrentUser()?.uid
 
         userId?.let {
-            storageService.updateDocument(
+            firebaseStorageService.updateDocument(
                 collection = "users",
                 documentId = it,
                 field = "userName",

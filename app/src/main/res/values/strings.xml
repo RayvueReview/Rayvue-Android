@@ -12,9 +12,7 @@
     <!-- Main -->
     <string name="nav_games_title">Games</string>
     <string name="nav_awards_title">Awards</string>
-    <string name="nav_add_title">Add</string>
     <string name="nav_journal_title">Journal</string>
-    <string name="nav_settings_title">Settings</string>
 
     <!-- Account Screen -->
     <string name="account_prompt_message">Create a free account to save your reviews in the cloud.</string>
@@ -66,6 +64,15 @@
     <string name="games_section_recent_title">Recently Added</string>
     <string name="games_section_discover_title">Discover</string>
     <string name="games_section_all_title">All Games</string>
+
+    <!-- Awards Screen -->
+
+
+    <!-- Journal Screen -->
+    <string name="journal_empty_data_error_message">You haven\'t added any games to your journal.</string>
+
+    <!-- Search Screen -->
+    <string name="search_placeholder">Search</string>
 
     <!-- Game Details Screen -->
     <string name="game_details_get_data_error_message">An error occurred. Details for this game could not be loaded.</string>

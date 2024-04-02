@@ -19,9 +19,10 @@ class ReviewsViewModel @Inject constructor(
 ) : ViewModel() {
     val obtainedReviewsState = MutableStateFlow<ObtainedReviewsState>(ObtainedReviewsState.Loading)
     val sentReviewState = MutableStateFlow<SentReviewState>(SentReviewState.Idle)
+    val isRefreshing = MutableStateFlow(false)
+
     val isUserLoggedIn = MutableStateFlow(true)
     val hasUserReviewedGame = MutableStateFlow(false)
-    val isRefreshing = MutableStateFlow(false)
 
     init {
         viewModelScope.launch {

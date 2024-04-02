@@ -11,10 +11,9 @@ import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
-class StorageService @Inject constructor(
-) {
-    private val db = Firebase.firestore
+class FirebaseStorageService @Inject constructor() {
     private val auth = Firebase.auth
+    val db = Firebase.firestore
 
     fun getCurrentUser() = auth.currentUser
 
@@ -23,7 +22,6 @@ class StorageService @Inject constructor(
         documentFields: Array<String>,
         filters: Map<String, Any> = emptyMap()
     ): List<T> {
-        val db = Firebase.firestore
         var query: Query = db.collection(collection)
 
         for ((field, value) in filters) {
@@ -48,7 +46,6 @@ class StorageService @Inject constructor(
 
             list.add(obj)
         }
-
         return list
     }
 
@@ -113,4 +110,13 @@ class StorageService @Inject constructor(
             db.collection(collection).document(document.id).delete().await()
         }
     }
+
+    /*suspend inline fun <reified T : Any> searchDocuments(
+        collection: String,
+        documentFields: Array<String>,
+        filters: Map<String, Any> = emptyMap()
+    ): List<T> {
+        val list = mutableListOf<T>()
+        return list
+    }*/
 }

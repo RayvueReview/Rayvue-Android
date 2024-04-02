@@ -7,10 +7,10 @@ import javax.inject.Singleton
 
 @Singleton
 class GamesService @Inject constructor(
-    private val storageService: StorageService
+    private val firebaseStorageService: FirebaseStorageService
 ) {
     suspend fun fetchGames(): List<Game> {
-        return storageService.getDocuments(
+        return firebaseStorageService.getDocuments(
             collection = "games",
             documentFields = arrayOf(
                 "id",
@@ -23,7 +23,7 @@ class GamesService @Inject constructor(
     suspend fun fetchGameDetails(
         gameId: String,
     ): GameDetails {
-        return storageService.getDocuments<GameDetails>(
+        return firebaseStorageService.getDocuments<GameDetails>(
             collection = "games",
             documentFields = arrayOf(
                 "id",
@@ -36,5 +36,19 @@ class GamesService @Inject constructor(
             ),
             filters = mapOf("id" to gameId),
         ).first()
+    }
+
+    suspend fun searchGames(
+        query: String,
+    ): List<Game> {
+        return firebaseStorageService.getDocuments(
+            collection = "games",
+            documentFields = arrayOf(
+                "id",
+                "name",
+                "icon",
+            ),
+            filters = mapOf("name" to query),
+        )
     }
 }
