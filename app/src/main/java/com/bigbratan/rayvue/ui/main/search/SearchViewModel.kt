@@ -15,7 +15,7 @@ class SearchViewModel @Inject constructor(
     private val gamesService: GamesService,
 ) : ViewModel() {
     val searchedGamesState =
-        MutableStateFlow<SearchedGamesState>(SearchedGamesState.Loading)
+        MutableStateFlow<SearchedGamesState>(SearchedGamesState.Idle)
 
     fun searchGames(query: String) {
         viewModelScope.launch {
@@ -33,6 +33,8 @@ class SearchViewModel @Inject constructor(
 }
 
 sealed class SearchedGamesState {
+    object Idle : SearchedGamesState()
+
     object Loading : SearchedGamesState()
 
     data class Success(

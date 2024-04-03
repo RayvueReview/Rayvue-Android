@@ -24,9 +24,9 @@ import com.bigbratan.rayvue.ui.auth.AuthTextField
 import com.bigbratan.rayvue.ui.auth.AuthView
 import com.bigbratan.rayvue.ui.utils.isValidCode
 import com.bigbratan.rayvue.ui.views.LoadingAnimation
-import com.bigbratan.rayvue.ui.views.OutlinedButton
+import com.bigbratan.rayvue.ui.views.OutlinedTextButton
 import com.bigbratan.rayvue.ui.views.Popup
-import com.bigbratan.rayvue.ui.views.TransparentButton
+import com.bigbratan.rayvue.ui.views.TransparentTextButton
 
 @Composable
 internal fun InputInviteScreen(
@@ -116,7 +116,7 @@ internal fun InputInviteScreen(
                         isErrorVisible = typedCodeError
                     )
 
-                    OutlinedButton(
+                    OutlinedTextButton(
                         modifier = Modifier.padding(top = 32.dp),
                         label = stringResource(id = R.string.input_invite_button_enter_title),
                         onClick = {
@@ -126,7 +126,7 @@ internal fun InputInviteScreen(
                         isButtonEnabled = isTypedCodeValid,
                     )
 
-                    TransparentButton(
+                    TransparentTextButton(
                         modifier = Modifier.padding(vertical = 32.dp),
                         label = stringResource(id = R.string.input_invite_button_skip_title),
                         onClick = {

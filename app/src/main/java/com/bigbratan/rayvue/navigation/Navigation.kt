@@ -36,6 +36,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
@@ -81,73 +82,25 @@ fun Navigation() {
             modifier = Modifier.fillMaxSize(),
             topBar = {
                 if (shouldShowTopBar) {
-                    Row(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .statusBarsPadding()
-                            .padding(horizontal = 24.dp)
-                            .padding(top = 8.dp),
-                        verticalAlignment = Alignment.CenterVertically,
-                        horizontalArrangement = Arrangement.SpaceBetween
-                    ) {
-                        /*EmbeddedSearchBar(
-                            modifier = Modifier.fillMaxWidth(),
-                            searchedGamesState = searchedGamesState.value,
-                            isSearchActive = isSearchActive,
-                            onQueryChange = { query ->
-                                viewModel.searchGames(query)
-                            },
-                            onActiveChanged = { isSearchActive = it },
-                            onSearch = { query ->
-                                viewModel.searchGames(query)
-                            },
-                            onGameClick = { gameId ->
-                                navController.navigate(
-                                    route = Screen.Main.GameDetailsScreen.routeWithArgs(
-                                        gameId
-                                    )
-                                )
-                            }
-                        )*/
-
-                        EmbeddedSearchBar(
-                            placeholder = if (navController.currentBackStackEntryAsState().value?.destination?.route == Screen.Main.JournalScreen.route)
-                                stringResource(id = R.string.search_local_placeholder)
-                            else
-                                stringResource(id = R.string.search_database_placeholder),
-                            modifier = Modifier.weight(1f),
-                            onClick = {
-                                navController.navigate(
-                                    route = Screen.Main.SettingsScreen.route
-                                )
-                            }
-                        )
-
-                        TonalIconButton(
-                            modifier = Modifier.padding(start = 24.dp),
-                            imageVector = Icons.Filled.Settings,
-                            onClick = {
-                                navController.navigate(
-                                    route = Screen.Main.SettingsScreen.route
-                                )
-                            },
-                        )
-                    }
+                    EmbeddedSearchBar(
+                        navController = navController,
+                    )
                 }
             },
             bottomBar = {
                 if (shouldShowBottomBar) {
                     EmbeddedBottomBar(
-                        navController = navController
+                        navController = navController,
                     )
                 }
             }
         ) { paddingValues ->
             val navModifier = if (shouldShowBottomBar) {
-                Modifier.padding(
-                    top = paddingValues.calculateTopPadding(),
-                    bottom = paddingValues.calculateBottomPadding(),
-                )
+                Modifier
+                    .padding(
+                        top = paddingValues.calculateTopPadding(),
+                        bottom = paddingValues.calculateBottomPadding(),
+                    )
             } else {
                 Modifier
             }
@@ -237,6 +190,44 @@ private fun EmbeddedBottomBar(
 
 @Composable
 private fun EmbeddedSearchBar(
+    navController: NavHostController,
+) {
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .statusBarsPadding()
+            .padding(horizontal = 24.dp)
+            .padding(top = 8.dp),
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.SpaceBetween,
+    ) {
+        SearchBarButton(
+            placeholder = if (navController.currentBackStackEntryAsState().value?.destination?.route == Screen.Main.JournalScreen.route)
+                stringResource(id = R.string.search_local_placeholder)
+            else
+                stringResource(id = R.string.search_database_placeholder),
+            modifier = Modifier.weight(1f),
+            onClick = {
+                navController.navigate(
+                    route = Screen.Main.SearchScreen.route
+                )
+            }
+        )
+
+        TonalIconButton(
+            modifier = Modifier.padding(start = 24.dp),
+            imageVector = Icons.Filled.Settings,
+            onClick = {
+                navController.navigate(
+                    route = Screen.Main.SettingsScreen.route
+                )
+            },
+        )
+    }
+}
+
+@Composable
+private fun SearchBarButton(
     modifier: Modifier,
     placeholder: String,
     onClick: () -> Unit,
@@ -269,6 +260,7 @@ private fun EmbeddedSearchBar(
         Text(
             modifier = Modifier.padding(start = 8.dp),
             text = placeholder,
+            fontSize = 14.sp,
             fontFamily = plusJakartaSans,
             fontWeight = FontWeight(500),
             color = MaterialTheme.colorScheme.onSurface,
@@ -276,115 +268,3 @@ private fun EmbeddedSearchBar(
         )
     }
 }
-
-/*@Composable
-@OptIn(ExperimentalMaterial3Api::class)
-private fun EmbeddedSearchBar(
-    modifier: Modifier,
-    searchedGamesState: SearchedGamesState,
-    isSearchActive: Boolean,
-    onQueryChange: (String) -> Unit,
-    onActiveChanged: (Boolean) -> Unit,
-    onSearch: ((String) -> Unit)? = null,
-    onGameClick: (gameId: String) -> Unit,
-) {
-    var searchQuery by rememberSaveable { mutableStateOf("") }
-
-    val activeChanged: (Boolean) -> Unit = { active ->
-        searchQuery = ""
-        onQueryChange("")
-        onActiveChanged(active)
-    }
-
-    val searchBarModifier = if (isSearchActive) {
-        modifier
-    } else {
-        modifier
-            .padding(
-                start = 24.dp,
-                end = 64.dp,
-            )
-    }
-
-    if (onSearch != null) {
-        SearchBar(
-            modifier = searchBarModifier,
-            query = searchQuery,
-            onQueryChange = { query ->
-                searchQuery = query
-                onQueryChange(query)
-            },
-            onSearch = onSearch,
-            active = isSearchActive,
-            onActiveChange = activeChanged,
-            placeholder = {
-                Text(
-                    text = stringResource(id = R.string.search_database_placeholder),
-                    fontFamily = plusJakartaSans,
-                    fontWeight = FontWeight(500),
-                    color = MaterialTheme.colorScheme.onSurface,
-                    style = TextStyle(platformStyle = noFontPadding)
-                )
-            },
-            leadingIcon = {
-                Icon(
-                    imageVector = Icons.Filled.Search,
-                    tint = MaterialTheme.colorScheme.onSurfaceVariant,
-                    contentDescription = null,
-                )
-            },
-            trailingIcon = {
-                if (searchQuery.isNotEmpty()) {
-                    IconButton(
-                        onClick = {
-                            searchQuery = ""
-                            onQueryChange("")
-                        }
-                    ) {
-                        Icon(
-                            imageVector = Icons.Filled.Close,
-                            contentDescription = null,
-                            tint = MaterialTheme.colorScheme.onSurfaceVariant
-                        )
-                    }
-                }
-            },
-            colors = SearchBarDefaults.colors(
-                containerColor = MaterialTheme.colorScheme.surfaceVariant,
-            ),
-            tonalElevation = 0.dp,
-            content = {
-                when (searchedGamesState) {
-                    is SearchedGamesState.Loading -> {}
-
-                    is SearchedGamesState.Error -> {
-                        ErrorMessage(
-                            message = stringResource(
-                                id = R.string.games_get_data_error_message
-                            ),
-                            isInHomeScreen = true,
-                            onBackClick = { }
-                        )
-                    }
-
-                    is SearchedGamesState.Success -> {
-                        val games = searchedGamesState.games
-
-                        LazyVerticalGrid(
-                            columns = GridCells.Fixed(SEARCH_GRID_SIZE)
-                        ) {
-                            items(games.size) { gameIndex ->
-                                val game = games[gameIndex]
-
-                                HorizontalGameCard(
-                                    game = game,
-                                    onGameClick = { onGameClick(game.id) },
-                                )
-                            }
-                        }
-                    }
-                }
-            }
-        )
-    }
-}*/

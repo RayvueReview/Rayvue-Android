@@ -72,6 +72,7 @@
     <string name="journal_empty_data_error_message">You haven\'t added any games to your journal.</string>
 
     <!-- Search Screen -->
+    <string name="search_general_placeholder">Enter your search</string>
     <string name="search_database_placeholder">Search all games</string>
     <string name="search_local_placeholder">Search your games</string>
 

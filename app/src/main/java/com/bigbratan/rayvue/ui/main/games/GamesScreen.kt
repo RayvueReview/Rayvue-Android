@@ -5,13 +5,10 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.grid.GridCells
@@ -47,7 +44,7 @@ import com.bigbratan.rayvue.ui.theme.plusJakartaSans
 import com.bigbratan.rayvue.ui.views.ErrorMessage
 import com.bigbratan.rayvue.ui.views.FadingScrimBackground
 import com.bigbratan.rayvue.ui.views.LoadingAnimation
-import com.bigbratan.rayvue.ui.views.SectionHeader
+import com.bigbratan.rayvue.ui.views.ContentSectionHeader
 
 const val MAIN_GRID_SIZE = 2
 
@@ -130,7 +127,7 @@ private fun GamesView(
             columns = GridCells.Fixed(MAIN_GRID_SIZE),
         ) {
             item(span = { GridItemSpan(MAIN_GRID_SIZE) }) {
-                SectionHeader(
+                ContentSectionHeader(
                     text = stringResource(id = R.string.games_section_recent_title),
                     onClick = null,
                 )
@@ -154,7 +151,7 @@ private fun GamesView(
             }
 
             item(span = { GridItemSpan(MAIN_GRID_SIZE) }) {
-                SectionHeader(
+                ContentSectionHeader(
                     modifier = Modifier.padding(top = 12.dp),
                     text = stringResource(id = R.string.games_section_discover_title),
                     onClick = null,
@@ -179,7 +176,7 @@ private fun GamesView(
             }
 
             item(span = { GridItemSpan(MAIN_GRID_SIZE) }) {
-                SectionHeader(
+                ContentSectionHeader(
                     modifier = Modifier.padding(top = 12.dp),
                     text = stringResource(id = R.string.games_section_all_title),
                     onClick = null,

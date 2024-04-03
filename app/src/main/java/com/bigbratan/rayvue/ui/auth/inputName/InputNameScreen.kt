@@ -15,7 +15,7 @@ import com.bigbratan.rayvue.R
 import com.bigbratan.rayvue.ui.auth.AuthTextField
 import com.bigbratan.rayvue.ui.auth.AuthView
 import com.bigbratan.rayvue.ui.utils.isValidName
-import com.bigbratan.rayvue.ui.views.OutlinedButton
+import com.bigbratan.rayvue.ui.views.OutlinedTextButton
 
 @Composable
 internal fun InputNameScreen(
@@ -42,7 +42,7 @@ internal fun InputNameScreen(
                     isPassword = false,
                 )
 
-                OutlinedButton(
+                OutlinedTextButton(
                     modifier = Modifier.padding(vertical = 32.dp),
                     label = stringResource(id = R.string.input_name_button_title),
                     onClick = {

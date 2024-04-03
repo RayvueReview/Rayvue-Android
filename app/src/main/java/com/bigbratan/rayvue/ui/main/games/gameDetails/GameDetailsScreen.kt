@@ -66,7 +66,7 @@ import com.bigbratan.rayvue.ui.theme.noFontPadding
 import com.bigbratan.rayvue.ui.theme.plusJakartaSans
 import com.bigbratan.rayvue.ui.views.ErrorMessage
 import com.bigbratan.rayvue.ui.views.LoadingAnimation
-import com.bigbratan.rayvue.ui.views.SectionHeader
+import com.bigbratan.rayvue.ui.views.ContentSectionHeader
 import com.bigbratan.rayvue.ui.views.SolidScrimBackground
 import com.bigbratan.rayvue.ui.views.TransparentIconButton
 
@@ -208,7 +208,7 @@ private fun GameDetailsView(
                     }
 
                     item(span = { GridItemSpan(MAIN_GRID_SIZE) }) {
-                        SectionHeader(
+                        ContentSectionHeader(
                             modifier = Modifier.padding(top = 24.dp),
                             text = stringResource(id = R.string.game_details_section_reviews_title),
                             imageVector = Icons.Outlined.ArrowForward,
@@ -263,7 +263,7 @@ private fun GameDetailsView(
                     }
 
                     item(span = { GridItemSpan(MAIN_GRID_SIZE) }) {
-                        SectionHeader(
+                        ContentSectionHeader(
                             text = stringResource(id = R.string.game_details_section_keep_in_mind_title),
                             imageVector = Icons.Outlined.Info,
                             onClick = { onTagsInfoClick() },

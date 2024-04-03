@@ -22,9 +22,9 @@ import com.bigbratan.rayvue.R
 import com.bigbratan.rayvue.ui.theme.noFontPadding
 import com.bigbratan.rayvue.ui.theme.plusJakartaSans
 import com.bigbratan.rayvue.ui.theme.rubikMonoOne
-import com.bigbratan.rayvue.ui.views.OutlinedButton
-import com.bigbratan.rayvue.ui.views.TonalButton
-import com.bigbratan.rayvue.ui.views.TransparentButton
+import com.bigbratan.rayvue.ui.views.OutlinedTextButton
+import com.bigbratan.rayvue.ui.views.TonalTextButton
+import com.bigbratan.rayvue.ui.views.TransparentTextButton
 
 @Composable
 internal fun AccountScreen(
@@ -77,18 +77,18 @@ internal fun AccountScreen(
         }
 
         Column {
-            OutlinedButton(
+            OutlinedTextButton(
                 label = stringResource(id = R.string.account_button_login_title),
                 onClick = { onLoginClick() }
             )
 
-            TonalButton(
+            TonalTextButton(
                 modifier = Modifier.padding(top = 32.dp),
                 label = stringResource(id = R.string.account_button_signup_title),
                 onClick = { onSignupClick() }
             )
 
-            TransparentButton(
+            TransparentTextButton(
                 modifier = Modifier.padding(vertical = 32.dp),
                 label = stringResource(id = R.string.account_button_no_account_title),
                 onClick = { onSkipClick() }

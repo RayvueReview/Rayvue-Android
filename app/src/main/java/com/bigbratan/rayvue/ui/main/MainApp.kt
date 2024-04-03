@@ -12,6 +12,7 @@ import com.bigbratan.rayvue.ui.main.games.gameDetails.GameDetailsScreen
 import com.bigbratan.rayvue.ui.main.games.tagsInfo.TagsInfoScreen
 import com.bigbratan.rayvue.ui.main.journal.JournalScreen
 import com.bigbratan.rayvue.ui.main.reviews.ReviewsScreen
+import com.bigbratan.rayvue.ui.main.search.SearchScreen
 import com.bigbratan.rayvue.ui.main.settings.SettingsScreen
 import java.net.URLDecoder
 import java.nio.charset.StandardCharsets
@@ -27,7 +28,7 @@ fun NavGraphBuilder.mainApp(
                         gameId
                     )
                 )
-            },
+            }
         )
     }
 
@@ -37,6 +38,21 @@ fun NavGraphBuilder.mainApp(
 
     composable(route = Screen.Main.JournalScreen.route) {
         JournalScreen()
+    }
+
+    composable(route = Screen.Main.SearchScreen.route) {
+        SearchScreen(
+            onGameClick = { gameId ->
+                navController.navigate(
+                    route = Screen.Main.GameDetailsScreen.routeWithArgs(
+                        gameId
+                    )
+                )
+            },
+            onBackClick = {
+                navController.popBackStack()
+            }
+        )
     }
 
     composable(route = Screen.Main.SettingsScreen.route) {
