@@ -27,7 +27,6 @@ import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -64,6 +63,7 @@ import com.bigbratan.rayvue.ui.views.LoadingAnimation
 import com.bigbratan.rayvue.ui.views.TransparentIconButton
 
 const val SEARCH_GRID_SIZE = 1
+const val MIN_QUERY_LENGTH = 3
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @OptIn(ExperimentalComposeUiApi::class, ExperimentalMaterial3Api::class)
@@ -107,7 +107,7 @@ internal fun SearchScreen(
                             value = typedQueryState.value,
                             onValueChange = { newValue ->
                                 typedQueryState.value = newValue
-                                if (typedQueryState.value.text.length > 3)
+                                if (typedQueryState.value.text.length > MIN_QUERY_LENGTH)
                                     viewModel.searchGames(newValue.text)
                             },
                             textStyle = LocalTextStyle.current.copy(
@@ -145,9 +145,8 @@ internal fun SearchScreen(
                             keyboardOptions = KeyboardOptions(imeAction = ImeAction.Search),
                             keyboardActions = KeyboardActions(
                                 onSearch = {
-                                    viewModel.searchGames(
-                                        typedQueryState.value.text
-                                    )
+                                    if (typedQueryState.value.text.length > MIN_QUERY_LENGTH)
+                                        viewModel.searchGames(typedQueryState.value.text)
                                     keyboardController?.hide()
                                     focusManager.clearFocus()
                                 }
@@ -198,21 +197,24 @@ internal fun SearchScreen(
                 }
 
                 is SearchedGamesState.Success -> {
-                    val games = (searchedGamesState.value as SearchedGamesState.Success).games
+                    val games =
+                        if (typedQueryState.value.text.length > 3) (searchedGamesState.value as SearchedGamesState.Success).games else null
 
-                    items(games.size) { gameIndex ->
-                        val game = games[gameIndex]
+                    if (games != null) {
+                        items(games.size) { gameIndex ->
+                            val game = games[gameIndex]
 
-                        SearchedGameCard(
-                            modifier = Modifier
-                                .padding(horizontal = 16.dp)
-                                .padding(
-                                    top = if (gameIndex == 0) 16.dp else 4.dp,
-                                    bottom = if (gameIndex == games.size) 16.dp else 4.dp
-                                ),
-                            game = game,
-                            onGameClick = { onGameClick(game.id) },
-                        )
+                            SearchedGameCard(
+                                modifier = Modifier
+                                    .padding(horizontal = 16.dp)
+                                    .padding(
+                                        top = if (gameIndex == 0) 16.dp else 4.dp,
+                                        bottom = if (gameIndex == games.size) 16.dp else 4.dp
+                                    ),
+                                game = game,
+                                onGameClick = { onGameClick(game.id) },
+                            )
+                        }
                     }
                 }
             }
@@ -249,7 +251,7 @@ private fun SearchedGameCard(
 
         Text(
             modifier = Modifier.padding(start = 16.dp),
-            text = game.name,
+            text = game.displayName,
             fontFamily = plusJakartaSans,
             fontSize = 16.sp,
             fontWeight = FontWeight.Medium,

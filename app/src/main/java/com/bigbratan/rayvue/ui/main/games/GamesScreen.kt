@@ -244,7 +244,7 @@ private fun GameCard(
             modifier = Modifier
                 .padding(12.dp)
                 .align(Alignment.BottomStart),
-            text = game.name,
+            text = game.displayName,
             fontFamily = plusJakartaSans,
             fontWeight = FontWeight.Normal,
             fontSize = 16.sp,

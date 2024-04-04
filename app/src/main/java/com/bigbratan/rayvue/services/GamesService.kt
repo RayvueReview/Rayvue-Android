@@ -15,7 +15,7 @@ class GamesService @Inject constructor(
             collection = "games",
             documentFields = arrayOf(
                 "id",
-                "name",
+                "displayName",
                 "icon",
             ),
         )
@@ -28,7 +28,7 @@ class GamesService @Inject constructor(
             collection = "games",
             documentFields = arrayOf(
                 "id",
-                "name",
+                "displayName",
                 "icon",
                 "banner",
                 "description",
@@ -40,6 +40,21 @@ class GamesService @Inject constructor(
     }
 
     suspend fun searchGames(
+        searchQuery: String
+    ): List<Game> {
+        return firebaseStorageService.searchDocuments<Game>(
+            collection = "games",
+            documentFields = arrayOf(
+                "id",
+                "displayName",
+                "icon",
+            ),
+            searchField = "searchName",
+            searchQuery = searchQuery
+        )
+    }
+
+    /*suspend fun searchGames(
         query: String
     ): List<Game> {
         val potentialMatches = firebaseStorageService.getDocuments<Game>(
@@ -51,7 +66,7 @@ class GamesService @Inject constructor(
             ),
         )
 
-        val maxDistance = 24
+        val maxDistance = 8
 
         return potentialMatches.filter { game ->
             levenshtein(
@@ -100,5 +115,5 @@ class GamesService @Inject constructor(
         }
 
         return prev[len0 - 1]
-    }
+    }*/
 }

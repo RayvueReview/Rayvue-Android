@@ -4,7 +4,6 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.bigbratan.rayvue.models.Game
 import com.bigbratan.rayvue.services.GamesService
-import com.bigbratan.rayvue.services.UserService
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
@@ -54,7 +53,7 @@ sealed class ObtainedGamesState {
 data class GamesItemViewModel(
     private val games: List<Game>
 ) {
-    val allGames = games.sortedBy { game -> game.name }
+    val allGames = games.sortedBy { game -> game.displayName }
 
     val recentGames = games.sortedByDescending { game -> game.dateAdded }.take(10)
 
