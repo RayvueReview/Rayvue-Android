@@ -29,8 +29,10 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
@@ -39,6 +41,8 @@ import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.layout.onGloballyPositioned
+import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
@@ -73,12 +77,9 @@ internal fun SearchScreen(
     val typedQueryState = remember { mutableStateOf(TextFieldValue()) }
 
     val focusRequester = remember { FocusRequester() }
+    val focusManager = LocalFocusManager.current
     val keyboardController = LocalSoftwareKeyboardController.current
-
-    LaunchedEffect(Unit) {
-        focusRequester.requestFocus()
-        keyboardController?.show()
-    }
+    var textFieldLoaded by remember { mutableStateOf(false) }
 
     Scaffold(
         modifier = Modifier.fillMaxSize(),
@@ -93,13 +94,19 @@ internal fun SearchScreen(
                         TextField(
                             modifier = Modifier
                                 .fillMaxWidth()
+                                .padding(start = 16.dp)
                                 .focusRequester(focusRequester)
-                                .padding(start = 16.dp),
+                                .onGloballyPositioned {
+                                    if (!textFieldLoaded) {
+                                        focusRequester.requestFocus()
+                                        keyboardController?.show()
+                                        textFieldLoaded = true
+                                    }
+                                },
                             singleLine = true,
                             value = typedQueryState.value,
                             onValueChange = { newValue ->
                                 typedQueryState.value = newValue
-
                                 if (typedQueryState.value.text.length > 3)
                                     viewModel.searchGames(newValue.text)
                             },
@@ -141,6 +148,8 @@ internal fun SearchScreen(
                                     viewModel.searchGames(
                                         typedQueryState.value.text
                                     )
+                                    keyboardController?.hide()
+                                    focusManager.clearFocus()
                                 }
                             ),
                             colors = TextFieldDefaults.colors(
@@ -195,6 +204,12 @@ internal fun SearchScreen(
                         val game = games[gameIndex]
 
                         SearchedGameCard(
+                            modifier = Modifier
+                                .padding(horizontal = 16.dp)
+                                .padding(
+                                    top = if (gameIndex == 0) 16.dp else 4.dp,
+                                    bottom = if (gameIndex == games.size) 16.dp else 4.dp
+                                ),
                             game = game,
                             onGameClick = { onGameClick(game.id) },
                         )
@@ -207,12 +222,12 @@ internal fun SearchScreen(
 
 @Composable
 private fun SearchedGameCard(
+    modifier: Modifier,
     game: Game,
     onGameClick: (gameId: String) -> Unit,
 ) {
     Row(
-        modifier = Modifier
-            .padding(16.dp)
+        modifier = modifier
             .fillMaxWidth()
             .clip(RoundedCornerShape(16.dp))
             .clickable(

@@ -51,7 +51,7 @@ class GamesService @Inject constructor(
             ),
         )
 
-        val maxDistance = 5
+        val maxDistance = 24
 
         return potentialMatches.filter { game ->
             levenshtein(
