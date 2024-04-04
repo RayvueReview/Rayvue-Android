@@ -81,7 +81,7 @@ data class GameDetailsItemViewModel(
 ) {
     val id: String = gameDetails.id
 
-    val name: String = gameDetails.name
+    val name: String = gameDetails.displayName
 
     val encodedIcon: String = gameDetails.encodedIcon
 

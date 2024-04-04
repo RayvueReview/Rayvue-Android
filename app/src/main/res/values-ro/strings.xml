@@ -12,9 +12,7 @@
     <!-- Main -->
     <string name="nav_games_title">Jocuri</string>
     <string name="nav_awards_title">Premii</string>
-    <string name="nav_add_title">Adaugă</string>
     <string name="nav_journal_title">Jurnal</string>
-    <string name="nav_settings_title">Setări</string>
 
     <!-- Account Screen -->
     <string name="account_prompt_message">Creează un cont gratis pentru a salva recenziile tale în cloud.</string>
@@ -66,6 +64,17 @@
     <string name="games_section_recent_title">Recent adăugate</string>
     <string name="games_section_discover_title">Descoperă</string>
     <string name="games_section_all_title">Toate jocurile</string>
+
+    <!-- Awards Screen -->
+
+
+    <!-- Journal Screen -->
+    <string name="journal_empty_data_error_message">You haven\'t added any games to your journal.</string>
+
+    <!-- Search Screen -->
+    <string name="search_general_placeholder">Introdu căutarea ta</string>
+    <string name="search_database_placeholder">Caută jocuri</string>
+    <string name="search_local_placeholder">Caută jocurile tale</string>
 
     <!-- Game Details Screen -->
     <string name="game_details_get_data_error_message">A apărut o eroare. Detaliile pentru acest joc nu au putut fi încărcate.</string>

@@ -25,7 +25,7 @@ import com.bigbratan.rayvue.ui.auth.AuthView
 import com.bigbratan.rayvue.ui.utils.isValidEmail
 import com.bigbratan.rayvue.ui.utils.isValidPassword
 import com.bigbratan.rayvue.ui.views.LoadingAnimation
-import com.bigbratan.rayvue.ui.views.OutlinedButton
+import com.bigbratan.rayvue.ui.views.OutlinedTextButton
 import com.bigbratan.rayvue.ui.views.Popup
 
 @Composable
@@ -107,7 +107,7 @@ internal fun SignupScreen(
                         isPassword = true,
                     )
 
-                    OutlinedButton(
+                    OutlinedTextButton(
                         modifier = Modifier.padding(vertical = 32.dp),
                         label = stringResource(id = R.string.signup_button_title),
                         onClick = {

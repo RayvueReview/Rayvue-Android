@@ -5,13 +5,10 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.grid.GridCells
@@ -19,12 +16,9 @@ import androidx.compose.foundation.lazy.grid.GridItemSpan
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.ExperimentalMaterialApi
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material.pullrefresh.PullRefreshIndicator
 import androidx.compose.material.pullrefresh.pullRefresh
 import androidx.compose.material.pullrefresh.rememberPullRefreshState
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -50,17 +44,15 @@ import com.bigbratan.rayvue.ui.theme.plusJakartaSans
 import com.bigbratan.rayvue.ui.views.ErrorMessage
 import com.bigbratan.rayvue.ui.views.FadingScrimBackground
 import com.bigbratan.rayvue.ui.views.LoadingAnimation
-import com.bigbratan.rayvue.ui.views.SectionHeader
-import com.bigbratan.rayvue.ui.views.TonalIconButton
+import com.bigbratan.rayvue.ui.views.ContentSectionHeader
 
-const val GRID_SIZE = 2
+const val MAIN_GRID_SIZE = 2
 
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
 internal fun GamesScreen(
     viewModel: GamesViewModel = hiltViewModel(),
     onGameClick: (gameId: String) -> Unit,
-    onSettingsClick: () -> Unit,
 ) {
     val obtainedGamesState = viewModel.obtainedGamesState.collectAsState()
     val isRefreshing = viewModel.isRefreshing.collectAsState()
@@ -102,13 +94,10 @@ internal fun GamesScreen(
 
             is ObtainedGamesState.Success -> {
                 val games = (obtainedGamesState.value as ObtainedGamesState.Success).games
-                val userName = (obtainedGamesState.value as ObtainedGamesState.Success).userName
 
                 GamesView(
                     games = games,
-                    userName = userName,
                     onGameClick = onGameClick,
-                    onSettingsClick = onSettingsClick,
                 )
             }
         }
@@ -127,67 +116,24 @@ internal fun GamesScreen(
 @Composable
 private fun GamesView(
     games: GamesItemViewModel,
-    userName: String?,
     onGameClick: (gameId: String) -> Unit,
-    onSettingsClick: () -> Unit,
 ) {
     Scaffold(
         modifier = Modifier
-            .statusBarsPadding()
-            .navigationBarsPadding()
-            .fillMaxSize()
+            .padding(top = 12.dp)
+            .fillMaxSize(),
     ) {
         LazyVerticalGrid(
-            columns = GridCells.Fixed(GRID_SIZE),
+            columns = GridCells.Fixed(MAIN_GRID_SIZE),
         ) {
-            item(span = { GridItemSpan(GRID_SIZE) }) {
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(
-                            top = 32.dp,
-                            bottom = 20.dp
-                        ),
-                    horizontalArrangement = Arrangement.SpaceBetween,
-                    verticalAlignment = Alignment.CenterVertically,
-                ) {
-                    Text(
-                        modifier = Modifier
-                            .padding(horizontal = 24.dp)
-                            .weight(1f),
-                        text = userName?.let { userName ->
-                            stringResource(
-                                id = R.string.games_welcome_account_message,
-                                userName
-                            )
-                        }
-                            ?: stringResource(id = R.string.games_welcome_no_account_message),
-                        fontFamily = plusJakartaSans,
-                        fontWeight = FontWeight.SemiBold,
-                        fontSize = 24.sp,
-                        color = MaterialTheme.colorScheme.onSurface,
-                        style = TextStyle(
-                            platformStyle = noFontPadding,
-                            letterSpacing = 0.15.sp,
-                        ),
-                    )
-
-                    TonalIconButton(
-                        modifier = Modifier.padding(horizontal = 24.dp),
-                        imageVector = Icons.Filled.Settings,
-                        onClick = { onSettingsClick() },
-                    )
-                }
-            }
-
-            item(span = { GridItemSpan(GRID_SIZE) }) {
-                SectionHeader(
+            item(span = { GridItemSpan(MAIN_GRID_SIZE) }) {
+                ContentSectionHeader(
                     text = stringResource(id = R.string.games_section_recent_title),
                     onClick = null,
                 )
             }
 
-            item(span = { GridItemSpan(GRID_SIZE) }) {
+            item(span = { GridItemSpan(MAIN_GRID_SIZE) }) {
                 LazyRow(
                     modifier = Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.spacedBy(12.dp),
@@ -204,15 +150,15 @@ private fun GamesView(
                 }
             }
 
-            item(span = { GridItemSpan(GRID_SIZE) }) {
-                SectionHeader(
+            item(span = { GridItemSpan(MAIN_GRID_SIZE) }) {
+                ContentSectionHeader(
                     modifier = Modifier.padding(top = 12.dp),
                     text = stringResource(id = R.string.games_section_discover_title),
                     onClick = null,
                 )
             }
 
-            item(span = { GridItemSpan(GRID_SIZE) }) {
+            item(span = { GridItemSpan(MAIN_GRID_SIZE) }) {
                 LazyRow(
                     modifier = Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.spacedBy(12.dp),
@@ -229,8 +175,8 @@ private fun GamesView(
                 }
             }
 
-            item(span = { GridItemSpan(GRID_SIZE) }) {
-                SectionHeader(
+            item(span = { GridItemSpan(MAIN_GRID_SIZE) }) {
+                ContentSectionHeader(
                     modifier = Modifier.padding(top = 12.dp),
                     text = stringResource(id = R.string.games_section_all_title),
                     onClick = null,
@@ -298,7 +244,7 @@ private fun GameCard(
             modifier = Modifier
                 .padding(12.dp)
                 .align(Alignment.BottomStart),
-            text = game.name,
+            text = game.displayName,
             fontFamily = plusJakartaSans,
             fontWeight = FontWeight.Normal,
             fontSize = 16.sp,

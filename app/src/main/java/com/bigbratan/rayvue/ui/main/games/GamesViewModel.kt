@@ -4,7 +4,6 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.bigbratan.rayvue.models.Game
 import com.bigbratan.rayvue.services.GamesService
-import com.bigbratan.rayvue.services.UserService
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
@@ -13,7 +12,6 @@ import javax.inject.Inject
 @HiltViewModel
 class GamesViewModel @Inject constructor(
     private val gamesService: GamesService,
-    private val userService: UserService,
 ) : ViewModel() {
     val obtainedGamesState = MutableStateFlow<ObtainedGamesState>(ObtainedGamesState.Loading)
     val isRefreshing = MutableStateFlow(false)
@@ -22,27 +20,21 @@ class GamesViewModel @Inject constructor(
         canRefresh: Boolean = true,
     ) {
         viewModelScope.launch {
-            userService.user.collect { user ->
-                try {
-                    if (canRefresh)
-                        isRefreshing.value = true
+            try {
+                if (canRefresh)
+                    isRefreshing.value = true
 
-                    val games = gamesService.fetchGames()
-                    val userName = user?.userName
+                val games = gamesService.fetchGames()
 
-                    obtainedGamesState.value = ObtainedGamesState.Success(
-                        GamesItemViewModel(games),
-                        userName
-                    )
-                } catch (e: Exception) {
-                    if (canRefresh)
-                        isRefreshing.value = true
+                obtainedGamesState.value = ObtainedGamesState.Success(GamesItemViewModel(games))
+            } catch (e: Exception) {
+                if (canRefresh)
+                    isRefreshing.value = true
 
-                    obtainedGamesState.value = ObtainedGamesState.Error
-                } finally {
-                    if (canRefresh)
-                        isRefreshing.value = false
-                }
+                obtainedGamesState.value = ObtainedGamesState.Error
+            } finally {
+                if (canRefresh)
+                    isRefreshing.value = false
             }
         }
     }
@@ -52,8 +44,7 @@ sealed class ObtainedGamesState {
     object Loading : ObtainedGamesState()
 
     data class Success(
-        val games: GamesItemViewModel,
-        val userName: String?,
+        val games: GamesItemViewModel
     ) : ObtainedGamesState()
 
     object Error : ObtainedGamesState()
@@ -62,7 +53,7 @@ sealed class ObtainedGamesState {
 data class GamesItemViewModel(
     private val games: List<Game>
 ) {
-    val allGames = games.sortedBy { game -> game.name }
+    val allGames = games.sortedBy { game -> game.displayName }
 
     val recentGames = games.sortedByDescending { game -> game.dateAdded }.take(10)
 

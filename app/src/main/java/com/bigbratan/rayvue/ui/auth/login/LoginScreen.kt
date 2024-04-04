@@ -26,7 +26,7 @@ import com.bigbratan.rayvue.ui.utils.isValidEmail
 import com.bigbratan.rayvue.ui.utils.isValidPassword
 import com.bigbratan.rayvue.ui.views.Popup
 import com.bigbratan.rayvue.ui.views.LoadingAnimation
-import com.bigbratan.rayvue.ui.views.OutlinedButton
+import com.bigbratan.rayvue.ui.views.OutlinedTextButton
 
 @Composable
 internal fun LoginScreen(
@@ -109,7 +109,7 @@ internal fun LoginScreen(
                         isErrorVisible = typedPasswordError,
                     )
 
-                    OutlinedButton(
+                    OutlinedTextButton(
                         modifier = Modifier.padding(vertical = 32.dp),
                         label = stringResource(id = R.string.login_button_title),
                         onClick = {

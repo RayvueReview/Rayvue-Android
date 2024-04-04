@@ -14,6 +14,8 @@ class SettingsViewModel @Inject constructor(
     private val authService: AuthService,
     private val userService: UserService,
 ) : ViewModel() {
+    val obtainedUserState =
+        MutableStateFlow<ObtainedUserState>(ObtainedUserState.Loading)
     val sentLogOutDataState = MutableStateFlow<SentLogOutDataState>(SentLogOutDataState.Idle)
     val sentSignOutDataState = MutableStateFlow<SentSignOutDataState>(SentSignOutDataState.Idle)
     val areLoginSignupVisible = MutableStateFlow(false)
@@ -21,6 +23,20 @@ class SettingsViewModel @Inject constructor(
     init {
         viewModelScope.launch {
             areLoginSignupVisible.value = userService.user.value?.id == null
+        }
+    }
+
+    fun getData() {
+        viewModelScope.launch {
+            userService.user.collect { user ->
+                try {
+                    val userName = user?.userName
+
+                    obtainedUserState.value = ObtainedUserState.Success(userName)
+                } catch (e: Exception) {
+                    obtainedUserState.value = ObtainedUserState.Error
+                }
+            }
         }
     }
 
@@ -76,4 +92,14 @@ sealed class SentSignOutDataState {
     object Success : SentSignOutDataState()
 
     object Error : SentSignOutDataState()
+}
+
+sealed class ObtainedUserState {
+    object Loading : ObtainedUserState()
+
+    data class Success(
+        val userName: String?,
+    ) : ObtainedUserState()
+
+    object Error : ObtainedUserState()
 }

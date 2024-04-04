@@ -1,6 +1,7 @@
 package com.bigbratan.rayvue.ui.main.games.gameDetails
 
 import android.app.Activity
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
@@ -23,19 +24,31 @@ import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.GridItemSpan
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.KeyboardActions
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.BottomSheetScaffold
 import androidx.compose.material.BottomSheetValue
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.outlined.ArrowForward
 import androidx.compose.material.icons.outlined.Info
 import androidx.compose.material.rememberBottomSheetScaffoldState
 import androidx.compose.material.rememberBottomSheetState
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.LocalTextStyle
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextField
+import androidx.compose.material3.TextFieldDefaults
+import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.TopAppBarColors
+import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
@@ -45,13 +58,17 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Alignment.Companion.CenterHorizontally
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
@@ -60,13 +77,14 @@ import androidx.core.view.WindowCompat
 import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.AsyncImage
 import com.bigbratan.rayvue.R
-import com.bigbratan.rayvue.ui.main.games.GRID_SIZE
+import com.bigbratan.rayvue.ui.main.games.MAIN_GRID_SIZE
 import com.bigbratan.rayvue.ui.main.reviews.ReviewItemViewModel
+import com.bigbratan.rayvue.ui.main.search.MIN_QUERY_LENGTH
 import com.bigbratan.rayvue.ui.theme.noFontPadding
 import com.bigbratan.rayvue.ui.theme.plusJakartaSans
 import com.bigbratan.rayvue.ui.views.ErrorMessage
 import com.bigbratan.rayvue.ui.views.LoadingAnimation
-import com.bigbratan.rayvue.ui.views.SectionHeader
+import com.bigbratan.rayvue.ui.views.ContentSectionHeader
 import com.bigbratan.rayvue.ui.views.SolidScrimBackground
 import com.bigbratan.rayvue.ui.views.TransparentIconButton
 
@@ -134,7 +152,7 @@ internal fun GameDetailsScreen(
     }
 }
 
-@OptIn(ExperimentalMaterialApi::class)
+@OptIn(ExperimentalMaterialApi::class, ExperimentalMaterial3Api::class)
 @Composable
 private fun GameDetailsView(
     gameDetails: GameDetailsItemViewModel,
@@ -168,9 +186,9 @@ private fun GameDetailsView(
                         .fillMaxHeight(0.85f)
                         .fillMaxWidth()
                         .padding(vertical = 24.dp),
-                    columns = GridCells.Fixed(GRID_SIZE)
+                    columns = GridCells.Fixed(MAIN_GRID_SIZE)
                 ) {
-                    item(span = { GridItemSpan(GRID_SIZE) }) {
+                    item(span = { GridItemSpan(MAIN_GRID_SIZE) }) {
                         Text(
                             modifier = Modifier
                                 .fillMaxWidth()
@@ -188,7 +206,7 @@ private fun GameDetailsView(
                         )
                     }
 
-                    item(span = { GridItemSpan(GRID_SIZE) }) {
+                    item(span = { GridItemSpan(MAIN_GRID_SIZE) }) {
                         Text(
                             modifier = Modifier
                                 .fillMaxWidth()
@@ -207,8 +225,8 @@ private fun GameDetailsView(
                         )
                     }
 
-                    item(span = { GridItemSpan(GRID_SIZE) }) {
-                        SectionHeader(
+                    item(span = { GridItemSpan(MAIN_GRID_SIZE) }) {
+                        ContentSectionHeader(
                             modifier = Modifier.padding(top = 24.dp),
                             text = stringResource(id = R.string.game_details_section_reviews_title),
                             imageVector = Icons.Outlined.ArrowForward,
@@ -223,7 +241,7 @@ private fun GameDetailsView(
                     }
 
                     if (reviews.isEmpty()) {
-                        item(span = { GridItemSpan(GRID_SIZE) }) {
+                        item(span = { GridItemSpan(MAIN_GRID_SIZE) }) {
                             ReviewsMissingCard(
                                 modifier = Modifier.fillMaxWidth(),
                                 onReviewClick = {
@@ -236,7 +254,7 @@ private fun GameDetailsView(
                             )
                         }
                     } else {
-                        item(span = { GridItemSpan(GRID_SIZE) }) {
+                        item(span = { GridItemSpan(MAIN_GRID_SIZE) }) {
                             LazyRow(
                                 modifier = Modifier.fillMaxWidth(),
                                 horizontalArrangement = Arrangement.spacedBy(12.dp),
@@ -262,8 +280,8 @@ private fun GameDetailsView(
                         }
                     }
 
-                    item(span = { GridItemSpan(GRID_SIZE) }) {
-                        SectionHeader(
+                    item(span = { GridItemSpan(MAIN_GRID_SIZE) }) {
+                        ContentSectionHeader(
                             text = stringResource(id = R.string.game_details_section_keep_in_mind_title),
                             imageVector = Icons.Outlined.Info,
                             onClick = { onTagsInfoClick() },
@@ -315,17 +333,21 @@ private fun GameDetailsView(
             }
         )
 
-        TransparentIconButton(
+        TopAppBar(
             modifier = Modifier
-                .statusBarsPadding()
-                .navigationBarsPadding()
-                .padding(
-                    horizontal = 20.dp,
-                    vertical = 20.dp
-                ),
-            imageVector = Icons.Filled.ArrowBack,
-            tint = Color.White,
-            onClick = { onBackClick() }
+                .fillMaxWidth()
+                .statusBarsPadding(),
+            title = {},
+            colors = TopAppBarDefaults.topAppBarColors(
+                containerColor = Color.Transparent
+            ),
+            navigationIcon = {
+                TransparentIconButton(
+                    modifier = Modifier.padding(start = 16.dp),
+                    imageVector = Icons.Filled.ArrowBack,
+                    onClick = { onBackClick() },
+                )
+            }
         )
     }
 }

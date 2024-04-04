@@ -11,10 +11,9 @@ import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
-class StorageService @Inject constructor(
-) {
-    private val db = Firebase.firestore
+class FirebaseStorageService @Inject constructor() {
     private val auth = Firebase.auth
+    val db = Firebase.firestore
 
     fun getCurrentUser() = auth.currentUser
 
@@ -23,7 +22,6 @@ class StorageService @Inject constructor(
         documentFields: Array<String>,
         filters: Map<String, Any> = emptyMap()
     ): List<T> {
-        val db = Firebase.firestore
         var query: Query = db.collection(collection)
 
         for ((field, value) in filters) {
@@ -45,10 +43,51 @@ class StorageService @Inject constructor(
             }
 
             val obj = convertToObject<T>(objectFields)
-
             list.add(obj)
         }
+        return list
+    }
 
+    suspend inline fun <reified T : Any> searchDocuments(
+        collection: String,
+        documentFields: Array<String>,
+        searchField: String? = null,
+        searchQuery: String? = null,
+        filters: Map<String, Any> = emptyMap()
+    ): List<T> {
+        var query: Query = db.collection(collection)
+
+        for ((field, value) in filters) {
+            query = query.whereEqualTo(field, value)
+        }
+
+        if (searchField != null && !searchQuery.isNullOrEmpty()) {
+            val endQuery =
+                searchQuery.lowercase().filter { it.isLetterOrDigit() }
+                    .substring(0, searchQuery.length - 1) + searchQuery.last().inc()
+
+            query = query
+                .whereGreaterThanOrEqualTo(searchField, searchQuery)
+                .whereLessThan(searchField, endQuery)
+        }
+
+        val querySnapshot = query.get().await()
+        val list = mutableListOf<T>()
+
+        for (document in querySnapshot.documents) {
+            val objectFields = mutableMapOf<String, Any>()
+
+            for (documentField in documentFields) {
+                val value = document.get(documentField)
+
+                if (value != null) {
+                    objectFields[documentField] = value
+                }
+            }
+
+            val obj = convertToObject<T>(objectFields)
+            list.add(obj)
+        }
         return list
     }
 

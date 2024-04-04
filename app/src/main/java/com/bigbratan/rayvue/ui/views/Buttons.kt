@@ -30,22 +30,22 @@ import com.bigbratan.rayvue.ui.theme.plusJakartaSans
 
 @Composable
 internal fun TonalIconButton(
-    modifier: Modifier,
+    modifier: Modifier = Modifier,
     imageVector: ImageVector,
     onClick: () -> Unit,
 ) {
     Surface(
         modifier = modifier
+            .clip(CircleShape)
             .clickable(
                 interactionSource = remember { MutableInteractionSource() },
-                indication = rememberRipple(bounded = false),
+                indication = rememberRipple(bounded = true),
                 onClick = onClick,
-            )
-            .clip(CircleShape),
-        color = MaterialTheme.colorScheme.secondaryContainer
+            ),
+        color = MaterialTheme.colorScheme.surfaceVariant
     ) {
         Icon(
-            modifier = Modifier.padding(8.dp),
+            modifier = Modifier.padding(12.dp),
             imageVector = imageVector,
             contentDescription = null,
         )
@@ -74,7 +74,16 @@ internal fun TransparentIconButton(
 }
 
 @Composable
-internal fun OutlinedButton(
+internal fun OutlinedIconButton(
+    modifier: Modifier = Modifier,
+    imageVector: ImageVector,
+    onClick: () -> Unit,
+) {
+
+}
+
+@Composable
+internal fun OutlinedTextButton(
     modifier: Modifier = Modifier,
     label: String,
     onClick: () -> Unit,
@@ -117,7 +126,7 @@ internal fun OutlinedButton(
 }
 
 @Composable
-internal fun TonalButton(
+internal fun TonalTextButton(
     modifier: Modifier = Modifier,
     label: String,
     onClick: () -> Unit,
@@ -143,7 +152,7 @@ internal fun TonalButton(
 }
 
 @Composable
-internal fun TransparentButton(
+internal fun TransparentTextButton(
     modifier: Modifier = Modifier,
     label: String,
     onClick: () -> Unit,

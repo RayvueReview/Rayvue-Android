@@ -13,12 +13,12 @@ import javax.inject.Singleton
 @OptIn(DelicateCoroutinesApi::class)
 @Singleton
 class UserService @Inject constructor(
-    private val storageService: StorageService,
+    private val firebaseStorageService: FirebaseStorageService,
 ) {
     val user = MutableStateFlow<User?>(null)
 
     val isUserLoggedIn: Boolean
-        get() = storageService.getCurrentUser() != null
+        get() = firebaseStorageService.getCurrentUser() != null
 
     init {
         GlobalScope.launch(Dispatchers.IO) {
@@ -28,8 +28,8 @@ class UserService @Inject constructor(
     }
 
     suspend fun fetchUser() {
-        user.value = storageService.getCurrentUser()?.uid?.let { userId ->
-            storageService.getDocuments<User>(
+        user.value = firebaseStorageService.getCurrentUser()?.uid?.let { userId ->
+            firebaseStorageService.getDocuments<User>(
                 collection = "users",
                 documentFields = arrayOf(
                     "id",

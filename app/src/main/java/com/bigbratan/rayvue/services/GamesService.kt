@@ -2,19 +2,20 @@ package com.bigbratan.rayvue.services
 
 import com.bigbratan.rayvue.models.Game
 import com.bigbratan.rayvue.models.GameDetails
+import java.util.Locale
 import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
 class GamesService @Inject constructor(
-    private val storageService: StorageService
+    private val firebaseStorageService: FirebaseStorageService
 ) {
     suspend fun fetchGames(): List<Game> {
-        return storageService.getDocuments(
+        return firebaseStorageService.getDocuments(
             collection = "games",
             documentFields = arrayOf(
                 "id",
-                "name",
+                "displayName",
                 "icon",
             ),
         )
@@ -23,11 +24,11 @@ class GamesService @Inject constructor(
     suspend fun fetchGameDetails(
         gameId: String,
     ): GameDetails {
-        return storageService.getDocuments<GameDetails>(
+        return firebaseStorageService.getDocuments<GameDetails>(
             collection = "games",
             documentFields = arrayOf(
                 "id",
-                "name",
+                "displayName",
                 "icon",
                 "banner",
                 "description",
@@ -36,5 +37,20 @@ class GamesService @Inject constructor(
             ),
             filters = mapOf("id" to gameId),
         ).first()
+    }
+
+    suspend fun searchGames(
+        searchQuery: String
+    ): List<Game> {
+        return firebaseStorageService.searchDocuments<Game>(
+            collection = "games",
+            documentFields = arrayOf(
+                "id",
+                "displayName",
+                "icon",
+            ),
+            searchField = "searchName",
+            searchQuery = searchQuery
+        )
     }
 }

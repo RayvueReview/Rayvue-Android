@@ -19,7 +19,7 @@ import com.bigbratan.rayvue.ui.theme.noFontPadding
 import com.bigbratan.rayvue.ui.theme.plusJakartaSans
 
 @Composable
-internal fun SectionHeader(
+internal fun ContentSectionHeader(
     modifier: Modifier = Modifier,
     text: String,
     imageVector: ImageVector? = null,

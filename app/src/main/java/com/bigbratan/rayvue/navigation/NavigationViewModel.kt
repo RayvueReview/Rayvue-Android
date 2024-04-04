@@ -10,7 +10,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class NavigationViewModel @Inject constructor(
-    userService: UserService,
+    private val userService: UserService,
 ) : ViewModel() {
     val startDestination: MutableStateFlow<String?> = MutableStateFlow(null)
 
