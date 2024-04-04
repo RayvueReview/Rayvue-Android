@@ -152,13 +152,4 @@ class FirebaseStorageService @Inject constructor() {
             db.collection(collection).document(document.id).delete().await()
         }
     }
-
-    /*suspend inline fun <reified T : Any> searchDocuments(
-        collection: String,
-        documentFields: Array<String>,
-        filters: Map<String, Any> = emptyMap()
-    ): List<T> {
-        val list = mutableListOf<T>()
-        return list
-    }*/
 }
