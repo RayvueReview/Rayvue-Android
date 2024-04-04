@@ -94,34 +94,12 @@ fun Navigation() {
             Screen.Main.JournalScreen.route,
         )
 
-    /*val topBarHeight = 128.dp
-    val topBarHeightPx = with(LocalDensity.current) { topBarHeight.roundToPx().toFloat() }
-    var topBarOffsetHeightPx by remember { mutableStateOf(0f) }
-    val nestedScrollConnection = remember {
-        object : NestedScrollConnection {
-            override fun onPreScroll(
-                available: Offset,
-                source: NestedScrollSource
-            ): Offset {
-                topBarOffsetHeightPx =
-                    (topBarOffsetHeightPx + available.y).coerceIn(-topBarHeightPx, 0f)
-                return super.onPreScroll(available, source)
-            }
-        }
-    }*/
-
     startDestination.value?.let { startDestinationValue ->
         Scaffold(
             modifier = Modifier.fillMaxSize(),
             topBar = {
                 if (shouldShowTopBar) {
                     EmbeddedSearchBar(
-                        /*modifier = Modifier.offset {
-                            IntOffset(
-                                x = 0,
-                                y = topBarOffsetHeightPx.roundToInt()
-                            )
-                        },*/
                         navController = navController,
                     )
                 }
@@ -145,7 +123,6 @@ fun Navigation() {
             }
             NavHost(
                 modifier = navModifier,
-                    //.nestedScroll(nestedScrollConnection),
                 navController = navController,
                 startDestination = startDestinationValue,
             ) {
@@ -229,7 +206,6 @@ private fun EmbeddedBottomBar(
 
 @Composable
 private fun EmbeddedSearchBar(
-    //modifier: Modifier,
     navController: NavHostController,
 ) {
     Row(
