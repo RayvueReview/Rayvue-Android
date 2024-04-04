@@ -2,8 +2,6 @@ package com.bigbratan.rayvue.navigation
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.bigbratan.rayvue.models.Game
-import com.bigbratan.rayvue.services.GamesService
 import com.bigbratan.rayvue.services.UserService
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
