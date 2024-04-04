@@ -83,7 +83,10 @@ fun NavGraphBuilder.mainApp(
             GameDetailsScreen(
                 gameId = gameId,
                 onBackClick = {
-                    navController.popBackStack()
+                    navController.popBackStack(
+                        route = Screen.Main.GamesScreen.route,
+                        inclusive = false
+                    )
                 },
                 onReviewClick = { reviewedGameId, reviewedGameName, reviewedGameEncodedIcon ->
                     navController.navigate(
