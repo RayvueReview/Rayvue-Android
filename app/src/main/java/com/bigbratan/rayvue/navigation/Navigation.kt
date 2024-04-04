@@ -1,16 +1,22 @@
 package com.bigbratan.rayvue.navigation
 
 import android.annotation.SuppressLint
+import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.statusBarsPadding
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Book
 import androidx.compose.material.icons.filled.EmojiEvents
@@ -26,15 +32,26 @@ import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.input.nestedscroll.NestedScrollConnection
+import androidx.compose.ui.input.nestedscroll.NestedScrollSource
+import androidx.compose.ui.input.nestedscroll.nestedScroll
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -50,6 +67,7 @@ import com.bigbratan.rayvue.ui.main.mainApp
 import com.bigbratan.rayvue.ui.theme.noFontPadding
 import com.bigbratan.rayvue.ui.theme.plusJakartaSans
 import com.bigbratan.rayvue.ui.views.TonalIconButton
+import kotlin.math.roundToInt
 
 private val navItems = listOf(
     Screen.Main.GamesScreen,
@@ -73,9 +91,24 @@ fun Navigation() {
     val shouldShowTopBar =
         navController.currentBackStackEntryAsState().value?.destination?.route in listOf(
             Screen.Main.GamesScreen.route,
-            Screen.Main.AwardsScreen.route,
             Screen.Main.JournalScreen.route,
         )
+
+    /*val topBarHeight = 128.dp
+    val topBarHeightPx = with(LocalDensity.current) { topBarHeight.roundToPx().toFloat() }
+    var topBarOffsetHeightPx by remember { mutableStateOf(0f) }
+    val nestedScrollConnection = remember {
+        object : NestedScrollConnection {
+            override fun onPreScroll(
+                available: Offset,
+                source: NestedScrollSource
+            ): Offset {
+                topBarOffsetHeightPx =
+                    (topBarOffsetHeightPx + available.y).coerceIn(-topBarHeightPx, 0f)
+                return super.onPreScroll(available, source)
+            }
+        }
+    }*/
 
     startDestination.value?.let { startDestinationValue ->
         Scaffold(
@@ -83,6 +116,12 @@ fun Navigation() {
             topBar = {
                 if (shouldShowTopBar) {
                     EmbeddedSearchBar(
+                        /*modifier = Modifier.offset {
+                            IntOffset(
+                                x = 0,
+                                y = topBarOffsetHeightPx.roundToInt()
+                            )
+                        },*/
                         navController = navController,
                     )
                 }
@@ -104,9 +143,9 @@ fun Navigation() {
             } else {
                 Modifier
             }
-
             NavHost(
                 modifier = navModifier,
+                    //.nestedScroll(nestedScrollConnection),
                 navController = navController,
                 startDestination = startDestinationValue,
             ) {
@@ -190,6 +229,7 @@ private fun EmbeddedBottomBar(
 
 @Composable
 private fun EmbeddedSearchBar(
+    //modifier: Modifier,
     navController: NavHostController,
 ) {
     Row(

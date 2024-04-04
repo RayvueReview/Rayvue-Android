@@ -99,7 +99,9 @@ internal fun SearchScreen(
                             value = typedQueryState.value,
                             onValueChange = { newValue ->
                                 typedQueryState.value = newValue
-                                viewModel.searchGames(newValue.text)
+
+                                if (typedQueryState.value.text.length > 3)
+                                    viewModel.searchGames(newValue.text)
                             },
                             textStyle = LocalTextStyle.current.copy(
                                 fontSize = 14.sp,
