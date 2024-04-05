@@ -1,7 +1,8 @@
 package com.bigbratan.rayvue.services
 
-import com.google.firebase.Timestamp
 import com.bigbratan.rayvue.models.Review
+import com.google.firebase.Timestamp
+import com.google.firebase.firestore.DocumentSnapshot
 import java.util.UUID
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -13,9 +14,11 @@ class ReviewsService @Inject constructor(
 ) {
     suspend fun fetchReviews(
         gameId: String,
-    ): List<Review> {
+        limit: Long,
+        startAfter: DocumentSnapshot? = null
+    ): Pair<List<Review>, DocumentSnapshot?> {
         val userId = userService.user.value?.id
-        val reviews = firebaseStorageService.getDocuments<Review>(
+        val (reviews, lastSnapshot) = firebaseStorageService.getDocuments<Review>(
             collection = "reviews",
             documentFields = arrayOf(
                 "id",
@@ -28,14 +31,18 @@ class ReviewsService @Inject constructor(
             filters = mapOf(
                 "gameId" to gameId,
                 "isUserAccredited" to true
-            )
+            ),
+            limit = limit,
+            startAfter = startAfter
         )
 
-        return if (userId != null) {
+        val filteredReviews = if (userId != null) {
             reviews.filterNot { review -> review.userId == userId }
         } else {
             reviews
         }
+
+        return Pair(filteredReviews, lastSnapshot)
     }
 
     suspend fun fetchCurrentUserReview(
@@ -44,7 +51,7 @@ class ReviewsService @Inject constructor(
         val userId = userService.user.value?.id
 
         if (userId != null) {
-            return firebaseStorageService.getDocuments<Review>(
+            val (reviews, _) = firebaseStorageService.getDocuments<Review>(
                 collection = "reviews",
                 documentFields = arrayOf(
                     "id",
@@ -57,8 +64,10 @@ class ReviewsService @Inject constructor(
                 filters = mapOf(
                     "userId" to userId,
                     "gameId" to gameId
-                )
-            ).firstOrNull()
+                ),
+                limit = 1
+            )
+            return reviews.firstOrNull()
         } else {
             return null
         }

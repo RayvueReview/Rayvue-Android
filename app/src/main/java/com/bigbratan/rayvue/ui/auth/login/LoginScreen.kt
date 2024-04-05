@@ -24,9 +24,9 @@ import com.bigbratan.rayvue.ui.auth.AuthTextField
 import com.bigbratan.rayvue.ui.auth.AuthView
 import com.bigbratan.rayvue.ui.utils.isValidEmail
 import com.bigbratan.rayvue.ui.utils.isValidPassword
-import com.bigbratan.rayvue.ui.views.Popup
 import com.bigbratan.rayvue.ui.views.LoadingAnimation
 import com.bigbratan.rayvue.ui.views.OutlinedTextButton
+import com.bigbratan.rayvue.ui.views.Popup
 
 @Composable
 internal fun LoginScreen(

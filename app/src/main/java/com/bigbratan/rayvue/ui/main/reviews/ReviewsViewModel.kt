@@ -5,6 +5,7 @@ import androidx.lifecycle.viewModelScope
 import com.bigbratan.rayvue.models.Review
 import com.bigbratan.rayvue.services.ReviewsService
 import com.bigbratan.rayvue.services.UserService
+import com.google.firebase.firestore.DocumentSnapshot
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
@@ -20,6 +21,7 @@ class ReviewsViewModel @Inject constructor(
     val obtainedReviewsState = MutableStateFlow<ObtainedReviewsState>(ObtainedReviewsState.Loading)
     val sentReviewState = MutableStateFlow<SentReviewState>(SentReviewState.Idle)
     val isRefreshing = MutableStateFlow(false)
+    private var lastDocumentSnapshot: DocumentSnapshot? = null
 
     val isUserLoggedIn = MutableStateFlow(true)
     val hasUserReviewedGame = MutableStateFlow(false)
@@ -35,39 +37,57 @@ class ReviewsViewModel @Inject constructor(
     fun getData(
         gameId: String,
         canRefresh: Boolean = true,
+        loadMore: Boolean = false
     ) {
         viewModelScope.launch {
+            if (canRefresh) {
+                isRefreshing.value = true
+                if (!loadMore) {
+                    lastDocumentSnapshot = null
+                }
+            }
+
             try {
                 if (canRefresh)
                     isRefreshing.value = true
 
-                val userId = userService.user.value?.id
-                val reviews = reviewsService.fetchReviews(gameId)
-                    .sortedByDescending { review -> review.dateAdded }
-                    .map { ReviewItemViewModel(it) }
-                val currentUserReview = if (userId != null) {
-                    reviewsService.fetchCurrentUserReview(gameId)?.let { ReviewItemViewModel(it) }
+                val (reviews, lastSnapshot) = reviewsService.fetchReviews(
+                    gameId = gameId,
+                    limit = 10, // Define your limit
+                    startAfter = if (loadMore) lastDocumentSnapshot else null
+                )
+                lastDocumentSnapshot = lastSnapshot
+
+                val reviewsViewModels =
+                    reviews.sortedByDescending { it.dateAdded }.map { ReviewItemViewModel(it) }
+
+                if (loadMore) {
+                    val currentReviews =
+                        if (obtainedReviewsState.value is ObtainedReviewsState.Success) {
+                            (obtainedReviewsState.value as ObtainedReviewsState.Success).reviews + reviewsViewModels
+                        } else reviewsViewModels
+                    obtainedReviewsState.value = ObtainedReviewsState.Success(currentReviews)
                 } else {
-                    null
+                    obtainedReviewsState.value = ObtainedReviewsState.Success(reviewsViewModels)
                 }
 
-                if (currentUserReview != null) {
-                    obtainedReviewsState.value =
-                        ObtainedReviewsState.Success(listOf(currentUserReview) + reviews)
-                    hasUserReviewedGame.value = true
-                } else {
-                    obtainedReviewsState.value = ObtainedReviewsState.Success(reviews)
-                    hasUserReviewedGame.value = false
-                }
+                checkIfUserReviewedGame(gameId)
             } catch (e: Exception) {
-                if (canRefresh)
-                    isRefreshing.value = true
-
                 obtainedReviewsState.value = ObtainedReviewsState.Error
             } finally {
                 if (canRefresh)
                     isRefreshing.value = false
             }
+        }
+    }
+
+    private suspend fun checkIfUserReviewedGame(gameId: String) {
+        val userId = userService.user.value?.id
+        if (userId != null) {
+            val currentUserReview = reviewsService.fetchCurrentUserReview(gameId)
+            hasUserReviewedGame.value = currentUserReview != null
+        } else {
+            hasUserReviewedGame.value = false
         }
     }
 

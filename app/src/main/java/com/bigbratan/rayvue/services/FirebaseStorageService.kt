@@ -1,5 +1,6 @@
 package com.bigbratan.rayvue.services
 
+import android.util.Log
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.Query
@@ -20,16 +21,23 @@ class FirebaseStorageService @Inject constructor() {
     suspend inline fun <reified T : Any> getDocuments(
         collection: String,
         documentFields: Array<String>,
-        filters: Map<String, Any> = emptyMap()
-    ): List<T> {
-        var query: Query = db.collection(collection)
+        filters: Map<String, Any> = emptyMap(),
+        limit: Long,
+        startAfter: DocumentSnapshot? = null
+    ): Pair<List<T>, DocumentSnapshot?> {
+        var query: Query = db.collection(collection).limit(limit)
 
         for ((field, value) in filters) {
             query = query.whereEqualTo(field, value)
         }
 
+        startAfter?.let {
+            query = query.startAfter(it)
+        }
+
         val querySnapshot = query.get().await()
         val list = mutableListOf<T>()
+        var lastSnapshot: DocumentSnapshot? = null
 
         for (document in querySnapshot.documents) {
             val objectFields = mutableMapOf<String, Any>()
@@ -44,8 +52,10 @@ class FirebaseStorageService @Inject constructor() {
 
             val obj = convertToObject<T>(objectFields)
             list.add(obj)
+            lastSnapshot = document
         }
-        return list
+        Log.d("mydata - firebase service", "${Pair(list, lastSnapshot)}")
+        return Pair(list, lastSnapshot)
     }
 
     suspend inline fun <reified T : Any> searchDocuments(
@@ -91,18 +101,27 @@ class FirebaseStorageService @Inject constructor() {
         return list
     }
 
-    inline fun <reified T : Any> convertToObject(fieldMap: Map<String, Any>): T {
-        return Gson().fromJson(Gson().toJson(fieldMap), T::class.java)
-    }
-
-    suspend fun getDocument(
+    suspend inline fun <reified T : Any> getDocument(
         collection: String,
         documentId: String,
-    ): DocumentSnapshot {
-        return db.collection(collection)
+        documentFields: Array<String>,
+    ): T {
+        val documentSnapshot = db.collection(collection)
             .document(documentId)
             .get()
             .await()
+
+        val fieldsMap = documentFields.associateWith { fieldName ->
+            documentSnapshot.get(fieldName)
+        }.filterValues { it != null }
+
+        return convertToObject<T>(fieldsMap)
+    }
+
+    inline fun <reified T : Any> convertToObject(
+        fieldsMap: Map<String, Any?>
+    ): T {
+        return Gson().fromJson(Gson().toJson(fieldsMap), T::class.java)
     }
 
     suspend fun addDocument(

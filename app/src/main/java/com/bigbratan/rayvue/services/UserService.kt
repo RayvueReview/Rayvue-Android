@@ -1,4 +1,4 @@
-package com.bigbratan.rayvue.services;
+package com.bigbratan.rayvue.services
 
 
 import com.bigbratan.rayvue.models.User
@@ -29,15 +29,15 @@ class UserService @Inject constructor(
 
     suspend fun fetchUser() {
         user.value = firebaseStorageService.getCurrentUser()?.uid?.let { userId ->
-            firebaseStorageService.getDocuments<User>(
+            firebaseStorageService.getDocument<User>(
                 collection = "users",
+                documentId = userId,
                 documentFields = arrayOf(
                     "id",
                     "userName",
                     "isReviewer",
                 ),
-                filters = mapOf("id" to userId)
-            ).first()
+            )
         }
     }
 

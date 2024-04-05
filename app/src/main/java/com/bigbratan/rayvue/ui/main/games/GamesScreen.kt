@@ -10,10 +10,14 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.GridItemSpan
+import androidx.compose.foundation.lazy.grid.LazyGridState
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
+import androidx.compose.foundation.lazy.grid.rememberLazyGridState
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.pullrefresh.PullRefreshIndicator
@@ -24,6 +28,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -41,10 +46,10 @@ import com.bigbratan.rayvue.models.Game
 import com.bigbratan.rayvue.ui.theme.Black75
 import com.bigbratan.rayvue.ui.theme.noFontPadding
 import com.bigbratan.rayvue.ui.theme.plusJakartaSans
+import com.bigbratan.rayvue.ui.views.ContentSectionHeader
 import com.bigbratan.rayvue.ui.views.ErrorMessage
 import com.bigbratan.rayvue.ui.views.FadingScrimBackground
 import com.bigbratan.rayvue.ui.views.LoadingAnimation
-import com.bigbratan.rayvue.ui.views.ContentSectionHeader
 
 const val MAIN_GRID_SIZE = 2
 
@@ -56,6 +61,9 @@ internal fun GamesScreen(
 ) {
     val obtainedGamesState = viewModel.obtainedGamesState.collectAsState()
     val isRefreshing = viewModel.isRefreshing.collectAsState()
+    val gridState = rememberLazyGridState()
+    val listState1 = rememberLazyListState()
+    val listState2 = rememberLazyListState()
 
     val pullRefreshState = rememberPullRefreshState(
         refreshing = isRefreshing.value,
@@ -68,6 +76,48 @@ internal fun GamesScreen(
 
     LaunchedEffect(Unit) {
         viewModel.getData(canRefresh = false)
+    }
+
+    LaunchedEffect(gridState) {
+        snapshotFlow { gridState.layoutInfo.visibleItemsInfo.lastOrNull()?.index }
+            .collect { lastIndex ->
+                if (lastIndex != null && obtainedGamesState.value is ObtainedGamesState.Success) {
+                    val totalItemCount =
+                        (obtainedGamesState.value as ObtainedGamesState.Success).games.allGames.size
+
+                    if (lastIndex >= totalItemCount - 1) {
+                        viewModel.getData(canRefresh = false, loadMore = true)
+                    }
+                }
+            }
+    }
+
+    LaunchedEffect(listState1) {
+        snapshotFlow { listState1.layoutInfo.visibleItemsInfo.lastOrNull()?.index }
+            .collect { lastIndex ->
+                if (lastIndex != null && obtainedGamesState.value is ObtainedGamesState.Success) {
+                    val recentItemCount =
+                        (obtainedGamesState.value as ObtainedGamesState.Success).games.recentGames.size
+
+                    if (lastIndex >= recentItemCount - 1) {
+                        viewModel.getData(canRefresh = false, loadMore = true)
+                    }
+                }
+            }
+    }
+
+    LaunchedEffect(listState2) {
+        snapshotFlow { listState2.layoutInfo.visibleItemsInfo.lastOrNull()?.index }
+            .collect { lastIndex ->
+                if (lastIndex != null && obtainedGamesState.value is ObtainedGamesState.Success) {
+                    val randomItemCount =
+                        (obtainedGamesState.value as ObtainedGamesState.Success).games.randomGames.size
+
+                    if (lastIndex >= randomItemCount - 1) {
+                        viewModel.getData(canRefresh = false, loadMore = true)
+                    }
+                }
+            }
     }
 
     Box(
@@ -97,6 +147,9 @@ internal fun GamesScreen(
 
                 GamesView(
                     games = games,
+                    gridState = gridState,
+                    listState1 = listState1,
+                    listState2 = listState2,
                     onGameClick = onGameClick,
                 )
             }
@@ -116,6 +169,9 @@ internal fun GamesScreen(
 @Composable
 private fun GamesView(
     games: GamesItemViewModel,
+    gridState: LazyGridState,
+    listState1: LazyListState,
+    listState2: LazyListState,
     onGameClick: (gameId: String) -> Unit,
 ) {
     Scaffold(
@@ -125,6 +181,7 @@ private fun GamesView(
     ) {
         LazyVerticalGrid(
             columns = GridCells.Fixed(MAIN_GRID_SIZE),
+            state = gridState
         ) {
             item(span = { GridItemSpan(MAIN_GRID_SIZE) }) {
                 ContentSectionHeader(
@@ -137,7 +194,8 @@ private fun GamesView(
                 LazyRow(
                     modifier = Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.spacedBy(12.dp),
-                    contentPadding = PaddingValues(horizontal = 24.dp)
+                    contentPadding = PaddingValues(horizontal = 24.dp),
+                    state = listState1,
                 ) {
                     items(games.recentGames.size) { gameIndex ->
                         val game = games.recentGames[gameIndex]
@@ -162,7 +220,8 @@ private fun GamesView(
                 LazyRow(
                     modifier = Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.spacedBy(12.dp),
-                    contentPadding = PaddingValues(horizontal = 24.dp)
+                    contentPadding = PaddingValues(horizontal = 24.dp),
+                    state = listState2,
                 ) {
                     items(games.randomGames.size) { gameIndex ->
                         val game = games.randomGames[gameIndex]

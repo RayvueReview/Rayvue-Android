@@ -12,6 +12,9 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyListState
+import androidx.compose.foundation.lazy.grid.LazyGridState
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.icons.Icons
@@ -39,6 +42,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
@@ -60,8 +64,8 @@ import com.bigbratan.rayvue.R
 import com.bigbratan.rayvue.ui.theme.noFontPadding
 import com.bigbratan.rayvue.ui.theme.plusJakartaSans
 import com.bigbratan.rayvue.ui.views.ErrorMessage
-import com.bigbratan.rayvue.ui.views.Popup
 import com.bigbratan.rayvue.ui.views.LoadingAnimation
+import com.bigbratan.rayvue.ui.views.Popup
 import com.bigbratan.rayvue.ui.views.TransparentIconButton
 
 @OptIn(ExperimentalMaterialApi::class)
@@ -78,6 +82,7 @@ internal fun ReviewsScreen(
     val isUserLoggedIn = viewModel.isUserLoggedIn.collectAsState()
     val hasUserReviewedGame = viewModel.hasUserReviewedGame.collectAsState()
     val isRefreshing = viewModel.isRefreshing.collectAsState()
+    val listState = rememberLazyListState()
 
     val typedReviewState = remember { mutableStateOf(TextFieldValue()) }
     val focusManager = LocalFocusManager.current
@@ -98,6 +103,21 @@ internal fun ReviewsScreen(
             gameId = gameId,
             canRefresh = false,
         )
+    }
+
+    LaunchedEffect(listState) {
+        snapshotFlow { listState.layoutInfo.visibleItemsInfo.lastOrNull()?.index }
+            .collect { lastIndex ->
+                if (lastIndex != null) {
+                    val totalItemCount = obtainedReviewsState.value.let { state ->
+                        if (state is ObtainedReviewsState.Success) state.reviews.size else 0
+                    }
+
+                    if (lastIndex >= totalItemCount - 1) {
+                        viewModel.getData(gameId, canRefresh = false, loadMore = true)
+                    }
+                }
+            }
     }
 
     Box(
@@ -154,6 +174,7 @@ internal fun ReviewsScreen(
                         focusManager = focusManager,
                         isUserLoggedIn = isUserLoggedIn.value,
                         hasUserReviewedGame = hasUserReviewedGame.value,
+                        listState = listState,
                         onBackClick = onBackClick,
                         onSendClick = { typedReview ->
                             viewModel.addReview(
@@ -203,6 +224,7 @@ private fun ReviewsView(
     focusManager: FocusManager,
     isUserLoggedIn: Boolean,
     hasUserReviewedGame: Boolean,
+    listState: LazyListState,
     onSendClick: (typedReview: String) -> Unit,
     onBackClick: () -> Unit,
 ) {
@@ -349,7 +371,8 @@ private fun ReviewsView(
                 LazyColumn(
                     modifier = Modifier
                         .fillMaxSize()
-                        .padding(paddingValues)
+                        .padding(paddingValues),
+                    state = listState,
                 ) {
                     items(reviews.size) { reviewIndex ->
                         Column(
