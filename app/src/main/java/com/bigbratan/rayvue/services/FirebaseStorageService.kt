@@ -18,95 +18,105 @@ class FirebaseStorageService @Inject constructor() {
 
     fun getCurrentUser() = auth.currentUser
 
-    suspend inline fun <reified T : Any> getDocuments(
-        collection: String,
+    suspend inline fun <reified T : Any> getDocumentsRepeatedly(
+        collectionId: String,
         documentFields: Array<String>,
         filters: Map<String, Any> = emptyMap(),
+        orderBy: String? = null,
+        direction: Query.Direction = Query.Direction.ASCENDING,
         limit: Long,
         startAfter: DocumentSnapshot? = null
     ): Pair<List<T>, DocumentSnapshot?> {
-        var query: Query = db.collection(collection).limit(limit)
+        var query: Query = db.collection(collectionId)
 
-        for ((field, value) in filters) {
+        filters.forEach { (field, value) ->
             query = query.whereEqualTo(field, value)
         }
 
-        startAfter?.let {
-            query = query.startAfter(it)
+        query = query.limit(limit)
+
+        if (orderBy != null) {
+            query = query.orderBy(orderBy, direction)
+        }
+
+        if (startAfter != null) {
+            query = query.startAfter(startAfter)
         }
 
         val querySnapshot = query.get().await()
-        val list = mutableListOf<T>()
-        var lastSnapshot: DocumentSnapshot? = null
+        val documents = querySnapshot.documents
+        val lastSnapshot = documents.lastOrNull()
 
-        for (document in querySnapshot.documents) {
-            val objectFields = mutableMapOf<String, Any>()
-
-            for (documentField in documentFields) {
-                val value = document.get(documentField)
-
-                if (value != null) {
-                    objectFields[documentField] = value
-                }
-            }
-
-            val obj = convertToObject<T>(objectFields)
-            list.add(obj)
-            lastSnapshot = document
+        val list = documents.mapNotNull { document ->
+            documentFields.associateWith { document.get(it) }
+                .filterValues { it != null }
+                .takeIf { it.isNotEmpty() }
+                ?.let { convertToObject<T>(it) }
         }
-        Log.d("mydata - firebase service", "${Pair(list, lastSnapshot)}")
-        return Pair(list, lastSnapshot)
+
+        return list to lastSnapshot
     }
 
-    suspend inline fun <reified T : Any> searchDocuments(
-        collection: String,
+    suspend inline fun <reified T : Any> getDocuments(
+        collectionId: String,
         documentFields: Array<String>,
-        searchField: String? = null,
-        searchQuery: String? = null,
-        filters: Map<String, Any> = emptyMap()
+        filters: Map<String, Any> = emptyMap(),
+        orderBy: String? = null,
+        direction: Query.Direction = Query.Direction.ASCENDING,
+        limit: Long
     ): List<T> {
-        var query: Query = db.collection(collection)
+        var query: Query = db.collection(collectionId)
 
-        for ((field, value) in filters) {
+        filters.forEach { (field, value) ->
             query = query.whereEqualTo(field, value)
         }
 
-        if (searchField != null && !searchQuery.isNullOrEmpty()) {
-            val endQuery =
-                searchQuery.lowercase().filter { it.isLetterOrDigit() }
-                    .substring(0, searchQuery.length - 1) + searchQuery.last().inc()
+        if (orderBy != null) {
+            query = query.orderBy(orderBy, direction)
+        }
 
-            query = query
-                .whereGreaterThanOrEqualTo(searchField, searchQuery)
+        query = query.limit(limit)
+
+        val querySnapshot = query.get().await()
+        return querySnapshot.documents.mapNotNull { document ->
+            documentFields.associateWith { document.get(it) }
+                .filterValues { it != null }
+                .takeIf { it.isNotEmpty() }
+                ?.let { convertToObject<T>(it) }
+        }
+    }
+
+    suspend inline fun <reified T : Any> searchDocuments(
+        collectionId: String,
+        documentFields: Array<String>,
+        searchField: String? = null,
+        searchQuery: String? = null,
+    ): List<T> {
+        var query: Query = db.collection(collectionId)
+
+        if (!searchField.isNullOrEmpty() && !searchQuery.isNullOrEmpty()) {
+            val endQuery = searchQuery.lowercase()
+                .filter { it.isLetterOrDigit() }
+                .let { it.substring(0, it.length - 1) + it.last().inc() }
+            query = query.whereGreaterThanOrEqualTo(searchField, searchQuery)
                 .whereLessThan(searchField, endQuery)
         }
 
         val querySnapshot = query.get().await()
-        val list = mutableListOf<T>()
-
-        for (document in querySnapshot.documents) {
-            val objectFields = mutableMapOf<String, Any>()
-
-            for (documentField in documentFields) {
-                val value = document.get(documentField)
-
-                if (value != null) {
-                    objectFields[documentField] = value
-                }
-            }
-
-            val obj = convertToObject<T>(objectFields)
-            list.add(obj)
+        return querySnapshot.documents.mapNotNull { document ->
+            documentFields.associateWith { document.get(it) }
+                .filterValues { it != null }
+                .takeIf { it.isNotEmpty() }
+                ?.let { convertToObject<T>(it) }
         }
-        return list
     }
 
     suspend inline fun <reified T : Any> getDocument(
-        collection: String,
+        collectionId: String,
         documentId: String,
         documentFields: Array<String>,
     ): T {
-        val documentSnapshot = db.collection(collection)
+        val documentSnapshot = db.collection(collectionId)
             .document(documentId)
             .get()
             .await()
@@ -118,57 +128,113 @@ class FirebaseStorageService @Inject constructor() {
         return convertToObject<T>(fieldsMap)
     }
 
-    inline fun <reified T : Any> convertToObject(
-        fieldsMap: Map<String, Any?>
-    ): T {
-        return Gson().fromJson(Gson().toJson(fieldsMap), T::class.java)
+    suspend fun getDocumentAsList(
+        collectionId: String,
+        documentId: String,
+        documentField: String
+    ): List<String> {
+        val documentSnapshot = db.collection(collectionId)
+            .document(documentId)
+            .get()
+            .await()
+
+        val data = documentSnapshot.get(documentField)
+
+        return if (data is List<*>) {
+            @Suppress("UNCHECKED_CAST")
+            data as List<String>
+        } else {
+            Log.e(
+                "Firestore",
+                "Expected a List for field '$documentField' but got ${data?.javaClass?.simpleName}"
+            )
+            emptyList()
+        }
     }
 
     suspend fun addDocument(
-        collection: String,
+        collectionId: String,
         documentId: String,
         data: Any,
     ) {
-        db.collection(collection)
+        db.collection(collectionId)
             .document(documentId)
             .set(data)
             .await()
     }
 
     suspend fun updateDocument(
-        collection: String,
+        collectionId: String,
         documentId: String,
         field: String,
         value: Any,
     ) {
-        db.collection(collection)
+        db.collection(collectionId)
             .document(documentId)
             .update(field, value)
             .await()
     }
 
     suspend fun deleteDocument(
-        collection: String,
+        collectionId: String,
         documentId: String,
     ) {
-        db.collection(collection)
+        db.collection(collectionId)
             .document(documentId)
             .delete()
             .await()
     }
 
     suspend fun deleteDocuments(
-        collection: String,
-        internalId: String,
-        matchingId: String,
+        collectionId: String,
+        documentField: String,
+        value: String,
     ) {
-        val querySnapshot = db.collection(collection)
-            .whereEqualTo(internalId, matchingId)
+        val querySnapshot = db.collection(collectionId)
+            .whereEqualTo(documentField, value)
             .get()
             .await()
 
         for (document in querySnapshot.documents) {
-            db.collection(collection).document(document.id).delete().await()
+            db.collection(collectionId).document(document.id).delete().await()
         }
     }
+
+    inline fun <reified T : Any> convertToObject(
+        fieldsMap: Map<String, Any?>
+    ): T {
+        return Gson().fromJson(Gson().toJson(fieldsMap), T::class.java)
+    }
 }
+
+/*suspend inline fun <reified T : Any> getDocumentsRepeatedly(
+        collectionId: String,
+        documentFields: Array<String>,
+        filters: Map<String, Any> = emptyMap(),
+        orderBy: String? = null,
+        direction: Query.Direction = Query.Direction.ASCENDING,
+        limit: Long,
+        startAfter: DocumentSnapshot? = null
+    ): Pair<List<T>, DocumentSnapshot?> {
+        val query = db.collection(collectionId)
+            .apply {
+                filters.forEach { (field, value) -> whereEqualTo(field, value) }
+                limit(limit)
+                orderBy?.let { orderBy(it, direction) }
+                startAfter?.let { startAfter(it) }
+            }
+
+        val querySnapshot = query.get().await()
+        val documents = querySnapshot.documents
+        val lastSnapshot = documents.lastOrNull()
+
+        val list = documents.mapNotNull { document ->
+            val fieldsMap = documentFields.mapNotNull { field ->
+                document.get(field)?.let { field to it }
+            }.toMap()
+
+            if (fieldsMap.isNotEmpty()) convertToObject<T>(fieldsMap) else null
+        }
+
+        return list to lastSnapshot
+    }*/

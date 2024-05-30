@@ -13,7 +13,6 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListState
-import androidx.compose.foundation.lazy.grid.LazyGridState
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.ExperimentalMaterialApi
@@ -67,6 +66,7 @@ import com.bigbratan.rayvue.ui.views.ErrorMessage
 import com.bigbratan.rayvue.ui.views.LoadingAnimation
 import com.bigbratan.rayvue.ui.views.Popup
 import com.bigbratan.rayvue.ui.views.TransparentIconButton
+import kotlinx.coroutines.flow.distinctUntilChanged
 
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
@@ -93,13 +93,15 @@ internal fun ReviewsScreen(
             if (obtainedReviewsState.value !is ObtainedReviewsState.Loading &&
                 sentReviewState.value !is SentReviewState.Loading
             ) {
-                viewModel.getData(gameId)
+                // TODO: FIGURE OUT IF RESET SENT STATE IS NECESSARY HERE
+                viewModel.resetReceivedState(keepLastSnapshot = true)
+                viewModel.getReviews(gameId)
             }
         }
     )
 
     LaunchedEffect(gameId) {
-        viewModel.getData(
+        viewModel.getReviews(
             gameId = gameId,
             canRefresh = false,
         )
@@ -107,15 +109,18 @@ internal fun ReviewsScreen(
 
     LaunchedEffect(listState) {
         snapshotFlow { listState.layoutInfo.visibleItemsInfo.lastOrNull()?.index }
+            .distinctUntilChanged()
             .collect { lastIndex ->
-                if (lastIndex != null) {
-                    val totalItemCount = obtainedReviewsState.value.let { state ->
-                        if (state is ObtainedReviewsState.Success) state.reviews.size else 0
-                    }
+                val totalItemCount =
+                    (obtainedReviewsState.value as? ObtainedReviewsState.Success)?.reviews?.size
+                        ?: 0
 
-                    if (lastIndex >= totalItemCount - 1) {
-                        viewModel.getData(gameId, canRefresh = false, loadMore = true)
-                    }
+                if (lastIndex != null && lastIndex >= totalItemCount - 1) {
+                    viewModel.getReviews(
+                        gameId,
+                        canRefresh = false,
+                        canLoadMore = true
+                    )
                 }
             }
     }
@@ -193,11 +198,11 @@ internal fun ReviewsScreen(
                         isPopupVisible = isPopupVisible,
                         onConfirm = {
                             isPopupVisible = false
-                            viewModel.resetState()
+                            viewModel.resetSentState()
                         },
                         onDismiss = {
                             isPopupVisible = false
-                            viewModel.resetState()
+                            viewModel.resetSentState()
                         }
                     )
                 }

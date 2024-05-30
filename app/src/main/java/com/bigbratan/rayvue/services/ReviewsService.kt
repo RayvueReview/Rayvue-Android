@@ -3,6 +3,7 @@ package com.bigbratan.rayvue.services
 import com.bigbratan.rayvue.models.Review
 import com.google.firebase.Timestamp
 import com.google.firebase.firestore.DocumentSnapshot
+import com.google.firebase.firestore.Query
 import java.util.UUID
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -18,59 +19,58 @@ class ReviewsService @Inject constructor(
         startAfter: DocumentSnapshot? = null
     ): Pair<List<Review>, DocumentSnapshot?> {
         val userId = userService.user.value?.id
-        val (reviews, lastSnapshot) = firebaseStorageService.getDocuments<Review>(
-            collection = "reviews",
-            documentFields = arrayOf(
-                "id",
-                "gameId",
-                "userId",
-                "dateAdded",
-                "userName",
-                "content"
-            ),
-            filters = mapOf(
-                "gameId" to gameId,
-                "isUserAccredited" to true
-            ),
+        val documentFields = arrayOf("id", "gameId", "userId", "dateAdded", "userName", "content")
+        val filters = mapOf("gameId" to gameId, "isUserAccredited" to true)
+
+        val (reviews, lastSnapshot) = firebaseStorageService.getDocumentsRepeatedly<Review>(
+            collectionId = "reviews",
+            documentFields = documentFields,
+            filters = filters,
+            orderBy = "dateAdded",
+            direction = Query.Direction.DESCENDING,
             limit = limit,
             startAfter = startAfter
         )
 
-        val filteredReviews = if (userId != null) {
-            reviews.filterNot { review -> review.userId == userId }
-        } else {
-            reviews
-        }
-
-        return Pair(filteredReviews, lastSnapshot)
+        val filteredReviews = userId?.let { reviews.filterNot { it.userId == userId } } ?: reviews
+        return filteredReviews to lastSnapshot
     }
 
     suspend fun fetchCurrentUserReview(
-        gameId: String,
+        gameId: String
     ): Review? {
-        val userId = userService.user.value?.id
+        val userId = userService.user.value?.id ?: return null
+        val documentFields = arrayOf("id", "gameId", "userId", "dateAdded", "userName", "content")
+        val filters = mapOf("userId" to userId, "gameId" to gameId)
 
-        if (userId != null) {
-            val (reviews, _) = firebaseStorageService.getDocuments<Review>(
-                collection = "reviews",
-                documentFields = arrayOf(
-                    "id",
-                    "gameId",
-                    "userId",
-                    "dateAdded",
-                    "userName",
-                    "content"
-                ),
-                filters = mapOf(
-                    "userId" to userId,
-                    "gameId" to gameId
-                ),
-                limit = 1
-            )
-            return reviews.firstOrNull()
-        } else {
-            return null
-        }
+        val (reviews, _) = firebaseStorageService.getDocumentsRepeatedly<Review>(
+            collectionId = "reviews",
+            documentFields = documentFields,
+            filters = filters,
+            limit = 1
+        )
+
+        return reviews.firstOrNull()
+    }
+
+    suspend fun fetchReviewsOnce(
+        gameId: String,
+        limit: Long,
+    ): List<Review> {
+        val userId = userService.user.value?.id
+        val documentFields = arrayOf("id", "gameId", "userId", "dateAdded", "userName", "content")
+        val filters = mapOf("gameId" to gameId, "isUserAccredited" to true)
+
+        val reviews = firebaseStorageService.getDocuments<Review>(
+            collectionId = "reviews",
+            documentFields = documentFields,
+            filters = filters,
+            orderBy = "dateAdded",
+            direction = Query.Direction.DESCENDING,
+            limit = limit,
+        )
+
+        return userId?.let { reviews.filterNot { it.userId == userId } } ?: reviews
     }
 
     suspend fun addReview(
@@ -97,7 +97,7 @@ class ReviewsService @Inject constructor(
 
             if (reviewData != null) {
                 firebaseStorageService.addDocument(
-                    collection = "reviews",
+                    collectionId = "reviews",
                     documentId = reviewId,
                     data = reviewData,
                 )
@@ -113,7 +113,7 @@ class ReviewsService @Inject constructor(
 
         if (userId != null) {
             firebaseStorageService.updateDocument(
-                collection = "reviews",
+                collectionId = "reviews",
                 documentId = reviewId,
                 field = "content",
                 value = content,
@@ -128,7 +128,7 @@ class ReviewsService @Inject constructor(
 
         if (userId != null) {
             firebaseStorageService.deleteDocument(
-                collection = "reviews",
+                collectionId = "reviews",
                 documentId = reviewId,
             )
         }
@@ -138,9 +138,9 @@ class ReviewsService @Inject constructor(
         userId: String
     ) {
         firebaseStorageService.deleteDocuments(
-            collection = "reviews",
-            internalId = "userId",
-            matchingId = userId,
+            collectionId = "reviews",
+            documentField = "userId",
+            value = userId,
         )
     }
 }

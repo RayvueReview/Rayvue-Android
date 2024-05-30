@@ -30,7 +30,7 @@ class UserService @Inject constructor(
     suspend fun fetchUser() {
         user.value = firebaseStorageService.getCurrentUser()?.uid?.let { userId ->
             firebaseStorageService.getDocument<User>(
-                collection = "users",
+                collectionId = "users",
                 documentId = userId,
                 documentFields = arrayOf(
                     "id",

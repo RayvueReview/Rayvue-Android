@@ -1,7 +1,6 @@
 package com.bigbratan.rayvue.ui.main.games.gameDetails
 
 import android.content.Context
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.bigbratan.rayvue.R
@@ -11,11 +10,8 @@ import com.bigbratan.rayvue.services.ReviewsService
 import com.bigbratan.rayvue.services.UserService
 import com.bigbratan.rayvue.ui.main.reviews.ReviewItemViewModel
 import com.bigbratan.rayvue.ui.utils.encodeField
-import com.google.firebase.firestore.DocumentSnapshot
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
-import kotlinx.coroutines.Job
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -29,77 +25,43 @@ class GameDetailsViewModel @Inject constructor(
 ) : ViewModel() {
     val obtainedGameDetailsState =
         MutableStateFlow<ObtainedGameDetailsState>(ObtainedGameDetailsState.Loading)
-    private var lastReviewDocumentSnapshot: DocumentSnapshot? = null
-    private var isLoadingMoreReviews = false
-    private var fetchJob: Job? = null
 
     fun getData(
         gameId: String,
-        loadMore: Boolean = false
     ) {
-        fetchJob?.cancel()
-        fetchJob = viewModelScope.launch {
-            delay(300)
-
-            if (loadMore && isLoadingMoreReviews) {
-                return@launch
-            }
-
-            isLoadingMoreReviews = true
-
-            if (!loadMore) {
-                obtainedGameDetailsState.value = ObtainedGameDetailsState.Loading
-                lastReviewDocumentSnapshot = null
-            }
-
+        viewModelScope.launch {
             try {
-                val userId = userService.user.value?.id
                 val gameDetails = gamesService.fetchGameDetails(gameId)
-                val (newReviews, lastSnapshot) = reviewsService.fetchReviews(
-                    gameId = gameId,
-                    limit = 10,
-                    startAfter = if (loadMore) lastReviewDocumentSnapshot else null
-                )
-                lastReviewDocumentSnapshot = lastSnapshot
-
-                if (newReviews.isNotEmpty()) {
-                    lastReviewDocumentSnapshot = lastSnapshot
-                }
-
-                val newReviewsViewModels = newReviews.sortedByDescending { it.dateAdded }
-                    .map { ReviewItemViewModel(it) }
-
-                val currentState = obtainedGameDetailsState.value
-                val currentReviews = if (currentState is ObtainedGameDetailsState.Success) {
-                    currentState.reviews.toSet()
-                } else {
-                    emptySet()
-                }
-
-                val allReviews = if (!loadMore && userId != null) {
-                    val currentUserReview = reviewsService.fetchCurrentUserReview(gameId)
-                        ?.let { ReviewItemViewModel(it) }
-
-                    if (currentUserReview != null)
-                        listOf(currentUserReview) + newReviewsViewModels
-                    else
-                        newReviewsViewModels
-                } else {
-                    (currentReviews + newReviewsViewModels).toList()
-                }
+                val reviews = reviewsService.fetchReviewsOnce(
+                    gameId,
+                    1,
+                ).map(::ReviewItemViewModel)
 
                 obtainedGameDetailsState.value = ObtainedGameDetailsState.Success(
                     GameDetailsItemViewModel(
                         gameDetails.copy(encodedIcon = encodeField(gameDetails.icon)),
                         context
                     ),
-                    allReviews,
+                    mergeReviews(reviews, gameId)
                 )
             } catch (e: Exception) {
                 obtainedGameDetailsState.value = ObtainedGameDetailsState.Error
-            } finally {
-                isLoadingMoreReviews = false
             }
+        }
+    }
+
+    private suspend fun mergeReviews(
+        reviews: List<ReviewItemViewModel>,
+        gameId: String
+    ): List<ReviewItemViewModel> {
+        val currentUserReview = userService.user.value?.id?.let { userId ->
+            reviewsService.fetchCurrentUserReview(gameId)
+        }
+
+        return if (currentUserReview != null) {
+            listOf(ReviewItemViewModel(currentUserReview)) + reviews
+        } else {
+            reviews
         }
     }
 }

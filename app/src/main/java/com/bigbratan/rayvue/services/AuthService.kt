@@ -43,7 +43,7 @@ class AuthService @Inject constructor(
 
             userId?.let {
                 firebaseStorageService.addDocument(
-                    collection = "users",
+                    collectionId = "users",
                     documentId = it,
                     data = userData,
                 )
@@ -77,7 +77,7 @@ class AuthService @Inject constructor(
 
         userId?.let {
             firebaseStorageService.deleteDocument(
-                collection = "users",
+                collectionId = "users",
                 documentId = it,
             )
             reviewsService.deleteReviews(userId = userId)
@@ -117,7 +117,7 @@ class AuthService @Inject constructor(
 
         userId?.let {
             firebaseStorageService.updateDocument(
-                collection = "users",
+                collectionId = "users",
                 documentId = it,
                 field = "userName",
                 value = userName,

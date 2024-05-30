@@ -17,12 +17,10 @@ import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.GridItemSpan
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
-import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.BottomSheetScaffold
 import androidx.compose.material.BottomSheetValue
@@ -45,7 +43,6 @@ import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Alignment.Companion.CenterHorizontally
 import androidx.compose.ui.Modifier
@@ -88,7 +85,6 @@ internal fun GameDetailsScreen(
     onTagsInfoClick: () -> Unit,
 ) {
     val obtainedGameDetailsState by viewModel.obtainedGameDetailsState.collectAsState()
-    val listState = rememberLazyListState()
 
     val view = LocalView.current
     val window = (view.context as Activity).window
@@ -96,21 +92,6 @@ internal fun GameDetailsScreen(
 
     LaunchedEffect(gameId) {
         viewModel.getData(gameId)
-    }
-
-    LaunchedEffect(listState) {
-        snapshotFlow { listState.layoutInfo.visibleItemsInfo.lastOrNull()?.index }
-            .collect { lastIndex ->
-                if (lastIndex != null) {
-                    val totalItemCount = obtainedGameDetailsState.let { state ->
-                        if (state is ObtainedGameDetailsState.Success) state.reviews.size else 0
-                    }
-
-                    if (lastIndex >= totalItemCount - 1) {
-                        viewModel.getData(gameId, loadMore = true)
-                    }
-                }
-            }
     }
 
     DisposableEffect(Unit) {
@@ -147,7 +128,6 @@ internal fun GameDetailsScreen(
             GameDetailsView(
                 gameDetails = gameDetails,
                 reviews = reviews,
-                listState = listState,
                 onBackClick = onBackClick,
                 onReviewClick = onReviewClick,
                 onTagsInfoClick = onTagsInfoClick,
@@ -161,7 +141,6 @@ internal fun GameDetailsScreen(
 private fun GameDetailsView(
     gameDetails: GameDetailsItemViewModel,
     reviews: List<ReviewItemViewModel>,
-    listState: LazyListState,
     onBackClick: () -> Unit,
     onReviewClick: (
         gameId: String,
@@ -264,7 +243,6 @@ private fun GameDetailsView(
                                 modifier = Modifier.fillMaxWidth(),
                                 horizontalArrangement = Arrangement.spacedBy(12.dp),
                                 contentPadding = PaddingValues(horizontal = 24.dp),
-                                state = listState,
                             ) {
                                 items(reviews.size) { reviewIndex ->
                                     reviews[reviewIndex].let { review ->

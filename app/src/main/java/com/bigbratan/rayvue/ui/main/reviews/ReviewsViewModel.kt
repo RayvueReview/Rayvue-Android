@@ -7,11 +7,15 @@ import com.bigbratan.rayvue.services.ReviewsService
 import com.bigbratan.rayvue.services.UserService
 import com.google.firebase.firestore.DocumentSnapshot
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 import java.util.Locale
 import javax.inject.Inject
+
+const val LAST_FETCH = 0L
+const val DEBOUNCE_COOLDOWN = 1000L
 
 @HiltViewModel
 class ReviewsViewModel @Inject constructor(
@@ -20,11 +24,16 @@ class ReviewsViewModel @Inject constructor(
 ) : ViewModel() {
     val obtainedReviewsState = MutableStateFlow<ObtainedReviewsState>(ObtainedReviewsState.Loading)
     val sentReviewState = MutableStateFlow<SentReviewState>(SentReviewState.Idle)
-    val isRefreshing = MutableStateFlow(false)
-    private var lastDocumentSnapshot: DocumentSnapshot? = null
 
+    val isRefreshing = MutableStateFlow(false)
     val isUserLoggedIn = MutableStateFlow(true)
     val hasUserReviewedGame = MutableStateFlow(false)
+    private var isLoadingMoreReviews = false
+    private var lastReview: DocumentSnapshot? = null
+    private var fetchJob: Job? = null
+
+    private var lastFetchTimeMillis = LAST_FETCH
+    private val fetchCooldownMillis = DEBOUNCE_COOLDOWN
 
     init {
         viewModelScope.launch {
@@ -34,60 +43,63 @@ class ReviewsViewModel @Inject constructor(
         }
     }
 
-    fun getData(
+    fun getReviews(
         gameId: String,
         canRefresh: Boolean = true,
-        loadMore: Boolean = false
+        canLoadMore: Boolean = false,
     ) {
-        viewModelScope.launch {
-            if (canRefresh) {
-                isRefreshing.value = true
-                if (!loadMore) {
-                    lastDocumentSnapshot = null
-                }
-            }
+        val currentTime = System.currentTimeMillis()
+        if (canLoadMore && isLoadingMoreReviews && currentTime - lastFetchTimeMillis < fetchCooldownMillis) return
+
+        isLoadingMoreReviews = true
+        lastFetchTimeMillis = currentTime
+        fetchJob?.cancel()
+        fetchJob = viewModelScope.launch {
+            if (canRefresh) isRefreshing.value = true
 
             try {
-                if (canRefresh)
-                    isRefreshing.value = true
+                if (!canLoadMore) obtainedReviewsState.value =
+                    ObtainedReviewsState.Loading.apply { lastReview = null }
 
                 val (reviews, lastSnapshot) = reviewsService.fetchReviews(
-                    gameId = gameId,
-                    limit = 10, // Define your limit
-                    startAfter = if (loadMore) lastDocumentSnapshot else null
+                    gameId,
+                    4,
+                    if (canLoadMore) lastReview else null
                 )
-                lastDocumentSnapshot = lastSnapshot
+                lastReview = lastSnapshot.takeIf { reviews.isNotEmpty() }
 
-                val reviewsViewModels =
-                    reviews.sortedByDescending { it.dateAdded }.map { ReviewItemViewModel(it) }
+                val reviewsVMs = reviews.map(::ReviewItemViewModel)
+                val mergedReviews = mergeReviews(reviewsVMs, canLoadMore, gameId)
 
-                if (loadMore) {
-                    val currentReviews =
-                        if (obtainedReviewsState.value is ObtainedReviewsState.Success) {
-                            (obtainedReviewsState.value as ObtainedReviewsState.Success).reviews + reviewsViewModels
-                        } else reviewsViewModels
-                    obtainedReviewsState.value = ObtainedReviewsState.Success(currentReviews)
-                } else {
-                    obtainedReviewsState.value = ObtainedReviewsState.Success(reviewsViewModels)
-                }
-
-                checkIfUserReviewedGame(gameId)
+                obtainedReviewsState.value = ObtainedReviewsState.Success(mergedReviews)
             } catch (e: Exception) {
                 obtainedReviewsState.value = ObtainedReviewsState.Error
             } finally {
-                if (canRefresh)
-                    isRefreshing.value = false
+                if (canRefresh) isRefreshing.value = false
+
+                isLoadingMoreReviews = false
             }
         }
     }
 
-    private suspend fun checkIfUserReviewedGame(gameId: String) {
-        val userId = userService.user.value?.id
-        if (userId != null) {
-            val currentUserReview = reviewsService.fetchCurrentUserReview(gameId)
-            hasUserReviewedGame.value = currentUserReview != null
+    private suspend fun mergeReviews(
+        newReviews: List<ReviewItemViewModel>,
+        canLoadMore: Boolean,
+        gameId: String
+    ): List<ReviewItemViewModel> {
+        val currentReviews =
+            (obtainedReviewsState.value as? ObtainedReviewsState.Success)?.reviews.orEmpty()
+
+        return if (!canLoadMore) {
+            userService.user.value?.id?.let {
+                reviewsService.fetchCurrentUserReview(gameId)?.let { currentUserReview ->
+                    listOf(ReviewItemViewModel(currentUserReview)) + newReviews
+                }
+            } ?: newReviews
         } else {
-            hasUserReviewedGame.value = false
+            val existingIds = currentReviews.map { it.id }.toSet()
+            val newFilteredReviews = newReviews.filter { it.id !in existingIds }
+            currentReviews + newFilteredReviews
         }
     }
 
@@ -103,7 +115,6 @@ class ReviewsViewModel @Inject constructor(
                     gameId,
                     content,
                 )
-                getData(gameId)
 
                 sentReviewState.value = SentReviewState.Success
             } catch (e: Exception) {
@@ -112,8 +123,16 @@ class ReviewsViewModel @Inject constructor(
         }
     }
 
-    fun resetState() {
+    fun resetSentState() {
         sentReviewState.value = SentReviewState.Idle
+    }
+
+    fun resetReceivedState(keepLastSnapshot: Boolean = false) {
+        obtainedReviewsState.value = ObtainedReviewsState.Loading
+
+        if (!keepLastSnapshot) {
+            lastReview = null
+        }
     }
 }
 
@@ -151,3 +170,19 @@ data class ReviewItemViewModel(
 
     val userName: String = review.userName
 }
+
+/*private suspend fun mergeReviews(
+        newReviewsVMs: List<ReviewItemViewModel>,
+        canLoadMore: Boolean,
+        gameId: String
+    ): List<ReviewItemViewModel> {
+        val currentReviews =
+            (obtainedReviewsState.value as? ObtainedReviewsState.Success)?.reviews.orEmpty()
+        return if (!canLoadMore) {
+            userService.user.value?.id?.let { userId ->
+                reviewsService.fetchCurrentUserReview(gameId)?.let { currentUserReview ->
+                    listOf(ReviewItemViewModel(currentUserReview)) + newReviewsVMs
+                }
+            } ?: newReviewsVMs
+        } else currentReviews + newReviewsVMs
+    }*/
