@@ -73,7 +73,7 @@ internal fun TagsInfoScreen(
             ) {
                 item {
                     TagInfoCard(
-                        modifier = Modifier.padding(top = 24.dp),
+                        modifier = Modifier.padding(top = 12.dp),
                         title = stringResource(id = R.string.tags_info_sub_title),
                         meaning = stringResource(id = R.string.tags_info_sub_meaning),
                     )

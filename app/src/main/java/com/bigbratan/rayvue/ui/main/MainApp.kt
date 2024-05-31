@@ -33,7 +33,15 @@ fun NavGraphBuilder.mainApp(
     }
 
     composable(route = Screen.Main.AwardsScreen.route) {
-        AwardsScreen()
+        AwardsScreen(
+            onGameClick = { gameId ->
+                navController.navigate(
+                    route = Screen.Main.GameDetailsScreen.routeWithArgs(
+                        gameId
+                    )
+                )
+            }
+        )
     }
 
     composable(route = Screen.Main.JournalScreen.route) {

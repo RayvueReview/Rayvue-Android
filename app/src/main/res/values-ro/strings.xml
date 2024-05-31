@@ -55,7 +55,11 @@
     <string name="games_section_all_title">Toate jocurile</string>
 
     <!-- Awards Screen -->
-
+    <string name="awards_get_data_error_message">Nu au fost găsite jocuri cu acest tip de premiu.</string>
+    <string name="awards_tab_week_title">Săptămână</string>
+    <string name="awards_tab_month_title">Lună</string>
+    <string name="awards_tab_year_title">An</string>
+    <string name="awards_section_past_title">Premii din trecut</string>
 
     <!-- Journal Screen -->
     <string name="journal_empty_data_error_message">You haven\'t added any games to your journal.</string>
