@@ -26,40 +26,42 @@ class GameDetailsViewModel @Inject constructor(
     val obtainedGameDetailsState =
         MutableStateFlow<ObtainedGameDetailsState>(ObtainedGameDetailsState.Loading)
 
-    fun getData(gameId: String) {
+    fun getData(
+        gameId: String,
+    ) {
         viewModelScope.launch {
             try {
-                val userId = userService.user.value?.id
                 val gameDetails = gamesService.fetchGameDetails(gameId)
-                val reviews =
-                    reviewsService.fetchReviews(gameId).sortedByDescending { it.dateAdded }.take(10)
-                        .map { ReviewItemViewModel(it) }
-                val currentUserReview = if (userId != null) {
-                    reviewsService.fetchCurrentUserReview(gameId)?.let { ReviewItemViewModel(it) }
-                } else {
-                    null
-                }
+                val reviews = reviewsService.fetchReviewsOnce(
+                    gameId,
+                    10,
+                ).map(::ReviewItemViewModel)
 
-                if (currentUserReview != null) {
-                    obtainedGameDetailsState.value = ObtainedGameDetailsState.Success(
-                        GameDetailsItemViewModel(
-                            gameDetails.copy(encodedIcon = encodeField(gameDetails.icon)),
-                            context
-                        ),
-                        listOf(currentUserReview) + reviews,
-                    )
-                } else {
-                    obtainedGameDetailsState.value = ObtainedGameDetailsState.Success(
-                        GameDetailsItemViewModel(
-                            gameDetails.copy(encodedIcon = encodeField(gameDetails.icon)),
-                            context
-                        ),
-                        reviews,
-                    )
-                }
+                obtainedGameDetailsState.value = ObtainedGameDetailsState.Success(
+                    GameDetailsItemViewModel(
+                        gameDetails.copy(encodedIcon = encodeField(gameDetails.icon)),
+                        context
+                    ),
+                    mergeReviews(reviews, gameId)
+                )
             } catch (e: Exception) {
                 obtainedGameDetailsState.value = ObtainedGameDetailsState.Error
             }
+        }
+    }
+
+    private suspend fun mergeReviews(
+        reviews: List<ReviewItemViewModel>,
+        gameId: String
+    ): List<ReviewItemViewModel> {
+        val currentUserReview = userService.user.value?.id?.let { _ ->
+            reviewsService.fetchCurrentUserReview(gameId)
+        }
+
+        return if (currentUserReview != null) {
+            listOf(ReviewItemViewModel(currentUserReview)) + reviews
+        } else {
+            reviews
         }
     }
 }

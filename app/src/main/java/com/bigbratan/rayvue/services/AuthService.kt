@@ -22,9 +22,7 @@ class AuthService @Inject constructor(
     }
 
     @SuppressLint("RestrictedApi")
-    suspend fun createAccount(
-        isReviewer: Boolean,
-    ) {
+    suspend fun createAccount() {
         val email = accountService.getEmail()
         val password = accountService.getPassword()
         val userName = accountService.getName()
@@ -37,13 +35,13 @@ class AuthService @Inject constructor(
             val userId = authResult.user?.uid
             val userData = hashMapOf(
                 "id" to userId,
-                "isReviewer" to isReviewer,
+                "isReviewer" to false,
                 "userName" to userName
             )
 
             userId?.let {
                 firebaseStorageService.addDocument(
-                    collection = "users",
+                    collectionId = "users",
                     documentId = it,
                     data = userData,
                 )
@@ -77,7 +75,7 @@ class AuthService @Inject constructor(
 
         userId?.let {
             firebaseStorageService.deleteDocument(
-                collection = "users",
+                collectionId = "users",
                 documentId = it,
             )
             reviewsService.deleteReviews(userId = userId)
@@ -117,7 +115,7 @@ class AuthService @Inject constructor(
 
         userId?.let {
             firebaseStorageService.updateDocument(
-                collection = "users",
+                collectionId = "users",
                 documentId = it,
                 field = "userName",
                 value = userName,

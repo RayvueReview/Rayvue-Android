@@ -12,6 +12,8 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyListState
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.icons.Icons
@@ -39,6 +41,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
@@ -60,9 +63,10 @@ import com.bigbratan.rayvue.R
 import com.bigbratan.rayvue.ui.theme.noFontPadding
 import com.bigbratan.rayvue.ui.theme.plusJakartaSans
 import com.bigbratan.rayvue.ui.views.ErrorMessage
-import com.bigbratan.rayvue.ui.views.Popup
 import com.bigbratan.rayvue.ui.views.LoadingAnimation
+import com.bigbratan.rayvue.ui.views.Popup
 import com.bigbratan.rayvue.ui.views.TransparentIconButton
+import kotlinx.coroutines.flow.distinctUntilChanged
 
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
@@ -77,7 +81,9 @@ internal fun ReviewsScreen(
     val sentReviewState = viewModel.sentReviewState.collectAsState()
     val isUserLoggedIn = viewModel.isUserLoggedIn.collectAsState()
     val hasUserReviewedGame = viewModel.hasUserReviewedGame.collectAsState()
+    val isUserAccredited = viewModel.isUserAccredited.collectAsState()
     val isRefreshing = viewModel.isRefreshing.collectAsState()
+    val listState = rememberLazyListState()
 
     val typedReviewState = remember { mutableStateOf(TextFieldValue()) }
     val focusManager = LocalFocusManager.current
@@ -88,16 +94,36 @@ internal fun ReviewsScreen(
             if (obtainedReviewsState.value !is ObtainedReviewsState.Loading &&
                 sentReviewState.value !is SentReviewState.Loading
             ) {
-                viewModel.getData(gameId)
+                viewModel.resetSentState()
+                viewModel.resetReceivedState()
+                viewModel.getReviews(gameId)
             }
         }
     )
 
     LaunchedEffect(gameId) {
-        viewModel.getData(
+        viewModel.getReviews(
             gameId = gameId,
             canRefresh = false,
         )
+    }
+
+    LaunchedEffect(listState) {
+        snapshotFlow { listState.layoutInfo.visibleItemsInfo.lastOrNull()?.index }
+            .distinctUntilChanged()
+            .collect { lastIndex ->
+                val totalItemCount =
+                    (obtainedReviewsState.value as? ObtainedReviewsState.Success)?.reviews?.size
+                        ?: 0
+
+                if (lastIndex != null && lastIndex >= totalItemCount - 1) {
+                    viewModel.getReviews(
+                        gameId,
+                        canRefresh = false,
+                        canLoadMore = true
+                    )
+                }
+            }
     }
 
     Box(
@@ -154,6 +180,8 @@ internal fun ReviewsScreen(
                         focusManager = focusManager,
                         isUserLoggedIn = isUserLoggedIn.value,
                         hasUserReviewedGame = hasUserReviewedGame.value,
+                        isUserAccredited = isUserAccredited.value,
+                        listState = listState,
                         onBackClick = onBackClick,
                         onSendClick = { typedReview ->
                             viewModel.addReview(
@@ -162,6 +190,10 @@ internal fun ReviewsScreen(
                             )
                             typedReviewState.value = TextFieldValue("")
                             focusManager.clearFocus()
+                            viewModel.getReviews(
+                                gameId = gameId,
+                                canRefresh = false,
+                            )
                         }
                     )
 
@@ -172,11 +204,11 @@ internal fun ReviewsScreen(
                         isPopupVisible = isPopupVisible,
                         onConfirm = {
                             isPopupVisible = false
-                            viewModel.resetState()
+                            viewModel.resetSentState()
                         },
                         onDismiss = {
                             isPopupVisible = false
-                            viewModel.resetState()
+                            viewModel.resetSentState()
                         }
                     )
                 }
@@ -202,7 +234,9 @@ private fun ReviewsView(
     typedReviewState: MutableState<TextFieldValue>,
     focusManager: FocusManager,
     isUserLoggedIn: Boolean,
+    isUserAccredited: Boolean,
     hasUserReviewedGame: Boolean,
+    listState: LazyListState,
     onSendClick: (typedReview: String) -> Unit,
     onBackClick: () -> Unit,
 ) {
@@ -262,61 +296,65 @@ private fun ReviewsView(
                 modifier = Modifier.background(MaterialTheme.colorScheme.surface)
             ) {
                 if (isUserLoggedIn) {
-                    if (!hasUserReviewedGame) {
-                        OutlinedTextField(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(
-                                    horizontal = 24.dp,
-                                    vertical = 12.dp
-                                )
-                                .clip(RoundedCornerShape(8.dp)),
-                            colors = OutlinedTextFieldDefaults.colors(
-                                focusedBorderColor = if (typedReviewError) {
-                                    MaterialTheme.colorScheme.error
-                                } else {
-                                    MaterialTheme.colorScheme.primary
+                    if (isUserAccredited) {
+                        if (!hasUserReviewedGame) {
+                            OutlinedTextField(
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .padding(
+                                        horizontal = 24.dp,
+                                        vertical = 12.dp
+                                    )
+                                    .clip(RoundedCornerShape(8.dp)),
+                                colors = OutlinedTextFieldDefaults.colors(
+                                    focusedBorderColor = if (typedReviewError) {
+                                        MaterialTheme.colorScheme.error
+                                    } else {
+                                        MaterialTheme.colorScheme.primary
+                                    },
+                                    unfocusedBorderColor = if (typedReviewError) {
+                                        MaterialTheme.colorScheme.error
+                                    } else {
+                                        MaterialTheme.colorScheme.outline
+                                    },
+                                ),
+                                label = {
+                                    Text(
+                                        text = stringResource(id = R.string.reviews_write_hint),
+                                        fontFamily = plusJakartaSans,
+                                        fontWeight = FontWeight.Normal,
+                                        fontSize = 14.sp,
+                                        style = TextStyle(platformStyle = noFontPadding),
+                                        maxLines = 1,
+                                    )
                                 },
-                                unfocusedBorderColor = if (typedReviewError) {
-                                    MaterialTheme.colorScheme.error
-                                } else {
-                                    MaterialTheme.colorScheme.outline
-                                },
-                            ),
-                            label = {
-                                Text(
-                                    text = stringResource(id = R.string.reviews_write_hint),
-                                    fontFamily = plusJakartaSans,
-                                    fontWeight = FontWeight.Normal,
-                                    fontSize = 14.sp,
-                                    style = TextStyle(platformStyle = noFontPadding),
-                                    maxLines = 1,
-                                )
-                            },
-                            maxLines = 5,
-                            shape = RoundedCornerShape(8.dp),
-                            trailingIcon = {
-                                TransparentIconButton(
-                                    imageVector = Icons.Default.Send,
-                                    onClick = {
-                                        if (typedReviewState.value.text.isEmpty()) {
-                                            typedReviewError = true
-                                        } else {
-                                            onSendClick(typedReviewState.value.text)
-                                            typedReviewState.value = TextFieldValue("")
-                                            keyboardController?.hide()
-                                            focusManager.clearFocus()
+                                maxLines = 5,
+                                shape = RoundedCornerShape(8.dp),
+                                trailingIcon = {
+                                    TransparentIconButton(
+                                        imageVector = Icons.Default.Send,
+                                        onClick = {
+                                            if (typedReviewState.value.text.isEmpty()) {
+                                                typedReviewError = true
+                                            } else {
+                                                onSendClick(typedReviewState.value.text)
+                                                typedReviewState.value = TextFieldValue("")
+                                                keyboardController?.hide()
+                                                focusManager.clearFocus()
+                                            }
                                         }
-                                    }
-                                )
-                            },
-                            value = typedReviewState.value,
-                            onValueChange = { newValue ->
-                                typedReviewState.value = newValue
-                            },
-                        )
+                                    )
+                                },
+                                value = typedReviewState.value,
+                                onValueChange = { newValue ->
+                                    typedReviewState.value = newValue
+                                },
+                            )
+                        } else {
+                            ReviewInfo(text = stringResource(id = R.string.reviews_info_review_exists))
+                        }
                     } else {
-                        ReviewInfo(text = stringResource(id = R.string.reviews_info_review_exists))
+                        ReviewInfo(text = stringResource(id = R.string.reviews_info_not_accredited))
                     }
                 } else {
                     ReviewInfo(text = stringResource(id = R.string.reviews_info_no_account))
@@ -349,7 +387,8 @@ private fun ReviewsView(
                 LazyColumn(
                     modifier = Modifier
                         .fillMaxSize()
-                        .padding(paddingValues)
+                        .padding(paddingValues),
+                    state = listState,
                 ) {
                     items(reviews.size) { reviewIndex ->
                         Column(
@@ -357,7 +396,7 @@ private fun ReviewsView(
                                 .fillMaxWidth()
                                 .padding(horizontal = 24.dp)
                                 .padding(
-                                    top = if (reviewIndex == 0) 24.dp else 0.dp,
+                                    top = if (reviewIndex == 0) 12.dp else 0.dp,
                                     bottom = if (reviewIndex == reviews.size - 1) 24.dp else 0.dp,
                                 )
                         ) {

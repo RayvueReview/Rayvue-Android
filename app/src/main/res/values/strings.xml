@@ -45,21 +45,10 @@
     <string name="input_name_prompt_message">Add your name or choose an username.</string>
     <string name="input_name_name_hint">Name</string>
     <string name="input_name_name_support">Maximum 20 characters</string>
-    <string name="input_name_button_title">Continue</string>
-
-    <!-- Input Invite Screen -->
-    <string name="input_invite_prompt_message">Were you invited as a reviewer?</string>
-    <string name="input_invite_validate_data_error_message">Your code is wrong</string>
-    <string name="input_invite_send_code_data_error_message">An error occurred while trying to validate the code.</string>
-    <string name="input_invite_send_signup_data_error_message">An error occurred while trying to sign up.</string>
-    <string name="input_invite_invite_hint">Invite code</string>
-    <string name="input_invite_invite_support">You only need to input this once</string>
-    <string name="input_invite_button_enter_title">Enter code and sign up</string>
-    <string name="input_invite_button_skip_title">Skip this step and sign up</string>
+    <string name="input_name_button_title">Sign up</string>
+    <string name="input_name_send_signup_data_error_message">An error occurred while trying to sign up.</string>
 
     <!-- Games Screen -->
-    <string name="games_welcome_account_message">Hello there, %1$s! What game do you want to play today?</string>
-    <string name="games_welcome_no_account_message">Hello! What game do you want to play today?</string>
     <string name="games_get_data_error_message">An error occurred. Check your Internet connection and try again.</string>
     <string name="games_section_recent_title">Recently Added</string>
     <string name="games_section_discover_title">Discover</string>
@@ -102,34 +91,38 @@
     <string name="reviews_write_hint">Write a review</string>
     <string name="reviews_info_no_account">You need an account to leave a review.</string>
     <string name="reviews_info_review_exists">You\'ve already added a review for this game.</string>
+    <string name="reviews_info_not_accredited">You are not allowed to review games.</string>
 
     <!-- Tags Info Screen -->
     <string name="tags_info_title">Keep In Mind</string>
     <string name="tags_info_sub_title">What is a subscription service?</string>
-    <string name="tags_info_sub_meaning">A subscription service is when game companies ask for a certain sum of money in exchange for your access to their game every week/month/year.</string>
+    <string name="tags_info_sub_meaning">A subscription service is a system where game companies charge a certain amount of money in exchange for users to access their game every week/month/year or other predetermined period of time.</string>
     <string name="tags_info_micro_title">What are micro-transactions?</string>
-    <string name="tags_info_micro_meaning">Micro-transactions are in-game items that the user can purchase using real money. The problem with micro-transactions is that the game difficulty is created in such a way that the player can\'t progress in a reasonable amount of time without paying for said micro-transactions. Another issue is that those in-game items are created in such a way that, if you want to keep winning, you will have to keep buying them, ending up spending potentially thousands of real world currency.</string>
+    <string name="tags_info_micro_meaning">Micro-transactions are in-game items that the users can purchase using real money. The problem with micro-transactions is that the difficulty of the game is made in such a way that the players cannot progress in a reasonable amount of time without paying for said micro-transactions. Another problem is that those in-game items are created in such a way that if the players want to keep winning, they will have to keep buying them endlessly, potentially spending thousands of dollars (or any other real-life currency).</string>
     <string name="tags_info_pass_title">What is a battle pass?</string>
-    <string name="tags_info_pass_meaning">A battle pass is a subscription service for micro-transactions. It\'s usually divided into a basic battle pass and a premium battle pass, the premium version offering better rewards. All battle passes are designed in such a way that the player has to keep playing the game in order to get the better and better rewards, making them addicted in the process.</string>
+    <string name="tags_info_pass_meaning">A battle pass is a subscription service for the potential to win in-game items. It is usually split into a basic battle pass (free) and a premium battle pass, with the premium version offering better rewards than the basic one. All battle passes are designed in such a way that the player has to keep playing the game to get better and better rewards, making it addictive in the process.</string>
     <string name="tags_info_loot_title">What are loot boxes?</string>
-    <string name="tags_info_loot_meaning">Loot boxes are micro-transactions with a gambling twist. If you thought spending a lot of money on some in-game items is bad, wait until you have to spend this much money and potentially get nothing in return! Yay!</string>
+    <string name="tags_info_loot_meaning">Loot boxes are micro-transactions that contain different prizes which can only be obtained randomly, similar to gambling. The worst aspects of those boxes is that sometimes the player can get absolutely nothing, the rewards are usually useless and the best prizes can only be obtained if the player opens hundreds or even thousands of such boxes. Loot boxes, of course, can be divided into boxes with potentially useful prizes and boxes with fairly useless prizes.</string>
     <string name="tags_info_p2w_title">What is pay-to-win?</string>
-    <string name="tags_info_p2w_meaning">Pay-to-win is a derogatory name for a type of game that implements practices created to make you spend exorbitant amounts of money in order to have a chance at winning the game. Some of those practices were presented above.</string>
+    <string name="tags_info_p2w_meaning">Pay-to-win is the name of a type of game that implements practices designed to make the user spend exorbitant amounts of money for a chance to win. Not all games that implement micro-transactions are necessarily pay-to-win, as useful prizes can usually be obtained just by playing, without the need to spend real money. However, in cases where it is clear that a game cannot be completed or even played without the user spending money on loot boxes, battle passes or other micro-transactions, it is marked as pay-to-win.</string>
     <string name="tags_info_malicious_title">What are malicious practices?</string>
-    <string name="tags_info_malicious_meaning">Malicious practices are hidden psychological tricks added in games in order to further make you spend more money. Such tricks may include: creating a lot of in-game currencies so that the user is confused when spending them, the main goal being the devaluation of real money.</string>
+    <string name="tags_info_malicious_meaning">Other malicious practices are hidden psychological tricks added to make players spend more money without realizing it. Such tricks may include creating more in-game coins so that the user does not think twice when spending them, with the main purpose being to dilute the value of real money.</string>
     <string name="tags_info_tos_title">What are concerning TOS?</string>
-    <string name="tags_info_tos_meaning">Concerning terms of service are created in such a way that legally allows the company that owns the game to screw you over, either by stealing all your data, refusing refunds or even monitoring you device.</string>
+    <string name="tags_info_tos_meaning">Concerning Terms of Service are crafted in such a way that it legally allows the company that owns the game to screw the user without repercussion, either by stealing all of their data, denying refunds, or even monitoring their device.</string>
     <string name="tags_info_fake_title">What is fake engagement?</string>
-    <string name="tags_info_fake_meaning">Fake engagement refers to buying botted positive reviews for a game.</string>
+    <string name="tags_info_fake_meaning">Fake engagement refers to buying positive reviews for a game. Not on this platform, though.</string>
     <string name="tags_info_ad_title">What does \"not as advertised\" mean?</string>
-    <string name="tags_info_ad_meaning">When a game is marked with this tag, it means all the promotional art created in order to advertise that game completely misrepresents the final product. Example: a company releases a trailer that makes their game look like it\'s a third person shooter, but in reality, after you download the game expecting what you saw in the trailer, you find out it\'s just a base building game.</string>
+    <string name="tags_info_ad_meaning">When a game is labeled as such, it means that all promotional art created to advertise the game completely misrepresents the final product. For example: a company releases a trailer (short video that should realistically present the game) that makes it look like their game contains the ability to shoot enemies. In reality, after the users download it, expecting what they saw in the trailer, they find out that it’s just a generic game of managing a base and its resources, no shooting included.</string>
     <string name="tags_info_dev_title">What are immoral developers?</string>
-    <string name="tags_info_dev_meaning">Immoral developers are those who lie to their community and even steal from them.</string>
+    <string name="tags_info_dev_meaning">Immoral developers usually lie to their community, for example by making false promises. It could also mean they or the company they work for has allegations or convictions employee misconduct (for example, workplace harassment).</string>
     <string name="tags_info_scam_title">What is defined as a scam?</string>
-    <string name="tags_info_scam_meaning">A game marked as a scam is a game that was hyped up in order to make people buy or preorder it, but which turned out to be incomplete, buggy and overall a mess at launch, on top of which having developers who ran away with people\'s money, never to return.</string>
+    <string name="tags_info_scam_meaning">A game labeled “scam” is a game that was advertised to convince people to buy it, either at launch, by pre-ordering, or by investing money before it was even created, but turned out to be incomplete, with major bugs and generally a total disappointment at launch. A good example would be the following: developers start a campaign to raise funds for the creation of a promised game, but the money obtained is used more for the personal interests of the people behind the campaign (in other words, the money is stolen). When the time comes for the game to be released, it doesn\'t look even remotely similar to what was promised (and what people invested their own money in) because there weren't enough funds left to develop that version of the game.</string>
 
     <!-- Settings Screen -->
     <string name="settings_title">Settings</string>
+    <string name="settings_welcome_account_message">Hello, %1$s!</string>
+    <string name="settings_welcome_no_account_message">Hello! You\'re not logged in.</string>
+    <string name="settings_get_data_error_message">An error occurred. Your account could not be loaded.</string>
     <string name="settings_category_account_title">Account</string>
     <string name="settings_login_text">Log in</string>
     <string name="settings_login_subtext">Enter your account</string>
@@ -146,8 +139,8 @@
     <string name="settings_category_info_title">Info</string>
     <string name="settings_about_reviewer_text">What is a certified reviewer?</string>
     <string name="settings_about_reviewer_subtext">A certified reviewer is a person who has been exclusively invited to leave public reviews on any game.</string>
-    <string name="settings_about_invite_text">What is an invite code?</string>
-    <string name="settings_about_invite_subtext">An invite code is received via email by all the people who have been invited to become certified reviewers.</string>
+    <string name="settings_about_invite_text">How do I get certified?</string>
+    <string name="settings_about_invite_subtext">Only professional game reviewers can become certified.</string>
     <string name="settings_app_version_text">App version: %1$s</string>
 
 </resources>
