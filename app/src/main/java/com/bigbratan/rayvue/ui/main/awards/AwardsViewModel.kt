@@ -132,7 +132,7 @@ data class AwardGameItemViewModel(
         val calendar = Calendar.getInstance().apply { timeInMillis = date }
         val weekOfYear = calendar.get(Calendar.WEEK_OF_YEAR)
         val year = calendar.get(Calendar.YEAR)
-        "Week $weekOfYear $year"
+        "Week $weekOfYear of $year"
     }
 
     val gameOfTheMonth: String = SimpleDateFormat(
