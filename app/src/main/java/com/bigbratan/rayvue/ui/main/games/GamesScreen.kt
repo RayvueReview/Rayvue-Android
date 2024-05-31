@@ -75,7 +75,7 @@ internal fun GamesScreen(
         refreshing = isRefreshing.value,
         onRefresh = {
             if (obtainedGamesState.value !is ObtainedGamesState.Loading) {
-                viewModel.resetStates(keepLastSnapshot = true)
+                viewModel.resetStates()
                 viewModel.getAllGames()
                 viewModel.getFilteredGames()
             }
@@ -310,7 +310,7 @@ private fun GameCard(
             modifier = Modifier
                 .padding(12.dp)
                 .align(Alignment.BottomStart),
-            text = game.displayName,
+            text = game.displayName ?: "",
             fontFamily = plusJakartaSans,
             fontWeight = FontWeight.Normal,
             fontSize = 16.sp,
@@ -322,37 +322,3 @@ private fun GameCard(
         )
     }
 }
-
-/*LaunchedEffect(listStateRecent) {
-        snapshotFlow { listStateRecent.layoutInfo.visibleItemsInfo.lastOrNull()?.index }
-            .collect { lastIndex ->
-                if (lastIndex != null && obtainedRecentGamesState.value is Resource.Success) {
-                    val recentItemCount =
-                        (obtainedRecentGamesState.value as Resource.Success).recentGames.size
-
-                    if (lastIndex >= recentItemCount - 1) {
-                        viewModel.getAllGames(
-                            canRefresh = false,
-                            canLoadMore = true,
-                        )
-                    }
-                }
-            }
-    }
-
-    LaunchedEffect(listStateRandom) {
-        snapshotFlow { listStateRandom.layoutInfo.visibleItemsInfo.lastOrNull()?.index }
-            .collect { lastIndex ->
-                if (lastIndex != null && obtainedRandomGamesState.value is Resource.Success) {
-                    val randomItemCount =
-                        (obtainedRandomGamesState.value as Resource.Success).randomGames.size
-
-                    if (lastIndex >= randomItemCount - 1) {
-                        viewModel.getAllGames(
-                            canRefresh = false,
-                            canLoadMore = true,
-                        )
-                    }
-                }
-            }
-    }*/

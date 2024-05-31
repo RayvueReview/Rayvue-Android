@@ -45,21 +45,10 @@
     <string name="input_name_prompt_message">Adaugă numele tău sau alege un nume de utilizator.</string>
     <string name="input_name_name_hint">Nume</string>
     <string name="input_name_name_support">Maxim 20 de caractere</string>
-    <string name="input_name_button_title">Continuă</string>
-
-    <!-- Input Invite Screen -->
-    <string name="input_invite_prompt_message">Ai fost invitat cu rolul de critic?</string>
-    <string name="input_invite_validate_data_error_message">Codul tău e greșit</string>
-    <string name="input_invite_send_code_data_error_message">A apărut o eroare în timpul validării codului.</string>
-    <string name="input_invite_send_signup_data_error_message">A apărut o eroare în timpul creării contului.</string>
-    <string name="input_invite_invite_hint">Cod de invitație</string>
-    <string name="input_invite_invite_support">Trebuie să-l introduci doar o dată</string>
-    <string name="input_invite_button_enter_title">Introdu codul și crează cont</string>
-    <string name="input_invite_button_skip_title">Sări acest pas și crează cont</string>
+    <string name="input_name_button_title">Creează-ți cont</string>
+    <string name="input_name_send_signup_data_error_message">A apărut o eroare în timpul creării contului.</string>
 
     <!-- Games Screen -->
-    <string name="games_welcome_account_message">Salut, %1$s! Ce joc vrei să joci astăzi?</string>
-    <string name="games_welcome_no_account_message">Salut! Ce joc vrei să joci astăzi?</string>
     <string name="games_get_data_error_message">A apărut o eroare. Verifică-ți conexiunea la Internet și încearcă din nou.</string>
     <string name="games_section_recent_title">Recent adăugate</string>
     <string name="games_section_discover_title">Descoperă</string>
@@ -102,34 +91,38 @@
     <string name="reviews_write_hint">Scrie o recenzie</string>
     <string name="reviews_info_no_account">Îți trebuie un cont pentru a lăsa o recenzie.</string>
     <string name="reviews_info_review_exists">Ai adăugat deja o recenzie pentru acest joc.</string>
+    <string name="reviews_info_not_accredited">Nu ai permisiunea să lași recenzii.</string>
 
     <!-- Tags Info Screen -->
     <string name="tags_info_title">De reținut</string>
     <string name="tags_info_sub_title">Ce este un serviciu de subscripție?</string>
-    <string name="tags_info_sub_meaning">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis molestie tincidunt ligula, eu posuere ligula feugiat at. Etiam arcu lorem, sodales at volutpat vel, iaculis at lectus. Sed a metus nisl. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. In ut blandit urna.</string>
+    <string name="tags_info_sub_meaning">Un serviciu de abonament este un sistem prin care companiile de jocuri cer o anumită sumă de bani în schimbul accesului utilizatorilor la jocul lor în fiecare săptămână/lună/an sau altă perioadă predeterminată de timp.</string>
     <string name="tags_info_micro_title">Ce sunt micro-tranzacțiile?</string>
-    <string name="tags_info_micro_meaning">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis molestie tincidunt ligula, eu posuere ligula feugiat at. Etiam arcu lorem, sodales at volutpat vel, iaculis at lectus. Sed a metus nisl. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. In ut blandit urna.</string>
+    <string name="tags_info_micro_meaning">Micro-tranzacțiile sunt articole din joc pe care utilizatorul le poate cumpăra folosind bani reali. Problema cu micro-tranzacțiile este că dificultatea jocului este creată în așa fel încât jucătorul să nu poată progresa într-o perioadă rezonabilă de timp fără să plătească pentru respectivele micro-tranzacții. O altă problemă este că acele articole din joc sunt create în așa fel încât, dacă jucătorul vrea să continue să câștige, va trebui să le cumpere în continuare, la nesfârșit, ajungând să cheltuie potențial mii de lei.</string>
     <string name="tags_info_pass_title">Ce este un battle pass?</string>
-    <string name="tags_info_pass_meaning">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis molestie tincidunt ligula, eu posuere ligula feugiat at. Etiam arcu lorem, sodales at volutpat vel, iaculis at lectus. Sed a metus nisl. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. In ut blandit urna.</string>
-    <string name="tags_info_loot_title">Ce sunt premiile pe noroc?</string>
-    <string name="tags_info_loot_meaning">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis molestie tincidunt ligula, eu posuere ligula feugiat at. Etiam arcu lorem, sodales at volutpat vel, iaculis at lectus. Sed a metus nisl. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. In ut blandit urna.</string>
+    <string name="tags_info_pass_meaning">Un battle pass (permis de luptă) este un serviciu de abonament pentru potențialul de a câștiga articole din joc. De obicei, este împărțit într-un battle pass de bază (gratis) și un battle pass premium, versiunea premium oferind recompense mai bune decât cea de bază. Toate permisele de luptă sunt concepute în așa fel încât jucătorul trebuie să continue să joace jocul pentru a obține recompense din ce în ce mai bune, făcându-l dependent în acest proces.</string>
+    <string name="tags_info_loot_title">Ce sunt loot boxes?</string>
+    <string name="tags_info_loot_meaning">Loot boxes (cutiile cu pradă) sunt micro-tranzacții care conțin diferite premii ce pot fi obținute doar aleatoriu, asemănător cu jocurile de noroc. Cele mai negative aspecte al acestor cutii este că jucătorul, uneori, poate primi absolut nimic, de obicei recompensele sunt nefolositoare, iar premiile cele mai bune pot fi obținute doar dacă jucătorul deschide sute sau chiar mii de astfel de cutii. Cutiile, desigur, pot fi împărțite la rândul lor în cutii cu premii potențial folositoare și cutii cu premii destul de inutile.</string>
     <string name="tags_info_p2w_title">Ce înseamnă \"plătește pentru a câștiga\"?</string>
-    <string name="tags_info_p2w_meaning">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis molestie tincidunt ligula, eu posuere ligula feugiat at. Etiam arcu lorem, sodales at volutpat vel, iaculis at lectus. Sed a metus nisl. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. In ut blandit urna.</string>
+    <string name="tags_info_p2w_meaning">Pay-to-win (plătește pentru a câștiga) este denumirea unui tip de joc care implementează practici create pentru a face utilizatorul să cheltuie sume exorbitante de bani pentru a avea șansa de a câștiga jocul. Nu toate jocurile care implementează micro-tranzacții sunt neapărat pay-to-win, deoarece premiile utile pot fi obținute, de obicei, doar prin jucat, fără a fi necesară cheltuirea banilor reali. Totuși, în cazurile în care este clar că un joc nu poate fi terminat sau măcar jucat fără ca utilizatorul să dea bani pe loot boxes, battle passes sau alte micro-tranzacții, acesta este marcat ca fiind pay-to-win.</string>
     <string name="tags_info_malicious_title">Ce sunt practicile malițioase?</string>
-    <string name="tags_info_malicious_meaning">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis molestie tincidunt ligula, eu posuere ligula feugiat at. Etiam arcu lorem, sodales at volutpat vel, iaculis at lectus. Sed a metus nisl. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. In ut blandit urna.</string>
+    <string name="tags_info_malicious_meaning">Alte practici rău intenționate sunt trucurile psihologice ascunse, adăugate pentru a face jucătorii să cheltuie mai mulți bani fără să-și dea seama. Astfel de trucuri pot include crearea mai multor monede în joc, astfel încât utilizatorul să nu se gândească de două ori atunci când le cheltuie, scopul principal fiind diluarea valorii banilor reali.</string>
     <string name="tags_info_tos_title">Ce sunt termenii suspicioși?</string>
-    <string name="tags_info_tos_meaning">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis molestie tincidunt ligula, eu posuere ligula feugiat at. Etiam arcu lorem, sodales at volutpat vel, iaculis at lectus. Sed a metus nisl. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. In ut blandit urna.</string>
+    <string name="tags_info_tos_meaning">Termenii și condițiile îngrijorătoare sunt creați în așa fel încât, din punct de vedere legal, să permită companiei care deține jocul să încurce utilizatorul, fără repercursiuni, fie prin furarea tuturor datelor sale, refuzarea rambursărilor sau chiar monitorizarea dispozitivului acestuia.</string>
     <string name="tags_info_fake_title">Ce este angajamentul fals?</string>
-    <string name="tags_info_fake_meaning">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis molestie tincidunt ligula, eu posuere ligula feugiat at. Etiam arcu lorem, sodales at volutpat vel, iaculis at lectus. Sed a metus nisl. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. In ut blandit urna.</string>
+    <string name="tags_info_fake_meaning">Angajamentul fals se referă la cumpărarea de recenzii pozitive pentru un joc. Nu pe această platformă, totuși.</string>
     <string name="tags_info_ad_title">Ce sunt reclamele false?</string>
-    <string name="tags_info_ad_meaning">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis molestie tincidunt ligula, eu posuere ligula feugiat at. Etiam arcu lorem, sodales at volutpat vel, iaculis at lectus. Sed a metus nisl. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. In ut blandit urna.</string>
+    <string name="tags_info_ad_meaning">Când un joc este marcat cu eticheta \"reclame false\", înseamnă că toată arta promoțională creată pentru a face publicitate jocului reprezintă complet greșit produsul final. De exemplu: o companie lansează un trailer (scurt videoclip care ar trebui să prezinte realistic jocul) care face să pară că jocul lor conține abilitatea de a împușca inamici. În realitate, după ce utilizatorul îl descarcă, așteptându-se la ceea ce a văzut în trailer, află că este doar un joc generic de management al unei baze și a resurselor sale, împușcăturile fiind absente.</string>
     <string name="tags_info_dev_title">Ce sunt dezvoltatorii imorali?</string>
-    <string name="tags_info_dev_meaning">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis molestie tincidunt ligula, eu posuere ligula feugiat at. Etiam arcu lorem, sodales at volutpat vel, iaculis at lectus. Sed a metus nisl. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. In ut blandit urna.</string>
+    <string name="tags_info_dev_meaning">Dezvoltatorii imorali își mint de obicei comunitatea, de exemplu făcând promisiuni false. Ar putea însemna, de asemenea, că ei sau compania pentru care lucrează au acuzații sau condamnări privind comportamentul greșit al angajaților (de exemplu, hărțuire la locul de muncă).</string>
     <string name="tags_info_scam_title">Ce este definit ca înșelătorie?</string>
-    <string name="tags_info_scam_meaning">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis molestie tincidunt ligula, eu posuere ligula feugiat at. Etiam arcu lorem, sodales at volutpat vel, iaculis at lectus. Sed a metus nisl. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. In ut blandit urna.</string>
+    <string name="tags_info_scam_meaning">Un joc marcat cu eticheta \"înșelătorie\" este un joc care a fost promovat pentru a-i face pe oameni să-l cumpere, fie la lansare, prin precomandă, sau prin investiții monetare înainte ca acesta să existe, dar care s-a dovedit a fi incomplet, cu erori majore și, în general, o dezamăgire totală în momentul lansării pe piață. Un exemplu bun ar fi următorul: dezvoltatorii inițiază o campanie de strângere a fondurilor pentru crearea unui joc promis, dar banii obținuți sunt folosiți mai mult în interesele personale ale oamenilor din spatele campaniei (cu alte cuvinte, furați). Când vine timpul ca jocul să fie lansat, acesta nu se aseamănă nici măcar puțin cu ce a fost promis (și pe ce au investit oamenii proprii lor bani), deoarece nu au mai rămas suficiente fonduri pentru dezvoltarea acelei versiuni a jocului.</string>
 
     <!-- Settings Screen -->
     <string name="settings_title">Setări</string>
+    <string name="settings_welcome_account_message">Salut, %1$s!</string>
+    <string name="settings_welcome_no_account_message">Salut! Nu ești intrat în cont.</string>
+    <string name="settings_get_data_error_message">A apărut o eroare. Contul tău nu s-au putut încărca.</string>
     <string name="settings_category_account_title">Cont</string>
     <string name="settings_login_text">Logare</string>
     <string name="settings_login_subtext">Intră în contul tău</string>
@@ -146,8 +139,8 @@
     <string name="settings_category_info_title">Informații</string>
     <string name="settings_about_reviewer_text">Ce este un recenzor acreditat?</string>
     <string name="settings_about_reviewer_subtext">Un recenzor acreditat este o persoană care a fost invitată să lase recenzii publice pentru jocuri.</string>
-    <string name="settings_about_invite_text">Ce este un cod de invitație?</string>
-    <string name="settings_about_invite_subtext">Un cod de invitație este primit pe email de către persoanele care au fost invitate să devină recenzori acreditați.</string>
+    <string name="settings_about_invite_text">Cum pot fi acreditat?</string>
+    <string name="settings_about_invite_subtext">Doar recenzorii profesionali de jocuri video pot fi acreditați.</string>
     <string name="settings_app_version_text">Versiune aplicație: %1$s</string>
 
 </resources>

@@ -28,6 +28,7 @@ class ReviewsViewModel @Inject constructor(
     val isRefreshing = MutableStateFlow(false)
     val isUserLoggedIn = MutableStateFlow(true)
     val hasUserReviewedGame = MutableStateFlow(false)
+    val isUserAccredited = MutableStateFlow(false)
     private var isLoadingMoreReviews = false
     private var lastReview: DocumentSnapshot? = null
     private var fetchJob: Job? = null
@@ -39,6 +40,10 @@ class ReviewsViewModel @Inject constructor(
         viewModelScope.launch {
             userService.user.collect { user ->
                 isUserLoggedIn.value = user != null
+
+                if (user != null) {
+                    isUserAccredited.value = user.isReviewer == true
+                }
             }
         }
     }
@@ -63,7 +68,7 @@ class ReviewsViewModel @Inject constructor(
 
                 val (reviews, lastSnapshot) = reviewsService.fetchReviews(
                     gameId,
-                    4,
+                    5,
                     if (canLoadMore) lastReview else null
                 )
                 lastReview = lastSnapshot.takeIf { reviews.isNotEmpty() }
@@ -87,15 +92,16 @@ class ReviewsViewModel @Inject constructor(
         canLoadMore: Boolean,
         gameId: String
     ): List<ReviewItemViewModel> {
-        val currentReviews =
-            (obtainedReviewsState.value as? ObtainedReviewsState.Success)?.reviews.orEmpty()
+        val currentReviews = (obtainedReviewsState.value as? ObtainedReviewsState.Success)?.reviews.orEmpty()
+
+        val currentUserReview = userService.user.value?.id?.let { _ ->
+            reviewsService.fetchCurrentUserReview(gameId)?.let { ReviewItemViewModel(it) }
+        }
+
+        hasUserReviewedGame.value = currentUserReview != null
 
         return if (!canLoadMore) {
-            userService.user.value?.id?.let {
-                reviewsService.fetchCurrentUserReview(gameId)?.let { currentUserReview ->
-                    listOf(ReviewItemViewModel(currentUserReview)) + newReviews
-                }
-            } ?: newReviews
+            currentUserReview?.let { listOf(it) + newReviews } ?: newReviews
         } else {
             val existingIds = currentReviews.map { it.id }.toSet()
             val newFilteredReviews = newReviews.filter { it.id !in existingIds }
@@ -127,12 +133,8 @@ class ReviewsViewModel @Inject constructor(
         sentReviewState.value = SentReviewState.Idle
     }
 
-    fun resetReceivedState(keepLastSnapshot: Boolean = false) {
+    fun resetReceivedState() {
         obtainedReviewsState.value = ObtainedReviewsState.Loading
-
-        if (!keepLastSnapshot) {
-            lastReview = null
-        }
     }
 }
 
@@ -170,19 +172,3 @@ data class ReviewItemViewModel(
 
     val userName: String = review.userName
 }
-
-/*private suspend fun mergeReviews(
-        newReviewsVMs: List<ReviewItemViewModel>,
-        canLoadMore: Boolean,
-        gameId: String
-    ): List<ReviewItemViewModel> {
-        val currentReviews =
-            (obtainedReviewsState.value as? ObtainedReviewsState.Success)?.reviews.orEmpty()
-        return if (!canLoadMore) {
-            userService.user.value?.id?.let { userId ->
-                reviewsService.fetchCurrentUserReview(gameId)?.let { currentUserReview ->
-                    listOf(ReviewItemViewModel(currentUserReview)) + newReviewsVMs
-                }
-            } ?: newReviewsVMs
-        } else currentReviews + newReviewsVMs
-    }*/

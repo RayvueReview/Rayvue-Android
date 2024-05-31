@@ -105,13 +105,9 @@ class GamesViewModel @Inject constructor(
         }
     }
 
-    fun resetStates(keepLastSnapshot: Boolean = false) {
+    fun resetStates() {
         obtainedGamesState.value = ObtainedGamesState.Loading
         obtainedFilteredGamesState.value = ObtainedFilteredGamesState.Loading
-
-        if (!keepLastSnapshot) {
-            lastGame = null
-        }
     }
 }
 
@@ -135,42 +131,3 @@ sealed class ObtainedFilteredGamesState {
 
     object Error : ObtainedFilteredGamesState()
 }
-
-/*fun getAllGames(
-        canRefresh: Boolean = true,
-        loadMore: Boolean = false
-    ) {
-        viewModelScope.launch {
-            try {
-                if (canRefresh)
-                    isRefreshing.value = true
-
-                val (allGames, lastSnapshot) = gamesService.fetchAllGames(10, lastGame)
-                val recentGames = gamesService.fetchRecentGames(10)
-                val randomGames = gamesService.fetchRandomGames("all", 10)
-                lastGame = lastSnapshot
-
-                val newAllGames =
-                    if (loadMore && obtainedAllGamesState.value is ObtainedAllGamesState.Success) {
-                        (obtainedAllGamesState.value as ObtainedAllGamesState.Success).allGames + allGames
-                    } else {
-                        allGames
-                    }
-
-                obtainedAllGamesState.value =
-                    ObtainedAllGamesState.Success(
-                        recentGames,
-                        randomGames,
-                        newAllGames,
-                    )
-            } catch (e: Exception) {
-                if (canRefresh)
-                    isRefreshing.value = true
-
-                obtainedAllGamesState.value = ObtainedAllGamesState.Error
-            } finally {
-                if (canRefresh)
-                    isRefreshing.value = false
-            }
-        }
-    }*/

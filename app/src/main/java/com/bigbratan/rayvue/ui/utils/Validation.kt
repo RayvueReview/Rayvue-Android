@@ -10,13 +10,16 @@ internal fun TextFieldValue.isValidEmail(): Boolean {
 }
 
 internal fun TextFieldValue.isValidPassword(): Boolean {
-    return text.length >= 10 && text.isNotEmpty()
+    val hasDigit = text.any { it.isDigit() }
+    val hasUppercase = text.any { it.isUpperCase() }
+
+    return text.length >= 10 && hasDigit && hasUppercase && text.isNotEmpty()
+}
+
+internal fun TextFieldValue.isNotEmptyPassword(): Boolean {
+    return text.isNotEmpty()
 }
 
 internal fun TextFieldValue.isValidName(): Boolean {
     return text.length in 3..20 && text.isNotEmpty()
-}
-
-internal fun TextFieldValue.isValidCode(): Boolean {
-    return text.length == 9 && text.isDigitsOnly() && text.isNotEmpty()
 }

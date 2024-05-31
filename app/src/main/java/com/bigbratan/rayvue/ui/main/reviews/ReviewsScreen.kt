@@ -81,6 +81,7 @@ internal fun ReviewsScreen(
     val sentReviewState = viewModel.sentReviewState.collectAsState()
     val isUserLoggedIn = viewModel.isUserLoggedIn.collectAsState()
     val hasUserReviewedGame = viewModel.hasUserReviewedGame.collectAsState()
+    val isUserAccredited = viewModel.isUserAccredited.collectAsState()
     val isRefreshing = viewModel.isRefreshing.collectAsState()
     val listState = rememberLazyListState()
 
@@ -93,8 +94,8 @@ internal fun ReviewsScreen(
             if (obtainedReviewsState.value !is ObtainedReviewsState.Loading &&
                 sentReviewState.value !is SentReviewState.Loading
             ) {
-                // TODO: FIGURE OUT IF RESET SENT STATE IS NECESSARY HERE
-                viewModel.resetReceivedState(keepLastSnapshot = true)
+                viewModel.resetSentState()
+                viewModel.resetReceivedState()
                 viewModel.getReviews(gameId)
             }
         }
@@ -179,6 +180,7 @@ internal fun ReviewsScreen(
                         focusManager = focusManager,
                         isUserLoggedIn = isUserLoggedIn.value,
                         hasUserReviewedGame = hasUserReviewedGame.value,
+                        isUserAccredited = isUserAccredited.value,
                         listState = listState,
                         onBackClick = onBackClick,
                         onSendClick = { typedReview ->
@@ -188,6 +190,10 @@ internal fun ReviewsScreen(
                             )
                             typedReviewState.value = TextFieldValue("")
                             focusManager.clearFocus()
+                            viewModel.getReviews(
+                                gameId = gameId,
+                                canRefresh = false,
+                            )
                         }
                     )
 
@@ -228,6 +234,7 @@ private fun ReviewsView(
     typedReviewState: MutableState<TextFieldValue>,
     focusManager: FocusManager,
     isUserLoggedIn: Boolean,
+    isUserAccredited: Boolean,
     hasUserReviewedGame: Boolean,
     listState: LazyListState,
     onSendClick: (typedReview: String) -> Unit,
@@ -289,61 +296,65 @@ private fun ReviewsView(
                 modifier = Modifier.background(MaterialTheme.colorScheme.surface)
             ) {
                 if (isUserLoggedIn) {
-                    if (!hasUserReviewedGame) {
-                        OutlinedTextField(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(
-                                    horizontal = 24.dp,
-                                    vertical = 12.dp
-                                )
-                                .clip(RoundedCornerShape(8.dp)),
-                            colors = OutlinedTextFieldDefaults.colors(
-                                focusedBorderColor = if (typedReviewError) {
-                                    MaterialTheme.colorScheme.error
-                                } else {
-                                    MaterialTheme.colorScheme.primary
+                    if (isUserAccredited) {
+                        if (!hasUserReviewedGame) {
+                            OutlinedTextField(
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .padding(
+                                        horizontal = 24.dp,
+                                        vertical = 12.dp
+                                    )
+                                    .clip(RoundedCornerShape(8.dp)),
+                                colors = OutlinedTextFieldDefaults.colors(
+                                    focusedBorderColor = if (typedReviewError) {
+                                        MaterialTheme.colorScheme.error
+                                    } else {
+                                        MaterialTheme.colorScheme.primary
+                                    },
+                                    unfocusedBorderColor = if (typedReviewError) {
+                                        MaterialTheme.colorScheme.error
+                                    } else {
+                                        MaterialTheme.colorScheme.outline
+                                    },
+                                ),
+                                label = {
+                                    Text(
+                                        text = stringResource(id = R.string.reviews_write_hint),
+                                        fontFamily = plusJakartaSans,
+                                        fontWeight = FontWeight.Normal,
+                                        fontSize = 14.sp,
+                                        style = TextStyle(platformStyle = noFontPadding),
+                                        maxLines = 1,
+                                    )
                                 },
-                                unfocusedBorderColor = if (typedReviewError) {
-                                    MaterialTheme.colorScheme.error
-                                } else {
-                                    MaterialTheme.colorScheme.outline
-                                },
-                            ),
-                            label = {
-                                Text(
-                                    text = stringResource(id = R.string.reviews_write_hint),
-                                    fontFamily = plusJakartaSans,
-                                    fontWeight = FontWeight.Normal,
-                                    fontSize = 14.sp,
-                                    style = TextStyle(platformStyle = noFontPadding),
-                                    maxLines = 1,
-                                )
-                            },
-                            maxLines = 5,
-                            shape = RoundedCornerShape(8.dp),
-                            trailingIcon = {
-                                TransparentIconButton(
-                                    imageVector = Icons.Default.Send,
-                                    onClick = {
-                                        if (typedReviewState.value.text.isEmpty()) {
-                                            typedReviewError = true
-                                        } else {
-                                            onSendClick(typedReviewState.value.text)
-                                            typedReviewState.value = TextFieldValue("")
-                                            keyboardController?.hide()
-                                            focusManager.clearFocus()
+                                maxLines = 5,
+                                shape = RoundedCornerShape(8.dp),
+                                trailingIcon = {
+                                    TransparentIconButton(
+                                        imageVector = Icons.Default.Send,
+                                        onClick = {
+                                            if (typedReviewState.value.text.isEmpty()) {
+                                                typedReviewError = true
+                                            } else {
+                                                onSendClick(typedReviewState.value.text)
+                                                typedReviewState.value = TextFieldValue("")
+                                                keyboardController?.hide()
+                                                focusManager.clearFocus()
+                                            }
                                         }
-                                    }
-                                )
-                            },
-                            value = typedReviewState.value,
-                            onValueChange = { newValue ->
-                                typedReviewState.value = newValue
-                            },
-                        )
+                                    )
+                                },
+                                value = typedReviewState.value,
+                                onValueChange = { newValue ->
+                                    typedReviewState.value = newValue
+                                },
+                            )
+                        } else {
+                            ReviewInfo(text = stringResource(id = R.string.reviews_info_review_exists))
+                        }
                     } else {
-                        ReviewInfo(text = stringResource(id = R.string.reviews_info_review_exists))
+                        ReviewInfo(text = stringResource(id = R.string.reviews_info_not_accredited))
                     }
                 } else {
                     ReviewInfo(text = stringResource(id = R.string.reviews_info_no_account))
@@ -385,7 +396,7 @@ private fun ReviewsView(
                                 .fillMaxWidth()
                                 .padding(horizontal = 24.dp)
                                 .padding(
-                                    top = if (reviewIndex == 0) 24.dp else 0.dp,
+                                    top = if (reviewIndex == 0) 12.dp else 0.dp,
                                     bottom = if (reviewIndex == reviews.size - 1) 24.dp else 0.dp,
                                 )
                         ) {

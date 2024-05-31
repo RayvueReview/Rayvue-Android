@@ -22,8 +22,8 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import com.bigbratan.rayvue.R
 import com.bigbratan.rayvue.ui.auth.AuthTextField
 import com.bigbratan.rayvue.ui.auth.AuthView
+import com.bigbratan.rayvue.ui.utils.isNotEmptyPassword
 import com.bigbratan.rayvue.ui.utils.isValidEmail
-import com.bigbratan.rayvue.ui.utils.isValidPassword
 import com.bigbratan.rayvue.ui.views.LoadingAnimation
 import com.bigbratan.rayvue.ui.views.OutlinedTextButton
 import com.bigbratan.rayvue.ui.views.Popup
@@ -42,7 +42,7 @@ internal fun LoginScreen(
 
     val typedPasswordState = remember { mutableStateOf(TextFieldValue()) }
     var typedPasswordError by remember { mutableStateOf(false) }
-    val isTypedPasswordValid = typedPasswordState.value.isValidPassword()
+    val isTypedPasswordValid = typedPasswordState.value.isNotEmptyPassword()
 
     var isPopupVisible by remember { mutableStateOf(false) }
 

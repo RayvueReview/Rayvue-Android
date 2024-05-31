@@ -26,7 +26,7 @@ class SettingsViewModel @Inject constructor(
         }
     }
 
-    fun getData() {
+    fun getUser() {
         viewModelScope.launch {
             userService.user.collect { user ->
                 try {

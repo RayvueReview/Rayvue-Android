@@ -22,9 +22,7 @@ class AuthService @Inject constructor(
     }
 
     @SuppressLint("RestrictedApi")
-    suspend fun createAccount(
-        isReviewer: Boolean,
-    ) {
+    suspend fun createAccount() {
         val email = accountService.getEmail()
         val password = accountService.getPassword()
         val userName = accountService.getName()
@@ -37,7 +35,7 @@ class AuthService @Inject constructor(
             val userId = authResult.user?.uid
             val userData = hashMapOf(
                 "id" to userId,
-                "isReviewer" to isReviewer,
+                "isReviewer" to false,
                 "userName" to userName
             )
 

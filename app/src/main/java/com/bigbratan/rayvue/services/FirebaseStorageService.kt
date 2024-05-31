@@ -206,35 +206,3 @@ class FirebaseStorageService @Inject constructor() {
         return Gson().fromJson(Gson().toJson(fieldsMap), T::class.java)
     }
 }
-
-/*suspend inline fun <reified T : Any> getDocumentsRepeatedly(
-        collectionId: String,
-        documentFields: Array<String>,
-        filters: Map<String, Any> = emptyMap(),
-        orderBy: String? = null,
-        direction: Query.Direction = Query.Direction.ASCENDING,
-        limit: Long,
-        startAfter: DocumentSnapshot? = null
-    ): Pair<List<T>, DocumentSnapshot?> {
-        val query = db.collection(collectionId)
-            .apply {
-                filters.forEach { (field, value) -> whereEqualTo(field, value) }
-                limit(limit)
-                orderBy?.let { orderBy(it, direction) }
-                startAfter?.let { startAfter(it) }
-            }
-
-        val querySnapshot = query.get().await()
-        val documents = querySnapshot.documents
-        val lastSnapshot = documents.lastOrNull()
-
-        val list = documents.mapNotNull { document ->
-            val fieldsMap = documentFields.mapNotNull { field ->
-                document.get(field)?.let { field to it }
-            }.toMap()
-
-            if (fieldsMap.isNotEmpty()) convertToObject<T>(fieldsMap) else null
-        }
-
-        return list to lastSnapshot
-    }*/

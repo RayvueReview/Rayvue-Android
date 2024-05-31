@@ -34,7 +34,7 @@ class GameDetailsViewModel @Inject constructor(
                 val gameDetails = gamesService.fetchGameDetails(gameId)
                 val reviews = reviewsService.fetchReviewsOnce(
                     gameId,
-                    1,
+                    10,
                 ).map(::ReviewItemViewModel)
 
                 obtainedGameDetailsState.value = ObtainedGameDetailsState.Success(
@@ -54,7 +54,7 @@ class GameDetailsViewModel @Inject constructor(
         reviews: List<ReviewItemViewModel>,
         gameId: String
     ): List<ReviewItemViewModel> {
-        val currentUserReview = userService.user.value?.id?.let { userId ->
+        val currentUserReview = userService.user.value?.id?.let { _ ->
             reviewsService.fetchCurrentUserReview(gameId)
         }
 

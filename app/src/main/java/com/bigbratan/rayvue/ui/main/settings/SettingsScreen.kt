@@ -31,6 +31,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -51,6 +52,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import com.bigbratan.rayvue.R
 import com.bigbratan.rayvue.ui.theme.noFontPadding
 import com.bigbratan.rayvue.ui.theme.plusJakartaSans
+import com.bigbratan.rayvue.ui.views.ErrorMessage
 import com.bigbratan.rayvue.ui.views.LoadingAnimation
 import com.bigbratan.rayvue.ui.views.Popup
 import com.bigbratan.rayvue.ui.views.TransparentIconButton
@@ -64,6 +66,7 @@ internal fun SettingsScreen(
 ) {
     val sentLogOutDataState = viewModel.sentLogOutDataState.collectAsState()
     val sentSignOutDataState = viewModel.sentSignOutDataState.collectAsState()
+    val obtainedUserState = viewModel.obtainedUserState.collectAsState()
 
     val areLoginSignupVisible = viewModel.areLoginSignupVisible.collectAsState()
 
@@ -72,92 +75,120 @@ internal fun SettingsScreen(
     var isLogOutPopupVisible by remember { mutableStateOf(false) }
     var isSignOutPopupVisible by remember { mutableStateOf(false) }
 
+    LaunchedEffect(Unit) {
+        viewModel.getUser()
+    }
+
     Box(
         modifier = Modifier.fillMaxSize()
     ) {
-        when (sentLogOutDataState.value) {
-            SentLogOutDataState.Idle -> {
-                Unit
-            }
-
-            SentLogOutDataState.Loading -> {
+        when (obtainedUserState.value) {
+            ObtainedUserState.Loading -> {
                 LoadingAnimation(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .fillMaxHeight(0.5f)
-                        .align(Alignment.TopCenter)
+                    modifier = Modifier.fillMaxSize()
                 )
             }
 
-            is SentLogOutDataState.Success -> {
-                onBackClick()
-                viewModel.resetStates()
-            }
-
-            SentLogOutDataState.Error -> {
-                isLogOutPopupVisible = false
-                isLogOutErrorPopupVisible = true
-            }
-        }
-
-        when (sentSignOutDataState.value) {
-            SentSignOutDataState.Idle -> {
-                Unit
-            }
-
-            SentSignOutDataState.Loading -> {
-                LoadingAnimation(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .fillMaxHeight(0.5f)
-                        .align(Alignment.TopCenter)
+            ObtainedUserState.Error -> {
+                ErrorMessage(
+                    message = stringResource(
+                        id = R.string.settings_get_data_error_message
+                    ),
+                    isInHomeScreen = false,
+                    onBackClick = { onBackClick() }
                 )
             }
 
-            is SentSignOutDataState.Success -> {
-                onBackClick()
-                viewModel.resetStates()
-            }
+            is ObtainedUserState.Success -> {
+                val userName = (obtainedUserState.value as ObtainedUserState.Success).userName
 
-            SentSignOutDataState.Error -> {
-                isSignOutPopupVisible = false
-                isSignOutErrorPopupVisible = true
+                when (sentLogOutDataState.value) {
+                    SentLogOutDataState.Idle -> {
+                        Unit
+                    }
+
+                    SentLogOutDataState.Loading -> {
+                        LoadingAnimation(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .fillMaxHeight(0.5f)
+                                .align(Alignment.TopCenter)
+                        )
+                    }
+
+                    is SentLogOutDataState.Success -> {
+                        onBackClick()
+                        viewModel.resetStates()
+                    }
+
+                    SentLogOutDataState.Error -> {
+                        isLogOutPopupVisible = false
+                        isLogOutErrorPopupVisible = true
+                    }
+                }
+
+                when (sentSignOutDataState.value) {
+                    SentSignOutDataState.Idle -> {
+                        Unit
+                    }
+
+                    SentSignOutDataState.Loading -> {
+                        LoadingAnimation(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .fillMaxHeight(0.5f)
+                                .align(Alignment.TopCenter)
+                        )
+                    }
+
+                    is SentSignOutDataState.Success -> {
+                        onBackClick()
+                        viewModel.resetStates()
+                    }
+
+                    SentSignOutDataState.Error -> {
+                        isSignOutPopupVisible = false
+                        isSignOutErrorPopupVisible = true
+                    }
+                }
+
+                Popup(
+                    title = stringResource(id = R.string.error_title),
+                    message = if (isSignOutErrorPopupVisible) stringResource(id = R.string.settings_sing_out_error_message) else stringResource(
+                        id = R.string.settings_log_out_error_message
+                    ),
+                    isPopupVisible = isLogOutErrorPopupVisible || isSignOutErrorPopupVisible,
+                    hasNegativeAction = false,
+                    onConfirm = {
+                        isLogOutErrorPopupVisible = false
+                        isSignOutErrorPopupVisible = false
+                        viewModel.resetStates()
+                    },
+                    onDismiss = {
+                        isLogOutErrorPopupVisible = false
+                        isSignOutErrorPopupVisible = false
+                        viewModel.resetStates()
+                    },
+                )
+
+                SettingsView(
+                    userName = userName,
+                    areLoginSignupVisible = areLoginSignupVisible.value,
+                    onBackClick = { onBackClick() },
+                    onLogOutClick = { viewModel.exitAccount() },
+                    onSignOutClick = { viewModel.deleteAccount() },
+                    onLoginClick = { onLoginClick() },
+                    onSignupClick = { onSignupClick() },
+                )
             }
         }
-
-        Popup(
-            title = stringResource(id = R.string.error_title),
-            message = if (isSignOutErrorPopupVisible) stringResource(id = R.string.settings_sing_out_error_message) else stringResource(
-                id = R.string.settings_log_out_error_message
-            ),
-            isPopupVisible = isLogOutErrorPopupVisible || isSignOutErrorPopupVisible,
-            hasNegativeAction = false,
-            onConfirm = {
-                isLogOutErrorPopupVisible = false
-                isSignOutErrorPopupVisible = false
-                viewModel.resetStates()
-            },
-            onDismiss = {
-                isLogOutErrorPopupVisible = false
-                isSignOutErrorPopupVisible = false
-                viewModel.resetStates()
-            },
-        )
-
-        SettingsView(
-            areLoginSignupVisible = areLoginSignupVisible.value,
-            onBackClick = { onBackClick() },
-            onLogOutClick = { viewModel.exitAccount() },
-            onSignOutClick = { viewModel.deleteAccount() },
-            onLoginClick = { onLoginClick() },
-            onSignupClick = { onSignupClick() },
-        )
     }
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun SettingsView(
+    userName: String?,
     areLoginSignupVisible: Boolean,
     onLogOutClick: () -> Unit,
     onSignOutClick: () -> Unit,
@@ -204,8 +235,30 @@ private fun SettingsView(
             Column(
                 modifier = Modifier
                     .padding(paddingValues)
-                    .padding(24.dp)
+                    .padding(
+                        horizontal = 24.dp,
+                        vertical = 12.dp
+                    )
             ) {
+                Text(
+                    modifier = Modifier.padding(bottom = 24.dp),
+                    text = userName?.let { userName ->
+                        stringResource(
+                            id = R.string.settings_welcome_account_message,
+                            userName
+                        )
+                    }
+                        ?: stringResource(id = R.string.settings_welcome_no_account_message),
+                    fontFamily = plusJakartaSans,
+                    fontWeight = FontWeight.SemiBold,
+                    fontSize = 24.sp,
+                    color = MaterialTheme.colorScheme.onSurface,
+                    style = TextStyle(
+                        platformStyle = noFontPadding,
+                        letterSpacing = 0.15.sp,
+                    ),
+                )
+
                 Text(
                     text = stringResource(id = R.string.settings_category_account_title),
                     fontFamily = plusJakartaSans,
@@ -235,10 +288,7 @@ private fun SettingsView(
 
                     SettingCard(
                         modifier = Modifier
-                            .padding(
-                                top = 2.dp,
-                                bottom = 8.dp,
-                            )
+                            .padding(top = 2.dp)
                             .clip(RoundedCornerShape(4.dp, 4.dp, 16.dp, 16.dp)),
                         icon = Icons.Filled.PersonAdd,
                         text = stringResource(id = R.string.settings_signup_text),
@@ -263,10 +313,7 @@ private fun SettingsView(
 
                     SettingCard(
                         modifier = Modifier
-                            .padding(
-                                top = 2.dp,
-                                bottom = 8.dp,
-                            )
+                            .padding(top = 2.dp)
                             .clip(RoundedCornerShape(4.dp, 4.dp, 16.dp, 16.dp)),
                         icon = Icons.Filled.Delete,
                         text = stringResource(id = R.string.settings_sign_out_text),
@@ -277,7 +324,7 @@ private fun SettingsView(
                 }
 
                 Text(
-                    modifier = Modifier.padding(top = 16.dp),
+                    modifier = Modifier.padding(top = 24.dp),
                     text = stringResource(id = R.string.settings_category_info_title),
                     fontFamily = plusJakartaSans,
                     fontWeight = FontWeight.SemiBold,
@@ -316,10 +363,7 @@ private fun SettingsView(
 
                 SettingCard(
                     modifier = Modifier
-                        .padding(
-                            top = 2.dp,
-                            bottom = 8.dp,
-                        )
+                        .padding(top = 2.dp)
                         .clip(RoundedCornerShape(4.dp, 4.dp, 16.dp, 16.dp)),
                     icon = Icons.Filled.Code,
                     text = stringResource(

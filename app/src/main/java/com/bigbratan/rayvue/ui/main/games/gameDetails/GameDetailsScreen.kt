@@ -306,7 +306,7 @@ private fun GameDetailsView(
             content = {
                 Box {
                     AsyncImage(
-                        modifier = Modifier.aspectRatio(1 / 1.3f),
+                        modifier = Modifier.aspectRatio(1f / 1f),
                         model = gameDetails.banner,
                         contentDescription = null,
                         contentScale = ContentScale.Crop,
