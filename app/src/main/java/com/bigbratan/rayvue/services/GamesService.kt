@@ -124,8 +124,6 @@ class GamesService @Inject constructor(
             searchQuery = searchQuery
         )
 
-        Log.d("games", "Searched games in serv: $searchedGames")
-
         return searchedGames
     }
 }
