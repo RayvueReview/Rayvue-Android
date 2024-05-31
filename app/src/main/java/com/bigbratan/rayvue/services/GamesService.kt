@@ -1,6 +1,5 @@
 package com.bigbratan.rayvue.services
 
-import android.util.Log
 import com.bigbratan.rayvue.models.Game
 import com.bigbratan.rayvue.models.GameDetails
 import com.google.firebase.firestore.DocumentSnapshot
@@ -113,7 +112,7 @@ class GamesService @Inject constructor(
     suspend fun searchGames(
         searchQuery: String
     ): List<Game> {
-        val searchedGames = firebaseStorageService.searchDocuments<Game>(
+        return firebaseStorageService.searchDocuments<Game>(
             collectionId = "games",
             documentFields = arrayOf(
                 "id",
@@ -123,7 +122,5 @@ class GamesService @Inject constructor(
             searchField = "searchName",
             searchQuery = searchQuery
         )
-
-        return searchedGames
     }
 }
