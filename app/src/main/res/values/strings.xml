@@ -55,7 +55,11 @@
     <string name="games_section_all_title">All Games</string>
 
     <!-- Awards Screen -->
-
+    <string name="awards_get_data_error_message">No games with this award were found.</string>
+    <string name="awards_tab_week_title">Week</string>
+    <string name="awards_tab_month_title">Month</string>
+    <string name="awards_tab_year_title">Year</string>
+    <string name="awards_section_past_title">Past Awards</string>
 
     <!-- Journal Screen -->
     <string name="journal_empty_data_error_message">You haven\'t added any games to your journal.</string>
@@ -96,7 +100,7 @@
     <!-- Tags Info Screen -->
     <string name="tags_info_title">Keep In Mind</string>
     <string name="tags_info_sub_title">What is a subscription service?</string>
-    <string name="tags_info_sub_meaning">A subscription service is a system where game companies charge a certain amount of money in exchange for users to access their game every week/month/year or other predetermined period of time.</string>
+    <string name="tags_info_sub_meaning">A subscription service is a system where game companies charge a certain amount of money in exchange for users accessing their game every week/month/year or other predetermined period of time.</string>
     <string name="tags_info_micro_title">What are micro-transactions?</string>
     <string name="tags_info_micro_meaning">Micro-transactions are in-game items that the users can purchase using real money. The problem with micro-transactions is that the difficulty of the game is made in such a way that the players cannot progress in a reasonable amount of time without paying for said micro-transactions. Another problem is that those in-game items are created in such a way that if the players want to keep winning, they will have to keep buying them endlessly, potentially spending thousands of dollars (or any other real-life currency).</string>
     <string name="tags_info_pass_title">What is a battle pass?</string>
@@ -112,11 +116,11 @@
     <string name="tags_info_fake_title">What is fake engagement?</string>
     <string name="tags_info_fake_meaning">Fake engagement refers to buying positive reviews for a game. Not on this platform, though.</string>
     <string name="tags_info_ad_title">What does \"not as advertised\" mean?</string>
-    <string name="tags_info_ad_meaning">When a game is labeled as such, it means that all promotional art created to advertise the game completely misrepresents the final product. For example: a company releases a trailer (short video that should realistically present the game) that makes it look like their game contains the ability to shoot enemies. In reality, after the users download it, expecting what they saw in the trailer, they find out that it’s just a generic game of managing a base and its resources, no shooting included.</string>
+    <string name="tags_info_ad_meaning">When a game is labeled as such, it means that all promotional art created to advertise the game completely misrepresents the final product. For example: a company releases a trailer (short video that should realistically present the game) that makes it look like their game contains the ability to shoot enemies. In reality, after the users download it, expecting what they saw in the trailer, they find out that it\'s just a generic game of managing a base and its resources, no shooting included.</string>
     <string name="tags_info_dev_title">What are immoral developers?</string>
-    <string name="tags_info_dev_meaning">Immoral developers usually lie to their community, for example by making false promises. It could also mean they or the company they work for has allegations or convictions employee misconduct (for example, workplace harassment).</string>
+    <string name="tags_info_dev_meaning">Immoral developers usually lie to their community, for example by making false promises. It could also mean they or the company they work for has allegations or convictions of employee misconduct (for example, workplace harassment).</string>
     <string name="tags_info_scam_title">What is defined as a scam?</string>
-    <string name="tags_info_scam_meaning">A game labeled “scam” is a game that was advertised to convince people to buy it, either at launch, by pre-ordering, or by investing money before it was even created, but turned out to be incomplete, with major bugs and generally a total disappointment at launch. A good example would be the following: developers start a campaign to raise funds for the creation of a promised game, but the money obtained is used more for the personal interests of the people behind the campaign (in other words, the money is stolen). When the time comes for the game to be released, it doesn\'t look even remotely similar to what was promised (and what people invested their own money in) because there weren't enough funds left to develop that version of the game.</string>
+    <string name="tags_info_scam_meaning">A game labeled with \"scam\" is a game that was advertised to convince people to buy it, either at launch, by pre-ordering, or by investing money before it was even created, but turned out to be incomplete, with major bugs and generally a total disappointment at launch. A good example would be the following: developers start a campaign to raise funds for the creation of a promised game, but the money obtained is used more for the personal interests of the people behind the campaign (in other words, the money is stolen). When the time comes for the game to be released, it doesn\'t look even remotely similar to what was promised (and what people invested their own money in) because there weren\'t enough funds left to develop that version of the game.</string>
 
     <!-- Settings Screen -->
     <string name="settings_title">Settings</string>

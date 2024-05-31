@@ -1,5 +1,6 @@
 package com.bigbratan.rayvue.services
 
+import com.bigbratan.rayvue.models.AwardGame
 import com.bigbratan.rayvue.models.Game
 import com.bigbratan.rayvue.models.GameDetails
 import com.google.firebase.firestore.DocumentSnapshot
@@ -106,6 +107,29 @@ class GamesService @Inject constructor(
                 "categories",
                 "tags",
             ),
+        )
+    }
+
+    suspend fun fetchTopGames(
+        dateType: String,
+        limit: Long,
+        startAfter: DocumentSnapshot? = null
+    ): Pair<List<AwardGame>, DocumentSnapshot?> {
+        return firebaseStorageService.getDocumentsRepeatedly(
+            collectionId = "games",
+            documentFields = arrayOf(
+                "id",
+                "displayName",
+                "icon",
+                "banner",
+                "gameOfTheWeek",
+                "gameOfTheMonth",
+                "gameOfTheYear",
+            ),
+            limit = limit,
+            orderBy = dateType,
+            direction = Query.Direction.DESCENDING,
+            startAfter = startAfter
         )
     }
 
