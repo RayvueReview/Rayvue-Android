@@ -59,7 +59,7 @@ class AwardsViewModel @Inject constructor(
 
                 val (games, lastSnapshot) = gamesService.fetchTopGames(
                     dateType,
-                    4,
+                    6,
                     if (canLoadMore) lastGame else null
                 )
                 lastGame = lastSnapshot.takeIf { games.isNotEmpty() }
