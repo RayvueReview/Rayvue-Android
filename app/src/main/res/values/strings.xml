@@ -70,6 +70,8 @@
     <string name="entry_write_hint">Write something in your journal…</string>
     <string name="entry_button_save_title">Save</string>
     <string name="entry_send_data_error_message">An error occurred. The entry could not be uploaded to the server. It was saved only locally instead.</string>
+    <string name="entry_send_data_success_message">The entry was successfully saved.</string>
+    <string name="entry_replace_confirm_message">You\'ve already created a journal entry for this game. Do you want to replace its data?</string>
 
     <!-- Search Screen -->
     <string name="search_general_placeholder">Enter your search</string>

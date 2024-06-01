@@ -32,9 +32,8 @@ class FirebaseStorageService @Inject constructor() {
     ): Pair<List<T>, DocumentSnapshot?> {
         var query: Query = db.collection(collectionId)
 
-        if (ids != null) {
+        if (ids != null)
             query = query.whereIn(FieldPath.documentId(), ids)
-        }
 
         filters.forEach { (field, value) ->
             query = query.whereEqualTo(field, value)
@@ -42,13 +41,11 @@ class FirebaseStorageService @Inject constructor() {
 
         query = query.limit(limit)
 
-        if (orderBy != null) {
+        if (orderBy != null)
             query = query.orderBy(orderBy, direction)
-        }
 
-        if (startAfter != null) {
+        if (startAfter != null)
             query = query.startAfter(startAfter)
-        }
 
         val querySnapshot = query.get().await()
         val documents = querySnapshot.documents
@@ -70,7 +67,7 @@ class FirebaseStorageService @Inject constructor() {
         filters: Map<String, Any> = emptyMap(),
         orderBy: String? = null,
         direction: Query.Direction = Query.Direction.ASCENDING,
-        limit: Long
+        limit: Long? = null
     ): List<T> {
         var query: Query = db.collection(collectionId)
 
@@ -78,13 +75,14 @@ class FirebaseStorageService @Inject constructor() {
             query = query.whereEqualTo(field, value)
         }
 
-        if (orderBy != null) {
+        if (orderBy != null)
             query = query.orderBy(orderBy, direction)
-        }
 
-        query = query.limit(limit)
+        if (limit != null)
+            query = query.limit(limit)
 
         val querySnapshot = query.get().await()
+
         return querySnapshot.documents.mapNotNull { document ->
             documentFields.associateWith { document.get(it) }
                 .filterValues { it != null }
@@ -105,11 +103,13 @@ class FirebaseStorageService @Inject constructor() {
             val endQuery = searchQuery.lowercase()
                 .filter { it.isLetterOrDigit() }
                 .let { it.substring(0, it.length - 1) + it.last().inc() }
+
             query = query.whereGreaterThanOrEqualTo(searchField, searchQuery)
                 .whereLessThan(searchField, endQuery)
         }
 
         val querySnapshot = query.get().await()
+
         return querySnapshot.documents.mapNotNull { document ->
             documentFields.associateWith { document.get(it) }
                 .filterValues { it != null }
@@ -127,7 +127,6 @@ class FirebaseStorageService @Inject constructor() {
             .document(documentId)
             .get()
             .await()
-
         val fieldsMap = documentFields.associateWith { fieldName ->
             documentSnapshot.get(fieldName)
         }.filterValues { it != null }
@@ -144,7 +143,6 @@ class FirebaseStorageService @Inject constructor() {
             .document(documentId)
             .get()
             .await()
-
         val data = documentSnapshot.get(documentField)
 
         return if (data is List<*>) {
@@ -152,7 +150,7 @@ class FirebaseStorageService @Inject constructor() {
             data as List<String>
         } else {
             Log.e(
-                "Firestore",
+                "getDocumentAsList",
                 "Expected a List for field '$documentField' but got ${data?.javaClass?.simpleName}"
             )
             emptyList()

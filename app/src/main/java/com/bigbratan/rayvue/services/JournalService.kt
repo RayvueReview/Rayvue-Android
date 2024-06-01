@@ -1,7 +1,7 @@
 package com.bigbratan.rayvue.services
 
 import com.bigbratan.rayvue.models.JournalEntry
-import com.google.firebase.firestore.DocumentSnapshot
+import com.google.firebase.firestore.Query
 import kotlinx.coroutines.flow.first
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -68,12 +68,10 @@ class JournalService @Inject constructor(
         ).first()
     }
 
-    suspend fun fetchJournalEntriesFromFirebase(
+    suspend fun getFirebaseJournalEntries(
         userId: String,
-        limit: Long,
-        startAfter: DocumentSnapshot? = null
-    ): Pair<List<JournalEntry>, DocumentSnapshot?> {
-        return firebaseStorageService.getDocumentsRepeatedly(
+    ): List<JournalEntry> {
+        return firebaseStorageService.getDocuments(
             collectionId = "journalEntries",
             documentFields = arrayOf(
                 "id",
@@ -83,8 +81,8 @@ class JournalService @Inject constructor(
                 "dateAdded"
             ),
             filters = mapOf("userId" to userId),
-            limit = limit,
-            startAfter = startAfter
+            orderBy = "dateAdded",
+            direction = Query.Direction.DESCENDING,
         )
     }
 }

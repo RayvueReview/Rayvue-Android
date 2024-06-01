@@ -129,13 +129,22 @@ internal fun TonalTextButton(
     modifier: Modifier = Modifier,
     label: String,
     onClick: () -> Unit,
+    isButtonEnabled: Boolean = true,
 ) {
+    val backgroundColor = if (isButtonEnabled) {
+        MaterialTheme.colorScheme.secondaryContainer
+    } else {
+        MaterialTheme.colorScheme.secondaryContainer.copy(alpha = 0.3f)
+    }
+
     Text(
         modifier = modifier
             .fillMaxWidth()
             .clip(RoundedCornerShape(56.dp))
-            .clickable(onClick = onClick)
-            .background(MaterialTheme.colorScheme.secondaryContainer)
+            .run {
+                if (isButtonEnabled) clickable(onClick = onClick) else this
+            }
+            .background(backgroundColor)
             .padding(vertical = 12.dp),
         text = label,
         fontFamily = plusJakartaSans,

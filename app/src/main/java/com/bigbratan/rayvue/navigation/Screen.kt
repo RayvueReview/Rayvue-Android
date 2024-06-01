@@ -18,7 +18,11 @@ sealed class Screen(val route: String) {
 
         object JournalScreen : Screen("journal_screen")
 
-        object EntryScreen : Screen("entry_screen")
+        object EntryScreen : Screen("entry_screen") {
+            const val routeWithArgs = "entry_screen/{gameId}/{gameName}/{gameIcon}"
+            fun createRouteWithArgs(gameId: String, gameName: String, gameIcon: String) =
+                "entry_screen/$gameId/$gameName/$gameIcon"
+        }
 
         object SearchScreen : Screen("search_screen")
 
@@ -40,3 +44,10 @@ sealed class Screen(val route: String) {
         }
     }
 }
+
+//object EntryScreen : Screen("entry_screen")
+
+/*object EntryScreen : Screen("entry_screen/{gameId}/{gameName}/{gameIcon}") {
+    fun createRoute(gameId: String, gameName: String, gameIcon: String) =
+        "entry_screen/$gameId/$gameName/$gameIcon"
+}*/

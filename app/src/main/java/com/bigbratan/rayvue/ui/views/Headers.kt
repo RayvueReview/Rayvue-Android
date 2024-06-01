@@ -51,7 +51,7 @@ internal fun ContentSectionHeader(
         Text(
             text = text,
             fontFamily = plusJakartaSans,
-            fontWeight = FontWeight(500),
+            fontWeight = FontWeight.Medium,
             fontSize = 16.sp,
             color = MaterialTheme.colorScheme.onSurface,
             style = TextStyle(platformStyle = noFontPadding),

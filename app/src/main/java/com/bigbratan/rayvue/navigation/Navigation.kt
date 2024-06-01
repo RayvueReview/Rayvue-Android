@@ -137,7 +137,7 @@ private fun EmbeddedBottomBar(
                     Text(
                         text = stringResource(id = navLabel),
                         fontFamily = plusJakartaSans,
-                        fontWeight = FontWeight(500),
+                        fontWeight = FontWeight.Normal,
                         color = MaterialTheme.colorScheme.onSurface,
                         style = TextStyle(platformStyle = noFontPadding)
                     )

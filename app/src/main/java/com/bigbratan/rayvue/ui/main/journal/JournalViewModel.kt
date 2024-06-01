@@ -27,7 +27,7 @@ class JournalViewModel @Inject constructor(
         MutableStateFlow<ObtainedJournalGamesState>(ObtainedJournalGamesState.Loading)
     val sentJournalGamesState =
         MutableStateFlow<SentJournalGamesState>(SentJournalGamesState.Idle)
-    val userIdState = MutableStateFlow<String?>(null)
+    private val userIdState = MutableStateFlow<String?>(null)
 
     val isRefreshing = MutableStateFlow(false)
     private var isLoadingMoreGames = false
@@ -59,8 +59,22 @@ class JournalViewModel @Inject constructor(
             if (canRefresh) isRefreshing.value = true
 
             try {
-                val localEntries = journalService.getLocalJournalEntries()
-                val gameIds = localEntries.map { it.gameId }.distinct()
+                var localEntries = journalService.getLocalJournalEntries()
+
+                if (localEntries.isEmpty()) {
+                    userIdState.value?.let { userId ->
+                        localEntries = journalService.getFirebaseJournalEntries(userId)
+                    }
+                }
+
+                val gameIds = localEntries.map { journalEntry ->
+                    journalEntry.gameId
+                }.distinct()
+
+                if (gameIds.isEmpty()) {
+                    obtainedJournalGamesState.value = ObtainedJournalGamesState.Error
+                    return@launch
+                }
 
                 if (!canLoadMore) obtainedJournalGamesState.value =
                     ObtainedJournalGamesState.Loading.apply { lastGame = null }
@@ -141,4 +155,14 @@ sealed class SentJournalGamesState {
     object Success : SentJournalGamesState()
 
     object Error : SentJournalGamesState()
+}
+
+sealed class ObtainedJournalUserState {
+    object Loading : ObtainedJournalUserState()
+
+    data class Success(
+        val userId: String?,
+    ) : ObtainedJournalUserState()
+
+    object Error : ObtainedJournalUserState()
 }

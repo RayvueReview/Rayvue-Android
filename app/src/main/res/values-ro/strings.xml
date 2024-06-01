@@ -70,6 +70,8 @@
     <string name="entry_write_hint">Scrie ceva în jurnalul tău…</string>
     <string name="entry_button_save_title">Salvează</string>
     <string name="entry_send_data_error_message">A apărut o eroare. Ce ai scris în jurnal nu a putut fi trimis către server. Datele au fost salvate doar local.</string>
+    <string name="entry_send_data_success_message">Datele din jurnal au fost salvate.</string>
+    <string name="entry_replace_confirm_message">Ai adăugat deja date în jurnal pentru acest joc. Vrei să le înlocuiești?</string>
 
     <!-- Search Screen -->
     <string name="search_general_placeholder">Introdu căutarea ta</string>

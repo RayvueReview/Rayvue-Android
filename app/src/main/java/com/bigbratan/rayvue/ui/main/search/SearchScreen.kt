@@ -105,7 +105,7 @@ internal fun SearchScreen(
                                     viewModel.searchGames(newValue.text)
                             },
                             textStyle = LocalTextStyle.current.copy(
-                                fontSize = 14.sp,
+                                fontSize = 16.sp,
                                 fontFamily = plusJakartaSans,
                                 color = MaterialTheme.colorScheme.onSurface,
                                 platformStyle = noFontPadding,
@@ -113,9 +113,9 @@ internal fun SearchScreen(
                             placeholder = {
                                 Text(
                                     text = stringResource(id = R.string.search_general_placeholder),
-                                    fontSize = 14.sp,
+                                    fontSize = 16.sp,
                                     fontFamily = plusJakartaSans,
-                                    fontWeight = FontWeight(500),
+                                    fontWeight = FontWeight.Normal,
                                     color = MaterialTheme.colorScheme.onSurface,
                                     style = TextStyle(platformStyle = noFontPadding)
                                 )

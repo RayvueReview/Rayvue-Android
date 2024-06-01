@@ -407,7 +407,7 @@ internal fun SearchBarButton(
             text = placeholder,
             fontSize = 16.sp,
             fontFamily = plusJakartaSans,
-            fontWeight = FontWeight(500),
+            fontWeight = FontWeight.Medium,
             color = MaterialTheme.colorScheme.onSurface,
             style = TextStyle(platformStyle = noFontPadding)
         )
