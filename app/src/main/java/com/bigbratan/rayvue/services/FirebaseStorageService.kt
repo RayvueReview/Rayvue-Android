@@ -3,7 +3,9 @@ package com.bigbratan.rayvue.services
 import android.util.Log
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.DocumentSnapshot
+import com.google.firebase.firestore.FieldPath
 import com.google.firebase.firestore.Query
+import com.google.firebase.firestore.SetOptions
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import com.google.gson.Gson
@@ -22,12 +24,17 @@ class FirebaseStorageService @Inject constructor() {
         collectionId: String,
         documentFields: Array<String>,
         filters: Map<String, Any> = emptyMap(),
+        ids: List<String>? = null,
         orderBy: String? = null,
         direction: Query.Direction = Query.Direction.ASCENDING,
         limit: Long,
         startAfter: DocumentSnapshot? = null
     ): Pair<List<T>, DocumentSnapshot?> {
         var query: Query = db.collection(collectionId)
+
+        if (ids != null) {
+            query = query.whereIn(FieldPath.documentId(), ids)
+        }
 
         filters.forEach { (field, value) ->
             query = query.whereEqualTo(field, value)
@@ -172,6 +179,17 @@ class FirebaseStorageService @Inject constructor() {
         db.collection(collectionId)
             .document(documentId)
             .update(field, value)
+            .await()
+    }
+
+    suspend fun addOrUpdateDocument(
+        collectionId: String,
+        documentId: String,
+        data: Any,
+    ) {
+        db.collection(collectionId)
+            .document(documentId)
+            .set(data, SetOptions.merge())
             .await()
     }
 

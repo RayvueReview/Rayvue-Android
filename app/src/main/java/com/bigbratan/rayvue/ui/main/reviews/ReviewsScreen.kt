@@ -270,13 +270,10 @@ private fun ReviewsView(
                             modifier = Modifier.padding(end = 16.dp),
                             text = gameName,
                             fontFamily = plusJakartaSans,
-                            fontSize = 14.sp,
+                            fontSize = 16.sp,
                             fontWeight = FontWeight.Medium,
                             color = MaterialTheme.colorScheme.onSurface,
-                            style = TextStyle(
-                                platformStyle = noFontPadding,
-                                letterSpacing = 0.1.sp,
-                            ),
+                            style = TextStyle(platformStyle = noFontPadding),
                             maxLines = 1,
                             overflow = TextOverflow.Ellipsis,
                         )

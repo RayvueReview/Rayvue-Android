@@ -15,7 +15,6 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Code
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Info
@@ -29,7 +28,6 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -45,17 +43,16 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.bigbratan.rayvue.R
 import com.bigbratan.rayvue.ui.theme.noFontPadding
 import com.bigbratan.rayvue.ui.theme.plusJakartaSans
+import com.bigbratan.rayvue.ui.views.BackNavigationBar
 import com.bigbratan.rayvue.ui.views.ErrorMessage
 import com.bigbratan.rayvue.ui.views.LoadingAnimation
 import com.bigbratan.rayvue.ui.views.Popup
-import com.bigbratan.rayvue.ui.views.TransparentIconButton
 
 @Composable
 internal fun SettingsScreen(
@@ -205,30 +202,9 @@ private fun SettingsView(
             .navigationBarsPadding()
             .fillMaxSize(),
         topBar = {
-            TopAppBar(
-                title = {
-                    Text(
-                        modifier = Modifier.padding(horizontal = 16.dp),
-                        text = stringResource(id = R.string.settings_title),
-                        fontFamily = plusJakartaSans,
-                        fontSize = 14.sp,
-                        fontWeight = FontWeight.Medium,
-                        color = MaterialTheme.colorScheme.onSurface,
-                        style = TextStyle(
-                            platformStyle = noFontPadding,
-                            letterSpacing = 0.1.sp,
-                        ),
-                        maxLines = 1,
-                        overflow = TextOverflow.Ellipsis,
-                    )
-                },
-                navigationIcon = {
-                    TransparentIconButton(
-                        modifier = Modifier.padding(start = 16.dp),
-                        imageVector = Icons.Filled.ArrowBack,
-                        onClick = { onBackClick() },
-                    )
-                }
+            BackNavigationBar(
+                title = stringResource(id = R.string.settings_title),
+                onBackClick = { onBackClick() },
             )
         },
         content = { paddingValues ->

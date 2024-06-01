@@ -1,4 +1,4 @@
-package com.bigbratan.rayvue.ui.main.games.gameDetails
+package com.bigbratan.rayvue.ui.main.gameDetails
 
 import android.app.Activity
 import androidx.compose.foundation.clickable

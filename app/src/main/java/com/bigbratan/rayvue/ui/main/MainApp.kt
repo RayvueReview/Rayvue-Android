@@ -7,10 +7,11 @@ import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
 import com.bigbratan.rayvue.navigation.Screen
 import com.bigbratan.rayvue.ui.main.awards.AwardsScreen
+import com.bigbratan.rayvue.ui.main.gameDetails.GameDetailsScreen
+import com.bigbratan.rayvue.ui.main.gameTagsInfo.TagsInfoScreen
 import com.bigbratan.rayvue.ui.main.games.GamesScreen
-import com.bigbratan.rayvue.ui.main.games.gameDetails.GameDetailsScreen
-import com.bigbratan.rayvue.ui.main.games.tagsInfo.TagsInfoScreen
 import com.bigbratan.rayvue.ui.main.journal.JournalScreen
+import com.bigbratan.rayvue.ui.main.journalEntry.EntryScreen
 import com.bigbratan.rayvue.ui.main.reviews.ReviewsScreen
 import com.bigbratan.rayvue.ui.main.search.SearchScreen
 import com.bigbratan.rayvue.ui.main.settings.SettingsScreen
@@ -28,24 +29,18 @@ fun NavGraphBuilder.mainApp(
                         gameId
                     )
                 )
-            }
-        )
-    }
-
-    composable(route = Screen.Main.AwardsScreen.route) {
-        AwardsScreen(
-            onGameClick = { gameId ->
+            },
+            onSearchClick = {
                 navController.navigate(
-                    route = Screen.Main.GameDetailsScreen.routeWithArgs(
-                        gameId
-                    )
+                    route = Screen.Main.SearchScreen.route
                 )
-            }
+            },
+            onSettingsClick = {
+                navController.navigate(
+                    route = Screen.Main.SettingsScreen.route
+                )
+            },
         )
-    }
-
-    composable(route = Screen.Main.JournalScreen.route) {
-        JournalScreen()
     }
 
     composable(route = Screen.Main.SearchScreen.route) {
@@ -60,24 +55,6 @@ fun NavGraphBuilder.mainApp(
             onBackClick = {
                 navController.popBackStack()
             }
-        )
-    }
-
-    composable(route = Screen.Main.SettingsScreen.route) {
-        SettingsScreen(
-            onLoginClick = {
-                navController.navigate(
-                    route = Screen.Auth.LoginScreen.route
-                )
-            },
-            onSignupClick = {
-                navController.navigate(
-                    route = Screen.Auth.SignupScreen.route
-                )
-            },
-            onBackClick = {
-                navController.popBackStack()
-            },
         )
     }
 
@@ -151,5 +128,95 @@ fun NavGraphBuilder.mainApp(
                 }
             }
         }
+    }
+
+    composable(route = Screen.Main.AwardsScreen.route) {
+        AwardsScreen(
+            onGameClick = { gameId ->
+                navController.navigate(
+                    route = Screen.Main.GameDetailsScreen.routeWithArgs(
+                        gameId
+                    )
+                )
+            }
+        )
+    }
+
+    composable(route = Screen.Main.JournalScreen.route) {
+        JournalScreen(
+            onGameClick = { journalGameId, journalGameName, journalGameEncodedIcon ->
+                navController.navigate(
+                    route = Screen.Main.EntryScreen.routeWithArgs(
+                        journalGameId,
+                        journalGameName,
+                        journalGameEncodedIcon,
+                    )
+                )
+            },
+            onAddClick = {
+                navController.navigate(
+                    route = Screen.Main.EntryScreen.route
+                )
+            }
+        )
+    }
+
+    /*composable(
+        route = Screen.Main.EntryScreen.routeWithArgs("{id}", "{name}", "{encodedIcon}"),
+        arguments = listOf(
+            navArgument(name = "id") { type = NavType.StringType },
+            navArgument(name = "name") { type = NavType.StringType },
+            navArgument(name = "encodedIcon") { type = NavType.StringType },
+        ),
+    ) { backStackEntry ->
+        val gameIdArg = backStackEntry.arguments?.getString("id")
+        val gameNameArg = backStackEntry.arguments?.getString("name")
+        val gameIconArg = backStackEntry.arguments?.getString("encodedIcon")
+
+        gameIdArg?.let { gameId ->
+            gameNameArg?.let { gameName ->
+                gameIconArg?.let { gameIcon ->
+                    EntryScreen(
+                        gameId = gameId,
+                        gameName = gameName,
+                        gameIcon = URLDecoder.decode(
+                            gameIcon,
+                            StandardCharsets.UTF_8.toString()
+                        ),
+                        onBackClick = {
+                            navController.popBackStack()
+                        },
+                    )
+                }
+            }
+        }
+    }*/
+
+    composable(
+        route = Screen.Main.EntryScreen.route
+    ) {
+        EntryScreen(
+            onBackClick = {
+                navController.popBackStack()
+            },
+        )
+    }
+
+    composable(route = Screen.Main.SettingsScreen.route) {
+        SettingsScreen(
+            onLoginClick = {
+                navController.navigate(
+                    route = Screen.Auth.LoginScreen.route
+                )
+            },
+            onSignupClick = {
+                navController.navigate(
+                    route = Screen.Auth.SignupScreen.route
+                )
+            },
+            onBackClick = {
+                navController.popBackStack()
+            },
+        )
     }
 }

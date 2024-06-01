@@ -18,6 +18,8 @@ sealed class Screen(val route: String) {
 
         object JournalScreen : Screen("journal_screen")
 
+        object EntryScreen : Screen("entry_screen")
+
         object SearchScreen : Screen("search_screen")
 
         object SettingsScreen : Screen("settings_screen")
@@ -32,7 +34,7 @@ sealed class Screen(val route: String) {
     fun routeWithArgs(vararg args: String): String {
         return buildString {
             append(route)
-            args.forEach { arg ->
+            args.filter { it.isNotEmpty() }.forEach { arg ->
                 append("/$arg")
             }
         }

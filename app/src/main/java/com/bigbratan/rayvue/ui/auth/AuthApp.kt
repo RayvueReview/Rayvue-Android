@@ -4,7 +4,7 @@ import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.composable
 import com.bigbratan.rayvue.navigation.Screen
-import com.bigbratan.rayvue.ui.auth.signup.inputName.InputNameScreen
+import com.bigbratan.rayvue.ui.auth.inputName.InputNameScreen
 import com.bigbratan.rayvue.ui.auth.login.LoginScreen
 import com.bigbratan.rayvue.ui.auth.signup.SignupScreen
 

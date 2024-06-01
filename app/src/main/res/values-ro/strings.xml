@@ -62,7 +62,14 @@
     <string name="awards_section_past_title">Premii din trecut</string>
 
     <!-- Journal Screen -->
-    <string name="journal_empty_data_error_message">You haven\'t added any games to your journal.</string>
+    <string name="journal_get_data_error_message">Nu ai adăugat jocuri în jurnalul tău.</string>
+
+    <!-- Entry Screen -->
+    <string name="entry_title">Jurnal</string>
+    <string name="entry_select_placeholder">Selectează un joc</string>
+    <string name="entry_write_hint">Scrie ceva în jurnalul tău…</string>
+    <string name="entry_button_save_title">Salvează</string>
+    <string name="entry_send_data_error_message">A apărut o eroare. Ce ai scris în jurnal nu a putut fi trimis către server. Datele au fost salvate doar local.</string>
 
     <!-- Search Screen -->
     <string name="search_general_placeholder">Introdu căutarea ta</string>

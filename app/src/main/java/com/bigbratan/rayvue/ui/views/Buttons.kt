@@ -111,7 +111,7 @@ internal fun OutlinedTextButton(
         text = label,
         fontFamily = plusJakartaSans,
         fontWeight = FontWeight.Medium,
-        fontSize = 16.sp,
+        fontSize = 20.sp,
         color = if (isButtonEnabled) {
             MaterialTheme.colorScheme.primary
         } else {
@@ -119,7 +119,6 @@ internal fun OutlinedTextButton(
         },
         style = TextStyle(
             platformStyle = noFontPadding,
-            letterSpacing = 0.1.sp,
             textAlign = TextAlign.Center,
         ),
     )
@@ -141,11 +140,10 @@ internal fun TonalTextButton(
         text = label,
         fontFamily = plusJakartaSans,
         fontWeight = FontWeight.Medium,
-        fontSize = 16.sp,
+        fontSize = 20.sp,
         color = MaterialTheme.colorScheme.onSecondaryContainer,
         style = TextStyle(
             platformStyle = noFontPadding,
-            letterSpacing = 0.1.sp,
             textAlign = TextAlign.Center,
         ),
     )
@@ -166,11 +164,10 @@ internal fun TransparentTextButton(
         text = label,
         fontFamily = plusJakartaSans,
         fontWeight = FontWeight.Medium,
-        fontSize = 16.sp,
+        fontSize = 20.sp,
         color = MaterialTheme.colorScheme.onPrimaryContainer,
         style = TextStyle(
             platformStyle = noFontPadding,
-            letterSpacing = 0.1.sp,
             textAlign = TextAlign.Center,
         ),
     )

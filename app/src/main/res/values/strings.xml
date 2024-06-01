@@ -62,7 +62,14 @@
     <string name="awards_section_past_title">Past Awards</string>
 
     <!-- Journal Screen -->
-    <string name="journal_empty_data_error_message">You haven\'t added any games to your journal.</string>
+    <string name="journal_get_data_error_message">You haven\'t added any games to your journal.</string>
+
+    <!-- Entry Screen -->
+    <string name="entry_title">Journal</string>
+    <string name="entry_select_placeholder">Select a game</string>
+    <string name="entry_write_hint">Write something in your journal…</string>
+    <string name="entry_button_save_title">Save</string>
+    <string name="entry_send_data_error_message">An error occurred. The entry could not be uploaded to the server. It was saved only locally instead.</string>
 
     <!-- Search Screen -->
     <string name="search_general_placeholder">Enter your search</string>

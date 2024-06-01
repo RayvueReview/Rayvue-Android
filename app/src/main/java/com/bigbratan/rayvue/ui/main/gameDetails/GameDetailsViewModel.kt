@@ -1,4 +1,4 @@
-package com.bigbratan.rayvue.ui.main.games.gameDetails
+package com.bigbratan.rayvue.ui.main.gameDetails
 
 import android.content.Context
 import androidx.lifecycle.ViewModel
