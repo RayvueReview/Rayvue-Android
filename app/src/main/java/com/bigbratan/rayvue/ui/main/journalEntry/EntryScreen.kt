@@ -137,12 +137,6 @@ internal fun EntryScreen(
         }
     }
 
-    /*LaunchedEffect(selectedGameState.value) {
-        selectedGameState.value?.let { game ->
-            viewModel.checkEntryAlreadyExists(game.id)
-        }
-    }*/
-
     LaunchedEffect(isSuccessSnackbarVisible) {
         if (isSuccessSnackbarVisible) {
             val result = snackbarHostState.showSnackbar(
