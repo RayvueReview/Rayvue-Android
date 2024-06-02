@@ -45,7 +45,7 @@ class JournalService @Inject constructor(
         )
     }
 
-    suspend fun updateAndUploadAllJournalEntries(
+    suspend fun updateAndUploadJournalEntries(
         userId: String
     ) {
         val entries = getLocalJournalEntries()
@@ -86,23 +86,3 @@ class JournalService @Inject constructor(
         )
     }
 }
-
-/*suspend fun uploadJournalEntries(
-        userId: String
-    ) {
-        val entries =
-            runBlocking {
-                localStorageService.readData(
-                    key = journalKey,
-                    defaultValue = listOf<JournalEntry>(),
-                ).first()
-            }
-
-        entries.forEach { entry ->
-            firebaseStorageService.addDocument(
-                collectionId = "journalEntries",
-                documentId = entry.id,
-                data = entry.copy(userId = userId),
-            )
-        }
-    }*/

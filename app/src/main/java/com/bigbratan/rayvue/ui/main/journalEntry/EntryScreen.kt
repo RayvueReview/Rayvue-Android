@@ -1,17 +1,20 @@
 package com.bigbratan.rayvue.ui.main.journalEntry
 
 import android.annotation.SuppressLint
+import android.util.Log
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.navigationBarsPadding
+import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.requiredWidth
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
@@ -47,6 +50,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.clipToBounds
 import androidx.compose.ui.focus.FocusManager
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
@@ -96,52 +100,58 @@ internal fun EntryScreen(
     gameIcon: String = "",
     onBackClick: () -> Unit,
 ) {
+    val entryAlreadyExists by viewModel.entryAlreadyExists.collectAsState()
+    val navigatedGameState by viewModel.navigatedGameState.collectAsState()
     val sentEntryState = viewModel.sentEntryState.collectAsState()
-    val currentJournalEntry by viewModel.currentJournalEntry.collectAsState()
-    val selectedGameState = remember { mutableStateOf<Game?>(null) }
-    val selectedGameFromJournalState by viewModel.selectedGameFromJournal.collectAsState()
-    val typedEntryState = remember { mutableStateOf(TextFieldValue()) }
+    val currentEntryState by viewModel.currentEntryState.collectAsState()
+    val userIdState by viewModel.userIdState.collectAsState()
 
-    val showConfirmationDialog = remember { mutableStateOf(false) }
-    val pendingGameSelection = remember { mutableStateOf<Game?>(null) }
+    val typedContentState = remember { mutableStateOf(TextFieldValue()) }
+    val selectedGameState = remember { mutableStateOf<Game?>(null) }
+    val pendingGameState = remember { mutableStateOf<Game?>(null) }
 
     val sheetScaffoldState = rememberBottomSheetScaffoldState(
         bottomSheetState = rememberBottomSheetState(initialValue = BottomSheetValue.Collapsed)
     )
     val snackbarHostState = remember { SnackbarHostState() }
+
     val successMessage = stringResource(id = R.string.entry_send_data_success_message)
     val successConfirmMessage = stringResource(id = R.string.action_positive_title)
 
-    var isPopupVisible by remember { mutableStateOf(false) }
-    var isSnackbarVisible by remember { mutableStateOf(false) }
-    val isButtonEnabled = remember(selectedGameState.value, typedEntryState.value.text) {
-        (selectedGameState.value != null || gameId.isNotEmpty() && gameIcon.isNotEmpty() && gameName.isNotEmpty()) && typedEntryState.value.text.isNotBlank()
+    var isErrorPopupVisible by remember { mutableStateOf(false) }
+    val isGameConfirmationPopupVisible = remember { mutableStateOf(false) }
+    var isSuccessSnackbarVisible by remember { mutableStateOf(false) }
+    val isSendButtonEnabled = remember(
+        selectedGameState.value,
+        typedContentState.value.text
+    ) {
+        (selectedGameState.value != null || gameId.isNotEmpty() && gameIcon.isNotEmpty() && gameName.isNotEmpty()) && typedContentState.value.text.isNotBlank()
     }
 
     val coroutineScope = rememberCoroutineScope()
     val focusManager = LocalFocusManager.current
     val keyboardController = LocalSoftwareKeyboardController.current
 
-    LaunchedEffect(currentJournalEntry) {
-        currentJournalEntry?.let { entry ->
-            typedEntryState.value = TextFieldValue(entry.content)
+    LaunchedEffect(currentEntryState) {
+        currentEntryState?.let { entry ->
+            typedContentState.value = TextFieldValue(entry.content)
         }
     }
 
-    LaunchedEffect(selectedGameState.value) {
+    /*LaunchedEffect(selectedGameState.value) {
         selectedGameState.value?.let { game ->
-            viewModel.checkEntryExists(game.id)
+            viewModel.checkEntryAlreadyExists(game.id)
         }
-    }
+    }*/
 
-    LaunchedEffect(isSnackbarVisible) {
-        if (isSnackbarVisible) {
+    LaunchedEffect(isSuccessSnackbarVisible) {
+        if (isSuccessSnackbarVisible) {
             val result = snackbarHostState.showSnackbar(
                 message = successMessage,
                 actionLabel = successConfirmMessage,
             )
             if (result == SnackbarResult.ActionPerformed) {
-                isSnackbarVisible = false
+                isSuccessSnackbarVisible = false
             }
         }
     }
@@ -152,7 +162,8 @@ internal fun EntryScreen(
         key3 = gameIcon
     ) {
         if (gameId == "{gameId}" && gameName == "{gameName}" && gameIcon == "{gameIcon}") {
-            viewModel.clearSelectedGameFromJournal()
+            // viewModel.clearNavigatedGame()
+            selectedGameState.value = null
         } else {
             if (gameId.isNotEmpty() && gameName.isNotEmpty() && gameIcon.isNotEmpty()) {
                 val game = Game(
@@ -162,10 +173,13 @@ internal fun EntryScreen(
                     banner = ""
                 )
 
-                viewModel.setSelectedGameFromJournal(game)
-                viewModel.loadJournalEntryForGame(gameId)
+                // viewModel.setNavigatedGame(game)
+                selectedGameState.value = game
+                viewModel.loadEntry(gameId)
+                Log.d("entryscr", "selectedGameState: ${selectedGameState.value}")
             } else {
-                viewModel.clearSelectedGameFromJournal()
+                // viewModel.clearNavigatedGame()
+                selectedGameState.value = null
             }
         }
     }
@@ -179,21 +193,20 @@ internal fun EntryScreen(
         drawerElevation = 0.dp,
         sheetPeekHeight = 0.dp,
         sheetContent = {
-            Box {
-                SearchView(
-                    searchViewModel = searchViewModel,
-                    onGameClick = { game ->
-                        pendingGameSelection.value = game
-                        viewModel.checkEntryExists(game.id)
-                        coroutineScope.launch {
-                            focusManager.clearFocus()
-                            keyboardController?.hide()
-                            sheetScaffoldState.bottomSheetState.collapse()
-                        }
-                    },
-                    isSheetExpanded = sheetScaffoldState.bottomSheetState.isExpanded,
-                )
-            }
+            SearchView(
+                searchViewModel = searchViewModel,
+                onGameClick = { game ->
+                    pendingGameState.value = game
+
+                    viewModel.checkEntryAlreadyExists(game.id)
+                    coroutineScope.launch {
+                        focusManager.clearFocus()
+                        keyboardController?.hide()
+                        sheetScaffoldState.bottomSheetState.collapse()
+                    }
+                },
+                isSheetExpanded = sheetScaffoldState.bottomSheetState.isExpanded,
+            )
         },
         content = {
             Box(modifier = Modifier.fillMaxSize()) {
@@ -207,71 +220,95 @@ internal fun EntryScreen(
                     }
 
                     SentEntryState.Success -> {
-                        isSnackbarVisible = true
+                        isSuccessSnackbarVisible = true
                         viewModel.resetSentState()
                     }
 
                     SentEntryState.Error -> {
-                        isPopupVisible = true
+                        isErrorPopupVisible = true
                     }
                 }
 
-                LaunchedEffect(viewModel.entryExists.value) {
-                    viewModel.entryExists.value?.let { exists ->
-                        if (exists) {
-                            showConfirmationDialog.value = true
-                        } else {
-                            showConfirmationDialog.value = false
-                            selectedGameState.value = pendingGameSelection.value
-                        }
+                LaunchedEffect(entryAlreadyExists) {
+                    if (entryAlreadyExists == true) {
+                        isGameConfirmationPopupVisible.value = true
+                    } else if (entryAlreadyExists == false) {
+                        isGameConfirmationPopupVisible.value = false
+                        selectedGameState.value = pendingGameState.value
                     }
                 }
 
                 EntryView(
-                    icon = gameIcon.ifEmpty { selectedGameState.value?.icon },
-                    title = gameName.ifEmpty { selectedGameState.value?.displayName },
-                    typedEntryState = typedEntryState,
+                    icon = selectedGameState.value?.icon,
+                    title = selectedGameState.value?.displayName,
+                    typedEntryState = typedContentState,
                     focusManager = focusManager,
+                    isButtonEnabled = isSendButtonEnabled,
                     onSearchClick = {
                         coroutineScope.launch {
                             sheetScaffoldState.bottomSheetState.expand()
                         }
                     },
                     onDeleteClick = {
+                        // viewModel.clearNavigatedGame()
                         selectedGameState.value = null
                     },
                     onSaveClick = { existingContent ->
-                        if (isButtonEnabled) {
+                        if (isSendButtonEnabled) {
                             val journalEntry =
                                 if (gameId.isNotEmpty()) {
-                                    currentJournalEntry?.let { entry ->
+                                    currentEntryState?.let { entry ->
+                                        selectedGameState.value?.let { selectedGameId ->
+                                            JournalEntry(
+                                                userId = userIdState,
+                                                gameId = selectedGameId.id,
+                                                id = entry.id,
+                                                content = existingContent,
+                                                dateAdded = Timestamp.now(),
+                                            )
+                                        }
+                                    }
+                                } else {
+                                    selectedGameState.value?.id?.let { selectedGameId ->
                                         JournalEntry(
-                                            userId = viewModel.userIdState.value,
-                                            gameId = gameId,
-                                            id = entry.id,
-                                            content = existingContent,
+                                            userId = userIdState,
+                                            gameId = selectedGameId,
+                                            id = UUID.randomUUID().toString(),
+                                            content = typedContentState.value.text,
+                                            dateAdded = Timestamp.now(),
+                                        )
+                                    }
+                                }
+
+                            /*val journalEntry =
+                                if (currentEntryState != null) {
+                                    selectedGameState.value?.id?.let { selectedGameId ->
+                                        JournalEntry(
+                                            userId = userIdState,
+                                            gameId = selectedGameId,
+                                            id = currentEntryState!!.id,
+                                            content = typedContentState.value.text,
                                             dateAdded = Timestamp.now(),
                                         )
                                     }
                                 } else {
                                     selectedGameState.value?.id?.let { selectedGameId ->
                                         JournalEntry(
-                                            userId = viewModel.userIdState.value,
+                                            userId = userIdState,
                                             gameId = selectedGameId,
                                             id = UUID.randomUUID().toString(),
-                                            content = typedEntryState.value.text,
+                                            content = typedContentState.value.text,
                                             dateAdded = Timestamp.now(),
                                         )
                                     }
-                                }
+                                }*/
+
                             if (journalEntry != null) {
-                                viewModel.saveJournalEntry(journalEntry)
-                                viewModel.uploadJournalEntry(journalEntry)
+                                viewModel.saveEntry(journalEntry)
+                                viewModel.uploadEntry(journalEntry)
                             }
                         }
-
                     },
-                    isButtonEnabled = isButtonEnabled,
                     onBackClick = onBackClick,
                 )
 
@@ -279,36 +316,38 @@ internal fun EntryScreen(
                     title = stringResource(id = R.string.error_title),
                     message = stringResource(id = R.string.entry_send_data_error_message),
                     hasNegativeAction = false,
-                    isPopupVisible = isPopupVisible,
+                    isPopupVisible = isErrorPopupVisible,
                     onConfirm = {
-                        isPopupVisible = false
+                        isErrorPopupVisible = false
                         viewModel.resetSentState()
                     },
                     onDismiss = {
-                        isPopupVisible = false
+                        isErrorPopupVisible = false
                         viewModel.resetSentState()
                     }
                 )
 
-                if (showConfirmationDialog.value) {
+                if (isGameConfirmationPopupVisible.value) {
                     Popup(
                         title = stringResource(id = R.string.question_title),
                         message = stringResource(id = R.string.entry_replace_confirm_message),
                         hasNegativeAction = true,
-                        isPopupVisible = showConfirmationDialog.value,
+                        isPopupVisible = isGameConfirmationPopupVisible.value,
                         onConfirm = {
-                            selectedGameState.value = pendingGameSelection.value
-                            showConfirmationDialog.value = false
-                            viewModel.resetEntryExists()
+                            // viewModel.clearNavigatedGame()
+                            selectedGameState.value = null
+                            selectedGameState.value = pendingGameState.value
+                            isGameConfirmationPopupVisible.value = false
+                            viewModel.resetEntryAlreadyExists()
                         },
                         onDismiss = {
-                            showConfirmationDialog.value = false
-                            pendingGameSelection.value = null
-                            viewModel.resetEntryExists()
+                            isGameConfirmationPopupVisible.value = false
+                            pendingGameState.value = null
+                            viewModel.resetEntryAlreadyExists()
                         }
                     )
                 } else {
-                    selectedGameState.value = pendingGameSelection.value
+                    selectedGameState.value = pendingGameState.value
                 }
 
                 SnackbarHost(
@@ -461,11 +500,10 @@ private fun SearchView(
     }
 }
 
-@OptIn(ExperimentalComposeUiApi::class)
 @Composable
 private fun EntryView(
-    icon: String?,
-    title: String?,
+    icon: String? = null,
+    title: String? = null,
     typedEntryState: MutableState<TextFieldValue>,
     focusManager: FocusManager,
     isButtonEnabled: Boolean,
@@ -474,13 +512,8 @@ private fun EntryView(
     onSaveClick: (typedEntry: String) -> Unit,
     onBackClick: () -> Unit,
 ) {
-    val keyboardController = LocalSoftwareKeyboardController.current
-
     Scaffold(
-        modifier = Modifier
-            .statusBarsPadding()
-            .navigationBarsPadding()
-            .fillMaxSize(),
+        modifier = Modifier.fillMaxSize(),
         topBar = {
             BackNavigationBar(
                 title = stringResource(id = R.string.entry_title),
@@ -491,7 +524,10 @@ private fun EntryView(
         Column(
             modifier = Modifier
                 .padding(paddingValues)
-                .padding(24.dp)
+                .padding(
+                    horizontal = 24.dp,
+                    vertical = 12.dp
+                )
                 .fillMaxSize()
         ) {
             if (icon == null) {
@@ -510,45 +546,53 @@ private fun EntryView(
                 )
             }
 
-            TextField(
+            BoxWithConstraints(
                 modifier = Modifier
-                    .fillMaxWidth()
-                    .fillMaxHeight()
-                    .padding(top = 12.dp)
+                    .clipToBounds()
                     .weight(1f),
-                textStyle = LocalTextStyle.current.copy(
-                    fontFamily = plusJakartaSans,
-                    fontWeight = FontWeight.Normal,
-                    fontSize = 20.sp,
-                    platformStyle = noFontPadding,
-                    color = MaterialTheme.colorScheme.onSurface,
-                ),
-                placeholder = {
-                    Text(
-                        text = stringResource(id = R.string.entry_write_hint),
+            ) {
+                TextField(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .fillMaxHeight()
+                        .padding(top = 12.dp)
+                        .requiredWidth(maxWidth + 16.dp)
+                        .offset(x = (-8).dp),
+                    textStyle = LocalTextStyle.current.copy(
                         fontFamily = plusJakartaSans,
                         fontWeight = FontWeight.Normal,
                         fontSize = 20.sp,
-                        style = TextStyle(platformStyle = noFontPadding),
-                        maxLines = 1,
-                    )
-                },
-                value = typedEntryState.value,
-                onValueChange = { newValue ->
-                    typedEntryState.value = newValue
-                },
-                colors = TextFieldDefaults.colors(
-                    focusedContainerColor = Color.Transparent,
-                    unfocusedContainerColor = Color.Transparent,
-                    disabledContainerColor = Color.Transparent,
-                    focusedIndicatorColor = Color.Transparent,
-                    unfocusedIndicatorColor = Color.Transparent,
-                    disabledIndicatorColor = Color.Transparent
-                ),
-                shape = RectangleShape,
-            )
+                        platformStyle = noFontPadding,
+                        color = MaterialTheme.colorScheme.onSurface,
+                    ),
+                    placeholder = {
+                        Text(
+                            text = stringResource(id = R.string.entry_write_hint),
+                            fontFamily = plusJakartaSans,
+                            fontWeight = FontWeight.Normal,
+                            fontSize = 20.sp,
+                            style = TextStyle(platformStyle = noFontPadding),
+                            maxLines = 1,
+                        )
+                    },
+                    value = typedEntryState.value,
+                    onValueChange = { newValue ->
+                        typedEntryState.value = newValue
+                    },
+                    colors = TextFieldDefaults.colors(
+                        focusedContainerColor = Color.Transparent,
+                        unfocusedContainerColor = Color.Transparent,
+                        disabledContainerColor = Color.Transparent,
+                        focusedIndicatorColor = Color.Transparent,
+                        unfocusedIndicatorColor = Color.Transparent,
+                        disabledIndicatorColor = Color.Transparent
+                    ),
+                    shape = RectangleShape,
+                )
+            }
 
             TonalTextButton(
+                modifier = Modifier.padding(bottom = 12.dp),
                 label = stringResource(id = R.string.entry_button_save_title),
                 onClick = {
                     if (typedEntryState.value.text.isNotEmpty()) {
@@ -575,6 +619,7 @@ private fun SelectedGameCard(
         modifier = modifier
             .fillMaxWidth()
             .clip(RoundedCornerShape(16.dp))
+            .background(MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.5f))
             .clickable(onClick = onGameClick)
             .padding(8.dp),
         verticalAlignment = Alignment.CenterVertically,
@@ -608,16 +653,3 @@ private fun SelectedGameCard(
         )
     }
 }
-
-/*SelectedGameCard(
-                    modifier = Modifier.fillMaxWidth(),
-                    icon = selectedGame!!.icon,
-                    title = selectedGame!!.displayName,
-                    // TODO: DO NOT USE DOUBLE BANG FOR selectedGame, THERE HAS TO BE A BETTER WAY
-                    // ALSO, IF gameId + gameName + gameIcon, OBTAINED FROM THE JOURNAL SCREEN, ARE NOT NULL OR EMPTY
-                    // USE THEM TO POPULATE THE SelectedGameCard (INSTEAD OF selectedGame)
-                    onGameClick = { sheetScaffoldState.bottomSheetState.expand() },
-                    onDeleteClick = {
-                        selectedGame = null
-                    } // TODO: CLEAR THE SELECTED GAME FOR BOTH INSTANCES (SELECTED GAME FROM SEARCH OR OBTAINED GAME DATA FROM SCREEN)
-                )*/

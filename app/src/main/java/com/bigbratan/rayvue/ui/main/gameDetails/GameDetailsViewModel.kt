@@ -115,4 +115,6 @@ data class GameDetailsItemViewModel(
             } ?: emptyList()
         )
     }
+
+    val categories: List<String> = gameDetails.categories
 }

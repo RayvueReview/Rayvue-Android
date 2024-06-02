@@ -82,6 +82,7 @@
     <string name="game_details_get_data_error_message">A apărut o eroare. Detaliile pentru acest joc nu au putut fi încărcate.</string>
     <string name="game_details_empty_data_error_message">Nu au fost găsite recenzii pentru acest joc. Adaugă tu unul.</string>
     <string name="game_details_section_reviews_title">Recenzii</string>
+    <string name="game_details_section_categories_title">Categorii</string>
     <string name="game_details_section_keep_in_mind_title">De reținut</string>
     <string name="game_details_tag_price_symbol">\$%1$s</string>
     <string name="game_details_tag_price_free">Gratis</string>

@@ -82,6 +82,7 @@
     <string name="game_details_get_data_error_message">An error occurred. Details for this game could not be loaded.</string>
     <string name="game_details_empty_data_error_message">No reviews have been found for this game. Add one yourself.</string>
     <string name="game_details_section_reviews_title">Reviews</string>
+    <string name="game_details_section_categories_title">Categories</string>
     <string name="game_details_section_keep_in_mind_title">Keep In Mind</string>
     <string name="game_details_tag_price_symbol">\$%1$s</string>
     <string name="game_details_tag_price_free">Free</string>

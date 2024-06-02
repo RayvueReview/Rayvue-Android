@@ -65,7 +65,6 @@ internal fun JournalScreen(
     val obtainedJournalGamesState = viewModel.obtainedJournalGamesState.collectAsState()
     val isRefreshing = viewModel.isRefreshing.collectAsState()
     val listState = rememberLazyListState()
-
     val pullRefreshState = rememberPullRefreshState(
         refreshing = isRefreshing.value,
         onRefresh = {

@@ -41,6 +41,7 @@ class LocalStorageService @Inject constructor(
 
         return dataStore.data.map { preferences ->
             val json = preferences[stringPreferencesKey(key)] ?: return@map defaultValue
+
             gson.fromJson<T>(json, type) ?: defaultValue
         }
     }

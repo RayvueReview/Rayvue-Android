@@ -8,7 +8,6 @@ import com.bigbratan.rayvue.services.JournalService
 import com.bigbratan.rayvue.services.UserService
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -17,12 +16,11 @@ class EntryViewModel @Inject constructor(
     private val journalService: JournalService,
     private val userService: UserService
 ) : ViewModel() {
+    val entryAlreadyExists = MutableStateFlow<Boolean?>(null)
+    val navigatedGameState = MutableStateFlow<Game?>(null)
     val sentEntryState = MutableStateFlow<SentEntryState>(SentEntryState.Idle)
+    val currentEntryState = MutableStateFlow<JournalEntry?>(null)
     val userIdState = MutableStateFlow<String?>(null)
-    val currentJournalEntry = MutableStateFlow<JournalEntry?>(null)
-    private val _entryExists = MutableStateFlow<Boolean?>(null)
-    val entryExists = _entryExists.asStateFlow()
-    val selectedGameFromJournal = MutableStateFlow<Game?>(null)
 
     init {
         viewModelScope.launch {
@@ -32,14 +30,36 @@ class EntryViewModel @Inject constructor(
         }
     }
 
-    fun saveJournalEntry(entry: JournalEntry) {
+    fun setNavigatedGame(game: Game) {
+        navigatedGameState.value = game
+    }
+
+    fun clearNavigatedGame() {
+        navigatedGameState.value = null
+    }
+
+    fun loadEntry(gameId: String) {
         viewModelScope.launch {
-            journalService.saveJournalEntry(entry)
-            currentJournalEntry.value = entry
+            var loadedEntry = journalService.getLocalJournalEntries().find { it.gameId == gameId }
+
+            if (loadedEntry != null) {
+                userIdState.value?.let { userId ->
+                    loadedEntry = journalService.getFirebaseJournalEntries(userId).find { it.gameId == gameId }
+                }
+            }
+
+            currentEntryState.value = loadedEntry
         }
     }
 
-    fun uploadJournalEntry(entry: JournalEntry) {
+    fun saveEntry(entry: JournalEntry) {
+        viewModelScope.launch {
+            journalService.saveJournalEntry(entry)
+            currentEntryState.value = entry
+        }
+    }
+
+    fun uploadEntry(entry: JournalEntry) {
         viewModelScope.launch {
             sentEntryState.value = SentEntryState.Loading
 
@@ -61,38 +81,23 @@ class EntryViewModel @Inject constructor(
         sentEntryState.value = SentEntryState.Idle
     }
 
-    fun checkEntryExists(gameId: String) {
+    fun checkEntryAlreadyExists(gameId: String) {
         viewModelScope.launch {
             val localEntries = journalService.getLocalJournalEntries()
             val localExists = localEntries.any { it.gameId == gameId }
 
             if (!localExists && userIdState.value != null) {
                 val remoteEntries = journalService.getFirebaseJournalEntries(userIdState.value!!)
-                _entryExists.value = remoteEntries.any { it.gameId == gameId }
+
+                entryAlreadyExists.value = remoteEntries.any { it.gameId == gameId }
             } else {
-                _entryExists.value = localExists
+                entryAlreadyExists.value = localExists
             }
         }
     }
 
-    fun resetEntryExists() {
-        _entryExists.value = null
-    }
-
-    fun setSelectedGameFromJournal(game: Game) {
-        selectedGameFromJournal.value = game
-    }
-
-    fun clearSelectedGameFromJournal() {
-        selectedGameFromJournal.value = null
-    }
-
-    fun loadJournalEntryForGame(gameId: String) {
-        viewModelScope.launch {
-            val entry = journalService.getLocalJournalEntries().find { it.gameId == gameId }
-
-            currentJournalEntry.value = entry
-        }
+    fun resetEntryAlreadyExists() {
+        entryAlreadyExists.value = null
     }
 }
 
@@ -105,10 +110,3 @@ sealed class SentEntryState {
 
     object Error : SentEntryState()
 }
-
-/*fun checkEntryExists(gameId: String) {
-        viewModelScope.launch {
-            val entries = journalService.getLocalJournalEntries()
-            _entryExists.value = entries.any { it.gameId == gameId }
-        }
-    }*/

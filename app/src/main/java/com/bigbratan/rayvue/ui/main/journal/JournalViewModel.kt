@@ -59,15 +59,15 @@ class JournalViewModel @Inject constructor(
             if (canRefresh) isRefreshing.value = true
 
             try {
-                var localEntries = journalService.getLocalJournalEntries()
+                var loadedEntries = journalService.getLocalJournalEntries()
 
-                if (localEntries.isEmpty()) {
+                if (loadedEntries.isEmpty()) {
                     userIdState.value?.let { userId ->
-                        localEntries = journalService.getFirebaseJournalEntries(userId)
+                        loadedEntries = journalService.getFirebaseJournalEntries(userId)
                     }
                 }
 
-                val gameIds = localEntries.map { journalEntry ->
+                val gameIds = loadedEntries.map { journalEntry ->
                     journalEntry.gameId
                 }.distinct()
 
@@ -120,7 +120,7 @@ class JournalViewModel @Inject constructor(
 
             userIdState.value?.let { userId ->
                 try {
-                    journalService.updateAndUploadAllJournalEntries(userId)
+                    journalService.updateAndUploadJournalEntries(userId)
 
                     sentJournalGamesState.value = SentJournalGamesState.Success
                 } catch (e: Exception) {
