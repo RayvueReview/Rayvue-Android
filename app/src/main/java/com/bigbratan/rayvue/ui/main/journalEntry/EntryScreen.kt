@@ -30,6 +30,9 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.LocalTextStyle
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Snackbar
+import androidx.compose.material3.SnackbarData
+import androidx.compose.material3.SnackbarDuration
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.SnackbarResult
@@ -142,6 +145,7 @@ internal fun EntryScreen(
             val result = snackbarHostState.showSnackbar(
                 message = successMessage,
                 actionLabel = successConfirmMessage,
+                duration = SnackbarDuration.Short,
             )
             if (result == SnackbarResult.ActionPerformed) {
                 isSuccessSnackbarVisible = false
@@ -240,12 +244,12 @@ internal fun EntryScreen(
                         if (isSendButtonEnabled) {
                             val journalEntry =
                                 if (gameId.isNotEmpty()) {
-                                    currentEntryState?.let { entry ->
+                                    currentEntryState?.let { currentEntry ->
                                         selectedGameState.value?.let { selectedGameId ->
                                             JournalEntry(
                                                 userId = userIdState,
                                                 gameId = selectedGameId.id,
-                                                id = entry.id,
+                                                id = currentEntry.id,
                                                 content = existingContent,
                                                 dateAdded = Timestamp.now(),
                                             )
@@ -262,29 +266,6 @@ internal fun EntryScreen(
                                         )
                                     }
                                 }
-
-                            /*val journalEntry =
-                                if (currentEntryState != null) {
-                                    selectedGameState.value?.id?.let { selectedGameId ->
-                                        JournalEntry(
-                                            userId = userIdState,
-                                            gameId = selectedGameId,
-                                            id = currentEntryState!!.id,
-                                            content = typedContentState.value.text,
-                                            dateAdded = Timestamp.now(),
-                                        )
-                                    }
-                                } else {
-                                    selectedGameState.value?.id?.let { selectedGameId ->
-                                        JournalEntry(
-                                            userId = userIdState,
-                                            gameId = selectedGameId,
-                                            id = UUID.randomUUID().toString(),
-                                            content = typedContentState.value.text,
-                                            dateAdded = Timestamp.now(),
-                                        )
-                                    }
-                                }*/
 
                             if (journalEntry != null) {
                                 viewModel.saveEntry(journalEntry)
@@ -334,9 +315,20 @@ internal fun EntryScreen(
                 }
 
                 SnackbarHost(
-                    modifier = Modifier.align(Alignment.BottomCenter),
-                    hostState = snackbarHostState
-                )
+                    modifier = Modifier
+                        .align(Alignment.BottomCenter)
+                        .padding(bottom = 120.dp),
+                    hostState = snackbarHostState,
+                ) { snackbarData: SnackbarData ->
+                    Snackbar(
+                        modifier = Modifier.padding(horizontal = 12.dp),
+                        snackbarData = snackbarData,
+                        containerColor = MaterialTheme.colorScheme.surfaceVariant,
+                        shape = RoundedCornerShape(16.dp),
+                        contentColor = MaterialTheme.colorScheme.onSecondaryContainer,
+                        actionColor = MaterialTheme.colorScheme.onTertiaryContainer,
+                    )
+                }
             }
         }
     )
