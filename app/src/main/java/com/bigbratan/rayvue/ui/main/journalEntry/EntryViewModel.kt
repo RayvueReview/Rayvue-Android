@@ -2,7 +2,6 @@ package com.bigbratan.rayvue.ui.main.journalEntry
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.bigbratan.rayvue.models.Game
 import com.bigbratan.rayvue.models.JournalEntry
 import com.bigbratan.rayvue.services.JournalService
 import com.bigbratan.rayvue.services.UserService
@@ -17,7 +16,6 @@ class EntryViewModel @Inject constructor(
     private val userService: UserService
 ) : ViewModel() {
     val entryAlreadyExists = MutableStateFlow<Boolean?>(null)
-    val navigatedGameState = MutableStateFlow<Game?>(null)
     val sentEntryState = MutableStateFlow<SentEntryState>(SentEntryState.Idle)
     val currentEntryState = MutableStateFlow<JournalEntry?>(null)
     val userIdState = MutableStateFlow<String?>(null)
@@ -28,14 +26,6 @@ class EntryViewModel @Inject constructor(
                 userIdState.value = user?.id
             }
         }
-    }
-
-    fun setNavigatedGame(game: Game) {
-        navigatedGameState.value = game
-    }
-
-    fun clearNavigatedGame() {
-        navigatedGameState.value = null
     }
 
     fun loadEntry(gameId: String) {
