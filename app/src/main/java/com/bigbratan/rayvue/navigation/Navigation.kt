@@ -1,24 +1,13 @@
 package com.bigbratan.rayvue.navigation
 
 import android.annotation.SuppressLint
-import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
-import androidx.compose.foundation.interaction.MutableInteractionSource
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.statusBarsPadding
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Book
 import androidx.compose.material.icons.filled.EmojiEvents
 import androidx.compose.material.icons.filled.Error
 import androidx.compose.material.icons.filled.Gamepad
-import androidx.compose.material.icons.filled.Search
-import androidx.compose.material.icons.filled.Settings
-import androidx.compose.material.ripple.rememberRipple
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.NavigationBar
@@ -28,15 +17,11 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.remember
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
@@ -49,7 +34,6 @@ import com.bigbratan.rayvue.ui.auth.authApp
 import com.bigbratan.rayvue.ui.main.mainApp
 import com.bigbratan.rayvue.ui.theme.noFontPadding
 import com.bigbratan.rayvue.ui.theme.plusJakartaSans
-import com.bigbratan.rayvue.ui.views.TonalIconButton
 
 private val navItems = listOf(
     Screen.Main.GamesScreen,
@@ -63,29 +47,16 @@ fun Navigation() {
     val viewModel: NavigationViewModel = hiltViewModel()
     val navController = rememberNavController()
     val startDestination = viewModel.startDestination.collectAsState()
-
     val shouldShowBottomBar =
         navController.currentBackStackEntryAsState().value?.destination?.route in listOf(
             Screen.Main.GamesScreen.route,
             Screen.Main.AwardsScreen.route,
             Screen.Main.JournalScreen.route,
         )
-    val shouldShowTopBar =
-        navController.currentBackStackEntryAsState().value?.destination?.route in listOf(
-            Screen.Main.GamesScreen.route,
-            Screen.Main.JournalScreen.route,
-        )
 
     startDestination.value?.let { startDestinationValue ->
         Scaffold(
             modifier = Modifier.fillMaxSize(),
-            topBar = {
-                if (shouldShowTopBar) {
-                    EmbeddedSearchBar(
-                        navController = navController,
-                    )
-                }
-            },
             bottomBar = {
                 if (shouldShowBottomBar) {
                     EmbeddedBottomBar(
@@ -166,7 +137,7 @@ private fun EmbeddedBottomBar(
                     Text(
                         text = stringResource(id = navLabel),
                         fontFamily = plusJakartaSans,
-                        fontWeight = FontWeight(500),
+                        fontWeight = FontWeight.Normal,
                         color = MaterialTheme.colorScheme.onSurface,
                         style = TextStyle(platformStyle = noFontPadding)
                     )
@@ -183,86 +154,5 @@ private fun EmbeddedBottomBar(
                 }
             )
         }
-    }
-}
-
-@Composable
-private fun EmbeddedSearchBar(
-    navController: NavHostController,
-) {
-    Row(
-        modifier = Modifier
-            .fillMaxWidth()
-            .statusBarsPadding()
-            .padding(horizontal = 24.dp)
-            .padding(top = 8.dp),
-        verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.SpaceBetween,
-    ) {
-        SearchBarButton(
-            placeholder = if (navController.currentBackStackEntryAsState().value?.destination?.route == Screen.Main.JournalScreen.route)
-                stringResource(id = R.string.search_local_placeholder)
-            else
-                stringResource(id = R.string.search_database_placeholder),
-            modifier = Modifier.weight(1f),
-            onClick = {
-                navController.navigate(
-                    route = Screen.Main.SearchScreen.route
-                )
-            }
-        )
-
-        TonalIconButton(
-            modifier = Modifier.padding(start = 24.dp),
-            imageVector = Icons.Filled.Settings,
-            onClick = {
-                navController.navigate(
-                    route = Screen.Main.SettingsScreen.route
-                )
-            },
-        )
-    }
-}
-
-@Composable
-private fun SearchBarButton(
-    modifier: Modifier,
-    placeholder: String,
-    onClick: () -> Unit,
-) {
-    Row(
-        modifier = modifier
-            .clip(RoundedCornerShape(64.dp))
-            .clickable(
-                interactionSource = remember { MutableInteractionSource() },
-                indication = rememberRipple(bounded = true),
-                onClick = onClick,
-            )
-            .fillMaxWidth()
-            .background(
-                color = MaterialTheme.colorScheme.surfaceVariant,
-                shape = RoundedCornerShape(64.dp)
-            )
-            .padding(
-                horizontal = 24.dp,
-                vertical = 12.dp,
-            ),
-        verticalAlignment = Alignment.CenterVertically
-    ) {
-        Icon(
-            imageVector = Icons.Filled.Search,
-            tint = MaterialTheme.colorScheme.onSurfaceVariant,
-            contentDescription = null,
-        )
-
-        Text(
-            modifier = Modifier.padding(start = 8.dp),
-            text = placeholder,
-            fontSize = 14.sp,
-            fontFamily = plusJakartaSans,
-            fontWeight = FontWeight(500),
-            color = MaterialTheme.colorScheme.onSurface,
-            style = TextStyle(platformStyle = noFontPadding)
-        )
     }
 }

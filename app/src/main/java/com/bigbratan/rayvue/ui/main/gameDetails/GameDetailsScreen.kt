@@ -1,4 +1,4 @@
-package com.bigbratan.rayvue.ui.main.games.gameDetails
+package com.bigbratan.rayvue.ui.main.gameDetails
 
 import android.app.Activity
 import androidx.compose.foundation.clickable
@@ -273,7 +273,7 @@ private fun GameDetailsView(
                     }
 
                     items(gameDetails.tags.size) { tagIndex ->
-                        val modifier = when {
+                        val tagModifier = when {
                             tagIndex % 2 == 0 -> Modifier.padding(
                                 start = 24.dp,
                                 end = 6.dp,
@@ -290,7 +290,7 @@ private fun GameDetailsView(
                         }
 
                         TagCard(
-                            modifier = modifier,
+                            modifier = tagModifier,
                             content = if (tagIndex == 0) {
                                 if (gameDetails.tags[tagIndex] != "0.0")
                                     stringResource(
@@ -301,12 +301,42 @@ private fun GameDetailsView(
                             } else gameDetails.tags[tagIndex]
                         )
                     }
+
+                    item(span = { GridItemSpan(MAIN_GRID_SIZE) }) {
+                        ContentSectionHeader(
+                            text = stringResource(id = R.string.game_details_section_categories_title),
+                            onClick = null,
+                        )
+                    }
+
+                    items(gameDetails.categories.size) { categoryIndex ->
+                        val categoryModifier = when {
+                            categoryIndex % 2 == 0 -> Modifier.padding(
+                                start = 24.dp,
+                                end = 6.dp,
+                                bottom = 12.dp,
+                            )
+
+                            categoryIndex % 2 == 1 -> Modifier.padding(
+                                start = 6.dp,
+                                end = 24.dp,
+                                bottom = 12.dp,
+                            )
+
+                            else -> Modifier
+                        }
+
+                        TagCard(
+                            modifier = categoryModifier,
+                            content = gameDetails.categories[categoryIndex]
+                        )
+                    }
                 }
             },
             content = {
                 Box {
                     AsyncImage(
-                        modifier = Modifier.aspectRatio(1f / 1f),
+                        modifier = Modifier.aspectRatio(16f / 14f),
                         model = gameDetails.banner,
                         contentDescription = null,
                         contentScale = ContentScale.Crop,

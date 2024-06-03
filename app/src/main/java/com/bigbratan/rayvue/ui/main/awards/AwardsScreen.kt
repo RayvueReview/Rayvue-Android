@@ -12,6 +12,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.rememberLazyListState
@@ -114,6 +115,7 @@ internal fun AwardsScreen(
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
         ScrollableTabRow(
+            modifier = Modifier.statusBarsPadding(),
             selectedTabIndex = pagerState.currentPage,
             indicator = { tabPositions ->
                 TabRowDefaults.Indicator(
@@ -139,6 +141,10 @@ internal fun AwardsScreen(
                     },
                     text = {
                         Text(
+                            fontSize = 16.sp,
+                            fontFamily = plusJakartaSans,
+                            fontWeight = FontWeight.Medium,
+                            style = TextStyle(platformStyle = noFontPadding),
                             text = when (dateType) {
                                 DateType.WEEK -> stringResource(id = R.string.awards_tab_week_title).uppercase()
                                 DateType.MONTH -> stringResource(id = R.string.awards_tab_month_title).uppercase()
@@ -357,26 +363,3 @@ private fun PastAwardsGameCard(
         }
     }
 }
-
-/*when (DateType.values()[page]) {
-                            DateType.WEEK -> AwardsView(
-                                topGames = topGames,
-                                awardDate = selectedDateType.value.dateType,
-                                listState = listState,
-                                onGameClick = onGameClick
-                            )
-
-                            DateType.MONTH -> AwardsView(
-                                topGames = topGames,
-                                awardDate = selectedDateType.value.dateType,
-                                listState = listState,
-                                onGameClick = onGameClick
-                            )
-
-                            DateType.YEAR -> AwardsView(
-                                topGames = topGames,
-                                awardDate = selectedDateType.value.dateType,
-                                listState = listState,
-                                onGameClick = onGameClick
-                            )
-                        }*/

@@ -1,4 +1,4 @@
-package com.bigbratan.rayvue.ui.auth.signup.inputName
+package com.bigbratan.rayvue.ui.auth.inputName
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column

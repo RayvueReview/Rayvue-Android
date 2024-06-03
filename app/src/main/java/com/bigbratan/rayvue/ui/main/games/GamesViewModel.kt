@@ -1,6 +1,5 @@
 package com.bigbratan.rayvue.ui.main.games
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.bigbratan.rayvue.models.Game

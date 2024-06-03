@@ -7,9 +7,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.lazy.grid.GridCells
-import androidx.compose.foundation.lazy.grid.GridItemSpan
-import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
@@ -55,39 +53,35 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.AsyncImage
 import com.bigbratan.rayvue.R
 import com.bigbratan.rayvue.models.Game
-import com.bigbratan.rayvue.ui.main.games.MAIN_GRID_SIZE
 import com.bigbratan.rayvue.ui.theme.noFontPadding
 import com.bigbratan.rayvue.ui.theme.plusJakartaSans
 import com.bigbratan.rayvue.ui.views.ErrorMessage
 import com.bigbratan.rayvue.ui.views.LoadingAnimation
 import com.bigbratan.rayvue.ui.views.TransparentIconButton
 
-const val SEARCH_GRID_SIZE = 1
 const val MIN_QUERY_LENGTH = 3
 
-@SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @OptIn(ExperimentalComposeUiApi::class, ExperimentalMaterial3Api::class)
+@SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
 internal fun SearchScreen(
     viewModel: SearchViewModel = hiltViewModel(),
     onGameClick: (gameId: String) -> Unit,
     onBackClick: () -> Unit,
 ) {
-    val searchedGamesState = viewModel.searchedGamesState.collectAsState()
-    val typedQueryState = remember { mutableStateOf(TextFieldValue()) }
-
-    val focusRequester = remember { FocusRequester() }
-    val focusManager = LocalFocusManager.current
-    val keyboardController = LocalSoftwareKeyboardController.current
-    var textFieldLoaded by remember { mutableStateOf(false) }
-
     Scaffold(
         modifier = Modifier.fillMaxSize(),
     ) {
-        LazyVerticalGrid(
-            columns = GridCells.Fixed(SEARCH_GRID_SIZE)
-        ) {
-            item(span = { GridItemSpan(MAIN_GRID_SIZE) }) {
+        val searchedGamesState = viewModel.searchedGamesState.collectAsState()
+        val typedQueryState = remember { mutableStateOf(TextFieldValue()) }
+
+        val focusRequester = remember { FocusRequester() }
+        val focusManager = LocalFocusManager.current
+        val keyboardController = LocalSoftwareKeyboardController.current
+        var textFieldLoaded by remember { mutableStateOf(false) }
+
+        LazyColumn {
+            item {
                 TopAppBar(
                     modifier = Modifier.fillMaxWidth(),
                     title = {
@@ -111,7 +105,7 @@ internal fun SearchScreen(
                                     viewModel.searchGames(newValue.text)
                             },
                             textStyle = LocalTextStyle.current.copy(
-                                fontSize = 14.sp,
+                                fontSize = 16.sp,
                                 fontFamily = plusJakartaSans,
                                 color = MaterialTheme.colorScheme.onSurface,
                                 platformStyle = noFontPadding,
@@ -119,9 +113,9 @@ internal fun SearchScreen(
                             placeholder = {
                                 Text(
                                     text = stringResource(id = R.string.search_general_placeholder),
-                                    fontSize = 14.sp,
+                                    fontSize = 16.sp,
                                     fontFamily = plusJakartaSans,
-                                    fontWeight = FontWeight(500),
+                                    fontWeight = FontWeight.Normal,
                                     color = MaterialTheme.colorScheme.onSurface,
                                     style = TextStyle(platformStyle = noFontPadding)
                                 )
@@ -177,7 +171,7 @@ internal fun SearchScreen(
                 }
 
                 is SearchedGamesState.Loading -> {
-                    item(span = { GridItemSpan(MAIN_GRID_SIZE) }) {
+                    item {
                         LoadingAnimation(
                             modifier = Modifier.fillMaxSize()
                         )
@@ -185,7 +179,7 @@ internal fun SearchScreen(
                 }
 
                 is SearchedGamesState.Error -> {
-                    item(span = { GridItemSpan(MAIN_GRID_SIZE) }) {
+                    item {
                         ErrorMessage(
                             message = stringResource(
                                 id = R.string.games_get_data_error_message
@@ -223,7 +217,7 @@ internal fun SearchScreen(
 }
 
 @Composable
-private fun SearchedGameCard(
+internal fun SearchedGameCard(
     modifier: Modifier,
     game: Game,
     onGameClick: (gameId: String) -> Unit,

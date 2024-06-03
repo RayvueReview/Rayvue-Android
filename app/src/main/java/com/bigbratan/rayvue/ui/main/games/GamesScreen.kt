@@ -1,15 +1,18 @@
 package com.bigbratan.rayvue.ui.main.games
 
 import android.annotation.SuppressLint
-import android.util.Log
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.grid.GridCells
@@ -19,32 +22,33 @@ import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.rememberLazyGridState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.ExperimentalMaterialApi
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Search
+import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material.pullrefresh.PullRefreshIndicator
 import androidx.compose.material.pullrefresh.pullRefresh
 import androidx.compose.material.pullrefresh.rememberPullRefreshState
+import androidx.compose.material.ripple.rememberRipple
+import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.LifecycleEventObserver
-import androidx.lifecycle.viewModelScope
-import androidx.lifecycle.whenResumed
 import coil.compose.AsyncImage
 import com.bigbratan.rayvue.R
 import com.bigbratan.rayvue.models.Game
@@ -55,8 +59,8 @@ import com.bigbratan.rayvue.ui.views.ContentSectionHeader
 import com.bigbratan.rayvue.ui.views.ErrorMessage
 import com.bigbratan.rayvue.ui.views.FadingScrimBackground
 import com.bigbratan.rayvue.ui.views.LoadingAnimation
+import com.bigbratan.rayvue.ui.views.TonalIconButton
 import kotlinx.coroutines.flow.distinctUntilChanged
-import kotlinx.coroutines.launch
 
 const val MAIN_GRID_SIZE = 2
 
@@ -65,6 +69,8 @@ const val MAIN_GRID_SIZE = 2
 internal fun GamesScreen(
     viewModel: GamesViewModel = hiltViewModel(),
     onGameClick: (gameId: String) -> Unit,
+    onSearchClick: () -> Unit,
+    onSettingsClick: () -> Unit,
 ) {
     val obtainedGamesState = viewModel.obtainedGamesState.collectAsState()
     val obtainedFilteredGamesState = viewModel.obtainedFilteredGamesState.collectAsState()
@@ -158,6 +164,8 @@ internal fun GamesScreen(
                             randomGames = randomGames,
                             gridState = gridState,
                             onGameClick = onGameClick,
+                            onSearchClick = onSearchClick,
+                            onSettingsClick = onSettingsClick,
                         )
                     }
                 }
@@ -182,18 +190,25 @@ private fun GamesView(
     randomGames: List<Game>,
     gridState: LazyGridState,
     onGameClick: (gameId: String) -> Unit,
+    onSearchClick: () -> Unit,
+    onSettingsClick: () -> Unit,
 ) {
     Scaffold(
-        modifier = Modifier
-            .padding(top = 12.dp)
-            .fillMaxSize(),
-    ) {
+        modifier = Modifier.fillMaxSize(),
+        topBar = {
+            EmbeddedSearchBar(
+                onSearchClick = onSearchClick,
+                onSettingsClick = onSettingsClick,
+            )
+        },
+    ) { paddingValues ->
         LazyVerticalGrid(
             columns = GridCells.Fixed(MAIN_GRID_SIZE),
             state = gridState
         ) {
             item(span = { GridItemSpan(MAIN_GRID_SIZE) }) {
                 ContentSectionHeader(
+                    modifier = Modifier.padding(top = paddingValues.calculateTopPadding()),
                     text = stringResource(id = R.string.games_section_recent_title),
                     onClick = null,
                 )
@@ -319,6 +334,82 @@ private fun GameCard(
                 platformStyle = noFontPadding,
                 letterSpacing = 0.25.sp,
             ),
+        )
+    }
+}
+
+@Composable
+private fun EmbeddedSearchBar(
+    onSearchClick: () -> Unit,
+    onSettingsClick: () -> Unit,
+) {
+    Box(
+        modifier = Modifier
+            .background(MaterialTheme.colorScheme.surface)
+            .statusBarsPadding()
+    ) {
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(bottom = 12.dp),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.SpaceBetween,
+        ) {
+            SearchBarButton(
+                modifier = Modifier
+                    .padding(start = 24.dp)
+                    .weight(1f),
+                placeholder = stringResource(id = R.string.search_database_placeholder),
+                onClick = onSearchClick,
+                shape = RoundedCornerShape(64.dp),
+            )
+
+            TonalIconButton(
+                modifier = Modifier.padding(horizontal = 24.dp),
+                imageVector = Icons.Filled.Settings,
+                onClick = onSettingsClick,
+            )
+        }
+    }
+}
+
+@Composable
+internal fun SearchBarButton(
+    modifier: Modifier = Modifier,
+    placeholder: String,
+    shape: RoundedCornerShape,
+    onClick: () -> Unit,
+) {
+    Row(
+        modifier = modifier
+            .clip(shape)
+            .clickable(
+                interactionSource = remember { MutableInteractionSource() },
+                indication = rememberRipple(bounded = true),
+                onClick = onClick,
+            )
+            .fillMaxWidth()
+            .background(
+                color = MaterialTheme.colorScheme.surfaceVariant,
+                shape = shape
+            )
+            .padding(12.dp),
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        Icon(
+            imageVector = Icons.Filled.Search,
+            tint = MaterialTheme.colorScheme.onSurfaceVariant,
+            contentDescription = null,
+        )
+
+        Text(
+            modifier = Modifier.padding(start = 12.dp),
+            text = placeholder,
+            fontSize = 16.sp,
+            fontFamily = plusJakartaSans,
+            fontWeight = FontWeight.Medium,
+            color = MaterialTheme.colorScheme.onSurface,
+            style = TextStyle(platformStyle = noFontPadding)
         )
     }
 }

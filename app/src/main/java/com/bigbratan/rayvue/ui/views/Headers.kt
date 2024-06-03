@@ -5,14 +5,19 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.bigbratan.rayvue.ui.theme.noFontPadding
@@ -46,13 +51,10 @@ internal fun ContentSectionHeader(
         Text(
             text = text,
             fontFamily = plusJakartaSans,
-            fontWeight = FontWeight(500),
+            fontWeight = FontWeight.Medium,
             fontSize = 16.sp,
             color = MaterialTheme.colorScheme.onSurface,
-            style = TextStyle(
-                platformStyle = noFontPadding,
-                letterSpacing = 0.15.sp,
-            ),
+            style = TextStyle(platformStyle = noFontPadding),
         )
 
         if (imageVector != null && onClick != null) {
@@ -63,4 +65,34 @@ internal fun ContentSectionHeader(
             )
         }
     }
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+internal fun BackNavigationBar(
+    title: String,
+    onBackClick: () -> Unit,
+) {
+    TopAppBar(
+        title = {
+            Text(
+                modifier = Modifier.padding(horizontal = 16.dp),
+                text = title,
+                fontFamily = plusJakartaSans,
+                fontSize = 16.sp,
+                fontWeight = FontWeight.Medium,
+                color = MaterialTheme.colorScheme.onSurface,
+                style = TextStyle(platformStyle = noFontPadding),
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis,
+            )
+        },
+        navigationIcon = {
+            TransparentIconButton(
+                modifier = Modifier.padding(start = 16.dp),
+                imageVector = Icons.Filled.ArrowBack,
+                onClick = onBackClick,
+            )
+        }
+    )
 }

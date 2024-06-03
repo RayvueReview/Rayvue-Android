@@ -1,4 +1,4 @@
-package com.bigbratan.rayvue.ui.auth.signup.inputName
+package com.bigbratan.rayvue.ui.auth.inputName
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
