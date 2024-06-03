@@ -27,7 +27,7 @@
     <string name="login_email_support">You\'ll have to remember it</string>
     <string name="login_email_error">The account with this email doesn\'t exist</string>
     <string name="login_password_hint">Your password</string>
-    <string name="login_password_support">If you forgot it, request a reset</string>
+    <string name="login_password_support">You can\'t request a reset at the moment</string>
     <string name="login_password_error">Wrong password</string>
     <string name="login_button_title">Enter account</string>
 

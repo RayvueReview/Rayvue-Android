@@ -27,7 +27,7 @@
     <string name="login_email_support">Va trebui să ți-o amintești</string>
     <string name="login_email_error">Contul cu acest email nu există</string>
     <string name="login_password_hint">Parola ta</string>
-    <string name="login_password_support">Dacă ai uitat-o, cere o resetare</string>
+    <string name="login_password_support">Nu poți cere resetarea acesteia momentan</string>
     <string name="login_password_error">Parolă greșită</string>
     <string name="login_button_title">Intră în cont</string>
 
