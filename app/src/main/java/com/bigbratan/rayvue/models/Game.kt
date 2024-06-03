@@ -6,7 +6,7 @@ data class Game(
     val id: String,
     val displayName: String,
     val icon: String,
-    val banner: String,
+    val banner: String? = null,
 )
 
 data class AwardGame(

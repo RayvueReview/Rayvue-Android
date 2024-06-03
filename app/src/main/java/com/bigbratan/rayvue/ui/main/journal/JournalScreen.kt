@@ -196,7 +196,7 @@ private fun JournalView(
                             bottom = if (gameIndex == journalGames.size) 24.dp else 12.dp
                         ),
                     icon = game.icon,
-                    banner = game.banner,
+                    banner = game.banner ?: "",
                     title = game.displayName,
                     onGameClick = {
                         onGameClick(
