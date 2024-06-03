@@ -38,7 +38,7 @@
     <string name="signup_email_support">The email has to be correct and complete</string>
     <string name="signup_email_error">Email is linked to an existing account</string>
     <string name="signup_password_hint">Password</string>
-    <string name="signup_password_support">Minimum 10 characters</string>
+    <string name="signup_password_support">Minimum 10 characters including 1 uppercase and 1 digit</string>
     <string name="signup_button_title">Next</string>
 
     <!-- Input Name Screen -->

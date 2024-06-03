@@ -38,7 +38,7 @@
     <string name="signup_email_support">Emailul trebuie sa fie corect și complet</string>
     <string name="signup_email_error">Emailul aparține unui cont existent</string>
     <string name="signup_password_hint">Parolă</string>
-    <string name="signup_password_support">Minim 10 caractere</string>
+    <string name="signup_password_support">Minim 10 caractere inclusiv o majusculă și o cifră</string>
     <string name="signup_button_title">Următorul</string>
 
     <!-- Input Name Screen -->
