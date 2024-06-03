@@ -15,7 +15,7 @@
     <string name="nav_journal_title">Journal</string>
 
     <!-- Account Screen -->
-    <string name="account_prompt_message">Create a free account to save your reviews in the cloud.</string>
+    <string name="account_prompt_message">Create a free account to save your data in the cloud.</string>
     <string name="account_button_login_title">Log in</string>
     <string name="account_button_signup_title">Sign up</string>
     <string name="account_button_no_account_title">Continue with no account</string>

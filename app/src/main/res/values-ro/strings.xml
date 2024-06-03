@@ -15,7 +15,7 @@
     <string name="nav_journal_title">Jurnal</string>
 
     <!-- Account Screen -->
-    <string name="account_prompt_message">Creează un cont gratis pentru a salva recenziile tale în cloud.</string>
+    <string name="account_prompt_message">Creează un cont gratis pentru a salva datele tale în cloud.</string>
     <string name="account_button_login_title">Intră în cont</string>
     <string name="account_button_signup_title">Creează un cont nou</string>
     <string name="account_button_no_account_title">Continuă fără un cont</string>
