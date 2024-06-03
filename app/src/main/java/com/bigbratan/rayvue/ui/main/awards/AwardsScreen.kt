@@ -27,8 +27,8 @@ import androidx.compose.material.pullrefresh.pullRefresh
 import androidx.compose.material.pullrefresh.rememberPullRefreshState
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.ScrollableTabRow
 import androidx.compose.material3.Tab
+import androidx.compose.material3.TabRow
 import androidx.compose.material3.TabRowDefaults
 import androidx.compose.material3.TabRowDefaults.tabIndicatorOffset
 import androidx.compose.material3.Text
@@ -114,7 +114,7 @@ internal fun AwardsScreen(
         modifier = Modifier.fillMaxSize(),
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
-        ScrollableTabRow(
+        TabRow(
             modifier = Modifier.statusBarsPadding(),
             selectedTabIndex = pagerState.currentPage,
             indicator = { tabPositions ->
@@ -123,7 +123,9 @@ internal fun AwardsScreen(
                         .tabIndicatorOffset(
                             currentTabPosition = tabPositions[pagerState.currentPage],
                         )
-                        .clip(RoundedCornerShape(topStart = 4.dp, topEnd = 4.dp)),
+                        .padding(horizontal = 32.dp)
+                        .clip(RoundedCornerShape(topStart = 4.dp, topEnd = 4.dp))
+                    ,
                 )
             },
             divider = {},
