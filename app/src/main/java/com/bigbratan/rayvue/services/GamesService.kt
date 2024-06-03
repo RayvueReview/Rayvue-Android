@@ -67,6 +67,7 @@ class GamesService @Inject constructor(
                 "displayName",
                 "icon",
             ),
+            orderBy = "displayName",
             limit = limit,
             startAfter = startAfter
         )

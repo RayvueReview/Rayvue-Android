@@ -28,7 +28,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.bigbratan.rayvue.R
-import com.bigbratan.rayvue.ui.theme.Black15
+import com.bigbratan.rayvue.ui.theme.Black50
 import com.bigbratan.rayvue.ui.theme.noFontPadding
 import com.bigbratan.rayvue.ui.theme.plusJakartaSans
 
@@ -55,7 +55,7 @@ internal fun SolidScrimBackground() {
     Box(
         modifier = Modifier
             .fillMaxSize()
-            .background(Black15)
+            .background(Black50)
     )
 }
 
